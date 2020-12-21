@@ -15,8 +15,8 @@ import hu.szrnkapeter.firebase.hosting.type.SerializerType;
 public class FirebaseRestApiConfig {
 
 	private InputStream configStream;
-	private int defaultConnectionTimeout;
-	private int defaultReadTimeout;
+	private int defaultConnectionTimeout = 30000;
+	private int defaultReadTimeout = 30000;
 	private SerializerType serializer = SerializerType.JACKSON;
 	private String siteName;
 

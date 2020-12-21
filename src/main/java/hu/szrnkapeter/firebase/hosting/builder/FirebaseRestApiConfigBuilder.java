@@ -37,6 +37,16 @@ public class FirebaseRestApiConfigBuilder {
 		config.setSerializer(serializer);
 		return this;
 	}
+	
+	public FirebaseRestApiConfigBuilder withDefaultConnectionTimeout(int defaultConnectionTimeout) {
+		config.setDefaultConnectionTimeout(defaultConnectionTimeout);
+		return this;
+	}
+	
+	public FirebaseRestApiConfigBuilder withDefaultReadTimeout(int defaultReadTimeout) {
+		config.setDefaultReadTimeout(defaultReadTimeout);
+		return this;
+	}
 
 	public FirebaseRestApiConfig build() {
 		return config;
