@@ -22,7 +22,7 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 ```xml
 <dependency>
-	<groupId>io.github.szrnkapeter</groupId>
+	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
 	<version>0.1</version>
 </dependency>
