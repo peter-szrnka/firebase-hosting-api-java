@@ -20,9 +20,9 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 ## Maven
 
-```java
+```xml
 <dependency>
-	<groupId>hu.szrnkapeter.firebase.hosting</groupId>
+	<groupId>io.github.szrnkapeter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
 	<version>0.1</version>
 </dependency>
