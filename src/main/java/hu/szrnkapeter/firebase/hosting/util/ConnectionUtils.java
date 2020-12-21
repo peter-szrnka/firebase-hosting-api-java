@@ -8,6 +8,12 @@ import java.util.Scanner;
 import hu.szrnkapeter.firebase.hosting.config.FirebaseRestApiConfig;
 import hu.szrnkapeter.firebase.hosting.serializer.SerializerFactory;
 
+/**
+ * Connection manager class.
+ * 
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class ConnectionUtils {
 	
 	private static final String FIREBASE_API_URL = "https://firebasehosting.googleapis.com/v1beta1/";
@@ -27,6 +33,9 @@ public class ConnectionUtils {
 		URLConnection connection = new URL(FIREBASE_API_URL + url).openConnection();
 		connection.setRequestProperty("Accept-Charset", CHARSET);
 		connection.setRequestProperty("Authorization", "Bearer " + accessToken);
+		connection.setConnectTimeout(config.getDefaultConnectionTimeout());
+		connection.setReadTimeout(config.getDefaultReadTimeout());
+
 		InputStream streamResponse = connection.getInputStream();
 
 		try (Scanner scanner = new Scanner(streamResponse)) {

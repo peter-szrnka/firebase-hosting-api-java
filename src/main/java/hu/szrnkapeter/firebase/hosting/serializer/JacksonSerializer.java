@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Jackson based serializer/deserializer.
  * 
  * @author Peter Szrnka
- *
+ * @since 0.1
  */
 public class JacksonSerializer implements Serializer {
 

@@ -2,6 +2,10 @@ package hu.szrnkapeter.firebase.hosting.model;
 
 import java.io.Serializable;
 
+/**
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class FileDetails implements Serializable {
 
 	private static final long serialVersionUID = -2427694455038032293L;

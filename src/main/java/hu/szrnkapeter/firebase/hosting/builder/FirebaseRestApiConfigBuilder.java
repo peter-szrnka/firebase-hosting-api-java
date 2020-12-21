@@ -8,8 +8,6 @@ import hu.szrnkapeter.firebase.hosting.type.SerializerType;
 /**
  * Builder class to create {@link FirebaseRestApiConfig} instances.
  * 
- * TODO Add new config setups
- * 
  * @author Peter Szrnka
  * @since 0.1
  */

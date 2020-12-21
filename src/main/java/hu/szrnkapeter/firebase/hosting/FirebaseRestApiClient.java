@@ -19,15 +19,18 @@ import hu.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
  */
 public class FirebaseRestApiClient {
 
+	private static final String FILES = "/files";
+	private static final String VERSIONS = "/versions/";
 	private static final String SITES = "sites/";
 
 	private FirebaseRestApiConfig config;
 	private String accessToken;
 
-	public FirebaseRestApiClient() {
-	}
-
 	public FirebaseRestApiClient(FirebaseRestApiConfig firebaseRestApiConfig) throws IOException {
+		if(firebaseRestApiConfig == null) {
+			throw new IllegalArgumentException("FirebaseRestApiConfig field is mandatory!");
+		}
+
 		config = firebaseRestApiConfig;
 		accessToken = GoogleCredentialUtils.getAccessToken(config);
 	}
@@ -51,13 +54,17 @@ public class FirebaseRestApiClient {
 	 * @throws Exception
 	 */
 	public GetVersionFilesResponse getVersionFiles(String version) throws Exception {
-		String url = SITES + config.getSiteName() + "/versions/" + version + "/files";
+		if(version == null || version.isEmpty()) {
+			throw new IllegalArgumentException("Version field is mandatory!");
+		}
 
-		Pattern p = Pattern.compile(SITES + config.getSiteName() + "/versions/.*");
+		String url = SITES + config.getSiteName() + VERSIONS + version + FILES;
+
+		Pattern p = Pattern.compile(SITES + config.getSiteName() + VERSIONS + ".*");
 		Matcher m = p.matcher(version);
 
 		if (m.matches()) {
-			url = version + "/files";
+			url = version + FILES;
 		}
 
 		return ConnectionUtils.openHTTPGetConnection(config, GetVersionFilesResponse.class, accessToken, url);

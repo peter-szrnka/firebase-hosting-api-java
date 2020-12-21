@@ -1,5 +1,9 @@
 package hu.szrnkapeter.firebase.hosting.serializer;
 
+/**
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public interface Serializer {
 
 	/**

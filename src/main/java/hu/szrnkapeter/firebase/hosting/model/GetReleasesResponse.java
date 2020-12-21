@@ -3,6 +3,10 @@ package hu.szrnkapeter.firebase.hosting.model;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class GetReleasesResponse implements Serializable {
 
 	private static final long serialVersionUID = -3469350443495966135L;

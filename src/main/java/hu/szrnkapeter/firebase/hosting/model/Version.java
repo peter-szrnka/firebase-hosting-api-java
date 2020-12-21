@@ -4,17 +4,20 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class Version implements Serializable {
 
 	private static final long serialVersionUID = -1388551022158308920L;
+
 	private String name;
 	private String status;
 	private Map<String, String> config;
 	private Map<String, String> labels;
-	//@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private Date createTime;
 	private User createUser;
-	//@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private Date finalizeTime;
 	private User finalizeUser;
 	private String fileCount;

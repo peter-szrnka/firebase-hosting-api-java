@@ -1,0 +1,850 @@
+{
+  "releases": [
+    {
+      "name": "sites/test/releases/1603360934558952",
+      "version": {
+        "name": "sites/test/versions/72e01552bb5498a1",
+        "status": "FINALIZED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-22T10:02:09.777355Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-22T10:02:14.137347Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218677"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-22T10:02:14.558952240Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603355184738958",
+      "version": {
+        "name": "sites/test/versions/1942ab7d92ae8a56",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-22T08:26:19.980336Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-22T08:26:24.821757Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-12-21T07:11:50.644520Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218678"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-22T08:26:24.738958355Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603351962912115",
+      "version": {
+        "name": "sites/test/versions/f51a62d87328811e",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-22T07:32:37.671277Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-22T07:32:42.553717Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T08:27:28.610835Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218768"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-22T07:32:42.912115173Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603351749847541",
+      "version": {
+        "name": "sites/test/versions/7bab854448fef0f3",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-09-16T16:08:38.224569Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-09-16T16:08:44.065821Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:32:57.645194Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218672"
+      },
+      "type": "ROLLBACK",
+      "releaseTime": "2020-10-22T07:29:09.847541850Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603224876373735",
+      "version": {
+        "name": "sites/test/versions/3e12c574d3b66e72",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-20T20:14:31.110080Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-20T20:14:36.006566Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:29:23.992880Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218731"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-20T20:14:36.373735699Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603187854571600",
+      "version": {
+        "name": "sites/test/versions/ad5b31ebc86c7221",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-20T09:57:29.468922Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-20T09:57:34.222402Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:29:28.855774Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218729"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-20T09:57:34.571600269Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1603093569674988",
+      "version": {
+        "name": "sites/test/versions/856d926b188b448b",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-10-19T07:46:04.526387Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-10-19T07:46:09.319998Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:29:33.643745Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218737"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-10-19T07:46:09.674988998Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1600688927191847",
+      "version": {
+        "name": "sites/test/versions/376c6dd52ff45e41",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-09-21T11:48:42.118881Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-09-21T11:48:46.802535Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:29:38.792544Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218773"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-09-21T11:48:47.191847197Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1600272524432423",
+      "version": {
+        "name": "sites/test/versions/7bab854448fef0f3",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-09-16T16:08:38.224569Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-09-16T16:08:44.065821Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-10-22T07:32:57.645194Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13218672"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-09-16T16:08:44.432423621Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1582922385400965",
+      "version": {
+        "name": "sites/test/versions/229c428b45f6eae3",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-02-28T20:39:39.272159Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-02-28T20:39:44.407750Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-09-16T16:08:58.439598Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13215981"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-02-28T20:39:45.400965Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1582895045449848",
+      "version": {
+        "name": "sites/test/versions/ac0d7235c14d35cc",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-02-28T13:03:58.355455Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-02-28T13:04:04.411473Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-07-12T14:05:00.915597Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13215970"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-02-28T13:04:05.449848Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1581691710314554",
+      "version": {
+        "name": "sites/test/versions/b0031083d85d3679",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-02-14T14:48:24.274303Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-02-14T14:48:29.213873Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-07-12T14:05:04.982796Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13215936"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-02-14T14:48:30.314554Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1581690039579980",
+      "version": {
+        "name": "sites/test/versions/6e1234271e24260a",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2020-02-14T14:20:19.055455Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2020-02-14T14:20:38.508364Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-02-22T18:03:49.864083Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "8",
+        "versionBytes": "13215931"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2020-02-14T14:20:39.579980Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573799567406578",
+      "version": {
+        "name": "sites/test/versions/35bf221c072fa620",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T06:32:42.901471Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T06:32:46.250527Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2020-02-22T18:03:47.002096Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T06:32:47.406578Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573799350411920",
+      "version": {
+        "name": "sites/test/versions/1b56ad7dc6f732f4",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T06:29:06.003183Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T06:29:09.327215Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:33:07.125585Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T06:29:10.411920Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573799253314652",
+      "version": {
+        "name": "sites/test/versions/b83c9652ebbe5c2a",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T06:27:27.409439Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T06:27:32.231663Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:31:08.680533Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T06:27:33.314652Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573798811711435",
+      "version": {
+        "name": "sites/test/versions/bd54eb160f555626",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T06:20:06.746143Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T06:20:10.621583Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:28:16.006262Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T06:20:11.711435Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573798296158429",
+      "version": {
+        "name": "sites/test/versions/948a14a00f57831a",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T06:11:31.307071Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T06:11:35.082303Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:27:41.532573Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T06:11:36.158429Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573797169787709",
+      "version": {
+        "name": "sites/test/versions/968d8ad3d0708687",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-15T05:52:44.763167Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-15T05:52:48.692031Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:27:38.241668Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-15T05:52:49.787709Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573764796101150",
+      "version": {
+        "name": "sites/test/versions/db730c017e6686f8",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-14T20:53:11.412591Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-14T20:53:15.011199Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:27:34.985028Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-14T20:53:16.101150Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573761025890886",
+      "version": {
+        "name": "sites/test/versions/b6eab44264053214",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-14T19:50:20.637935Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-14T19:50:24.763711Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-15T06:27:32.656354Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-14T19:50:25.890886Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573759271386001",
+      "version": {
+        "name": "sites/test/versions/4c6c8831362ce0bd",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-14T19:21:06.777727Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-14T19:21:10.262271Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-14T20:53:35.447357Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-14T19:21:11.386001Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573757102189376",
+      "version": {
+        "name": "sites/test/versions/36ab3fbf821dc1a3",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-14T18:44:54.455055Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-14T18:45:01.048655Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-14T20:53:32.016774Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-14T18:45:02.189376Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573418768656402",
+      "version": {
+        "name": "sites/test/versions/9ad6d80d36a98f7a",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-10T20:46:04.126319Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-10T20:46:07.575823Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-14T20:53:28.385746Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69383"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-10T20:46:08.656402Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    },
+    {
+      "name": "sites/test/releases/1573413879078376",
+      "version": {
+        "name": "sites/test/versions/edd14520794a2b76",
+        "status": "DELETED",
+        "config": {},
+        "labels": {
+          "deployment-tool": "cli-firebase"
+        },
+        "createTime": "2019-11-10T19:24:34.321871Z",
+        "createUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "finalizeTime": "2019-11-10T19:24:37.947839Z",
+        "finalizeUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "deleteTime": "2019-11-14T20:53:24.660524Z",
+        "deleteUser": {
+          "email": "test@email.com",
+          "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+        },
+        "fileCount": "7",
+        "versionBytes": "69379"
+      },
+      "type": "DEPLOY",
+      "releaseTime": "2019-11-10T19:24:39.078376Z",
+      "releaseUser": {
+        "email": "test@email.com",
+        "imageUrl": "https://lh3.googleusercontent.com/a-/XyZ"
+      }
+    }
+  ],
+  "nextPageToken": "XY012345"
+}

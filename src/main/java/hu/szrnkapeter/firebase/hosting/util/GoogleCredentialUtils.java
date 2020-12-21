@@ -7,12 +7,20 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
 import hu.szrnkapeter.firebase.hosting.config.FirebaseRestApiConfig;
 
+/**
+ * Google credential helper class.
+ * 
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class GoogleCredentialUtils {
 	
 	private static final String FIREBASE_DEFAULT_SCOPE = "https://www.googleapis.com/auth/firebase";
 
 	/**
 	 * Returns with the access token by the Firebase credential JSON.
+	 * 
+	 * TODO Refactor this to use the newest Google client API library.
 	 * 
 	 * @param config
 	 * @return
