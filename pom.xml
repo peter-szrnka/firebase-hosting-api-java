@@ -6,6 +6,8 @@
 	<artifactId>firebase-hosting-api-java</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
+	<name>Firebase Hosting API library Java</name>
+	<description>Firebase Hosting API library for Java</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -33,6 +35,14 @@
 			</roles>
 		</developer>
 	</developers>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<scm>
 		<url>https://github.com/szrnka-peter/firebase-hosting-api-java</url>
