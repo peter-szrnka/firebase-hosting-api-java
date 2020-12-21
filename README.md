@@ -9,6 +9,13 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 - Org.json
 - Gson
 
+# Implemented services
+
+| resource name             | Resource name                                 |
+| ------------------------- | --------------------------------------------- |
+| sites.releases.list       | Lists all releases                            |
+| sites.versions.files.list | Lists all files relating to the given version |
+
 # Configuration
 
 Import the Maven dependency:
@@ -85,10 +92,3 @@ FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
 		GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
 		System.out.println("Files response = " + files);
 ```
-
-# Implemented services
-
-| resource name             | Resource name                                 |
-| ------------------------- | --------------------------------------------- |
-| sites.releases.list       | Lists all releases                            |
-| sites.versions.files.list | Lists all files relating to the given version |
