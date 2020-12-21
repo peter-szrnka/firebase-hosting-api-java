@@ -8,5 +8,5 @@ public enum SerializerType {
 
 	GSON,
 	JACKSON,
-	ORG_JSON;
+	MOSHI;
 }

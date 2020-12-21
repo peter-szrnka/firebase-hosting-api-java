@@ -18,7 +18,7 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 # Configuration
 
-Import the Maven dependency:
+## Maven
 
 ```java
 <dependency>
@@ -27,6 +27,12 @@ Import the Maven dependency:
 	<version>0.1</version>
 </dependency>
 ```
+
+## Object serializers
+
+- Jackson (default)
+- Moshi
+- Gson
 
 # Usage
 
@@ -56,7 +62,7 @@ FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
 FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
-    			.withSerializer(SerializerType.JACKSON)
+    			.withSerializer(SerializerType.GSON)
     			.build();
 
 		FirebaseRestApiClient client = new FirebaseRestApiClient(config);

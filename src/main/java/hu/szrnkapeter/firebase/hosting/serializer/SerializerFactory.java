@@ -19,7 +19,11 @@ public class SerializerFactory {
 
 		switch (type) {
 		case GSON:
-		case ORG_JSON:
+			result = new GsonSerializer();
+			break;
+		case MOSHI:
+			result = new MoshiSerializer();
+			break;
 		default:
 			result = new JacksonSerializer();
 			break;
