@@ -22,9 +22,9 @@ public class GoogleCredentialUtils {
 	 * 
 	 * TODO Refactor this to use the newest Google client API library.
 	 * 
-	 * @param config
-	 * @return
-	 * @throws IOException
+	 * @param config A {@link FirebaseRestApiConfig} instance
+	 * @return The queried access token.
+	 * @throws IOException Any IO exception.
 	 */
 	public static String getAccessToken(FirebaseRestApiConfig config) throws IOException {
 		GoogleCredential googleCredential = GoogleCredential.fromStream(config.getConfigStream())

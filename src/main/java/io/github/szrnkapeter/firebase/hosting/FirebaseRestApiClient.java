@@ -26,6 +26,12 @@ public class FirebaseRestApiClient {
 	private FirebaseRestApiConfig config;
 	private String accessToken;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param firebaseRestApiConfig A new {@link FirebaseRestApiConfig}
+	 * @throws IOException An unwanted IOException
+	 */
 	public FirebaseRestApiClient(FirebaseRestApiConfig firebaseRestApiConfig) throws IOException {
 		if(firebaseRestApiConfig == null) {
 			throw new IllegalArgumentException("FirebaseRestApiConfig field is mandatory!");
@@ -40,6 +46,7 @@ public class FirebaseRestApiClient {
 	 * 
 	 * @throws MalformedURLException The unexpected MalformedURLException
 	 * @throws IOException The unexpected IOException
+	 * @return A new {@link GetReleasesResponse} instance
 	 */
 	public GetReleasesResponse getReleases() throws Exception {
 		return ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,

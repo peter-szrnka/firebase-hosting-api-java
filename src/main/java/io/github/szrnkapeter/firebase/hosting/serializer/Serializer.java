@@ -9,6 +9,7 @@ public interface Serializer {
 	/**
 	 * JSON to Object conversion.
 	 * 
+	 * @param <T> The T Type
 	 * @param clazz Result class.
 	 * @param responseBody The JSON response body
 	 * @return a T class
