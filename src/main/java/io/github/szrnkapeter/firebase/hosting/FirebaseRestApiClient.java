@@ -36,10 +36,10 @@ public class FirebaseRestApiClient {
 	}
 
 	/**
-	 * Returns with the list of releases
+	 * Returns with the list of releases.
 	 * 
-	 * @throws MalformedURLException
-	 * @throws IOException
+	 * @throws MalformedURLException The unexpected MalformedURLException
+	 * @throws IOException The unexpected IOException
 	 */
 	public GetReleasesResponse getReleases() throws Exception {
 		return ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,
@@ -49,9 +49,9 @@ public class FirebaseRestApiClient {
 	/**
 	 * Returns with all files of a given version
 	 * 
-	 * @param version
-	 * @return
-	 * @throws Exception
+	 * @param version Firebase version name
+	 * @return A {@link GetVersionFilesResponse} response
+	 * @throws Exception The unexpected exception
 	 */
 	public GetVersionFilesResponse getVersionFiles(String version) throws Exception {
 		if(version == null || version.isEmpty()) {

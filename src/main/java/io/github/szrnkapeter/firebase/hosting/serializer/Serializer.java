@@ -7,12 +7,12 @@ package io.github.szrnkapeter.firebase.hosting.serializer;
 public interface Serializer {
 
 	/**
-	 * JSON -> Object conversion.
+	 * JSON to Object conversion.
 	 * 
-	 * @param clazz
-	 * @param responseBody
-	 * @return
-	 * @throws Exception
+	 * @param clazz Result class.
+	 * @param responseBody The JSON response body
+	 * @return a T class
+	 * @throws Exception The unexpected exception
 	 */
 	<T> T getObject(Class<T> clazz, String responseBody) throws Exception;
 }

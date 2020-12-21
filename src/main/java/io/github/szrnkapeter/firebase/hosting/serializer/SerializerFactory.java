@@ -11,8 +11,8 @@ public class SerializerFactory {
 	/**
 	 * Creates a new {@link Serializer} instance.
 	 * 
-	 * @param type
-	 * @return
+	 * @param type {@link SerializerType} enum value. 
+	 * @return A new {@link Serializer} instance.
 	 */
 	public static Serializer getSerializer(SerializerType type) {
 		Serializer result = null;

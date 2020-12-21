@@ -22,12 +22,13 @@ public class ConnectionUtils {
 	/**
 	 * Opens an HTTP GET connection by the parameters.
 	 * 
-	 * @param config
-	 * @param clazz
-	 * @param accessToken
-	 * @param url
-	 * @return
-	 * @throws Exception
+	 * @param <T> T type
+	 * @param config A {@link FirebaseRestApiConfig} object instance.
+	 * @param clazz A class type
+	 * @param accessToken Firebase access token
+	 * @param url The input url that we want to call 
+	 * @return The T type
+	 * @throws Exception The unexpected exception
 	 */
 	public static <T> T openHTTPGetConnection(FirebaseRestApiConfig config, Class<T> clazz, String accessToken, String url) throws Exception {
 		URLConnection connection = new URL(FIREBASE_API_URL + url).openConnection();
