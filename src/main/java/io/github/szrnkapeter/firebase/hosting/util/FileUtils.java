@@ -20,7 +20,7 @@ public class FileUtils {
 	/**
 	 * Returns with the SHA-256 checksum of the given input stream.
 	 * 
-	 * @param fis Input stream
+	 * @param fileContent File content in byte array.
 	 * @return The SHA-256 hash
 	 * @throws Exception Any exception thrown by the method.
 	 * 
@@ -52,7 +52,7 @@ public class FileUtils {
 	/**
 	 * Compresses and returns with a gzipped input stream.
 	 * 
-	 * @param fileStream The input stream that we want to compress.
+	 * @param fileContent File content in byte array.
 	 * 
 	 * @return A new {@link GZIPInputStream} instance.
 	 * @throws Exception Any unwanted exception

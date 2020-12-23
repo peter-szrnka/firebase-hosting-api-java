@@ -14,16 +14,19 @@ public interface Serializer {
 	 * @param json The JSON response body
 	 * @return a T class
 	 * @throws Exception The unexpected exception
+	 * 
+	 * @since 0.1
 	 */
 	<T> T getObject(Class<T> clazz, String json) throws Exception;
 
 	/**
 	 * Object to JSON conversion.
 	 * 
+	 * @param <T> The T Type
 	 * @param clazz Input class.
 	 * @param obj The input object
 	 * @return The JSON representation of the given object
-	 * @throws Exception
+	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.2
 	 */

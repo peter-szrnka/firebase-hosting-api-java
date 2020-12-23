@@ -82,7 +82,7 @@ public class FirebaseHostingApiClient {
 	 * Deletes a version by ID. 
 	 * 
 	 * @param version The version ID that we want to delete.
-	 * @throws Exception
+	 * @throws Exception Any unwanted Exception
 	 * 
 	 * @since 0.2
 	 */
@@ -135,6 +135,8 @@ public class FirebaseHostingApiClient {
 	 * Calls the populateFiles endpoint.
 	 * 
 	 * @param request A {@link PopulateFilesRequest} request object
+	 * @param version Firebase version name
+	 * @return A {@link PopulateFilesResponse} response.
 	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.2

@@ -135,7 +135,10 @@ public class ConnectionUtils {
 	 * @param config      A {@link FirebaseHostingApiConfig} object instance.
 	 * @param accessToken Firebase access token
 	 * @param url Remote URL
+	 * @param fileContent File content in byte array.
 	 * @throws Exception The unexpected exception
+	 * 
+	 * @since 0.2
 	 */
 	public static void uploadFile(FirebaseHostingApiConfig config, String accessToken, String url, byte[] fileContent) throws Exception {
 
