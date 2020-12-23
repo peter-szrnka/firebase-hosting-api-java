@@ -1,5 +1,5 @@
 # firebase-hosting-api-java
-A simple Java library for Firebase Hosting REST API (https://firebase.google.com/docs/reference/hosting/rest). In the future (2021 Q1) I'll plan to implement all services.
+A simple Java library for Firebase Hosting REST API (https://firebase.google.com/docs/reference/hosting/rest).
 
 **IMPORTANT: This library is compatible only with V1BETA1 services!!**
 
