@@ -1,6 +1,8 @@
 # firebase-hosting-api-java
 A simple Java library for Firebase Hosting REST API (https://firebase.google.com/docs/reference/hosting/rest). In the future (2021 Q1) I'll plan to implement all services.
 
+**IMPORTANT: This library is compatible only with V1BETA1 services!!**
+
 # Used technologies
 
 - Java 8
@@ -11,10 +13,16 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 # Implemented services
 
-| resource name             | Resource name                                 |
-| ------------------------- | --------------------------------------------- |
-| sites.releases.list       | Lists all releases                            |
-| sites.versions.files.list | Lists all files relating to the given version |
+| resource name                               | Resource name                                                |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| v1beta1.sites.releases.list                 | Lists all releases                                           |
+| v1beta1.sites.versions.files.list           | Lists all files relating to the given version                |
+| v1beta1.sites.versions.create               | Creates a new deployment version                             |
+| v1beta1.sites.versions.populateFiles        | Sets the files should be downloaded with the upload function |
+| v1beta1.sites.versions.uploadRequiredHashes | Uploads the required files populated by populateFiles        |
+| v1beta1.sites.versions.patch                | Finalizes a given deploymentversion                          |
+| v1beta1.sites.releases.create               | Creates a new release                                        |
+| v1beta1.sites.versions.delete               | Deletes a deployment version                                 |
 
 # Configuration
 
@@ -39,12 +47,12 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 ## Simple call
 
 ```java
-FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
+FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
     			.build();
 
-		FirebaseRestApiClient client = new FirebaseRestApiClient(config);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
 		// Call getReleases
 		GetReleasesResponse response = client.getReleases();
@@ -59,13 +67,13 @@ FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
 ## Custom serializer
 
 ```java
-FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
+FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
     			.withSerializer(SerializerType.GSON)
     			.build();
 
-		FirebaseRestApiClient client = new FirebaseRestApiClient(config);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
 		// Call getReleases
 		GetReleasesResponse response = client.getReleases();
@@ -80,14 +88,14 @@ FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
 ## Custom timeouts
 
 ```java
-FirebaseRestApiConfig config = FirebaseRestApiConfigBuilder.builder()
+FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
     			.withDefaultConnectionTimeout(90000)
 				.withDefaultReadTimeout(90000)
     			.build();
 
-		FirebaseRestApiClient client = new FirebaseRestApiClient(config);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
 		// Call getReleases
 		GetReleasesResponse response = client.getReleases();

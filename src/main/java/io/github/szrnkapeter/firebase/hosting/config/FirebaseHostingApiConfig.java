@@ -2,17 +2,17 @@ package io.github.szrnkapeter.firebase.hosting.config;
 
 import java.io.InputStream;
 
-import io.github.szrnkapeter.firebase.hosting.builder.FirebaseRestApiConfigBuilder;
+import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
 import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 
 /**
- * Configuration holder class. Please use {@link FirebaseRestApiConfigBuilder}
+ * Configuration holder class. Please use {@link FirebaseHostingApiConfigBuilder}
  * to instantiate a new instance.
  * 
  * @author Peter Szrnka
- * @since 0.1
+ * @since 0.2
  */
-public class FirebaseRestApiConfig {
+public class FirebaseHostingApiConfig {
 
 	private InputStream configStream;
 	private int defaultConnectionTimeout = 30000;

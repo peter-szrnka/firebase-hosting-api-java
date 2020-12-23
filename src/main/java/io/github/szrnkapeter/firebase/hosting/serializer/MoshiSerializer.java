@@ -13,9 +13,21 @@ public class MoshiSerializer implements Serializer {
 	 * @see hu.szrnkapeter.firebase.hosting.serializer.Serializer#getObject(java.lang.Class, java.lang.String)
 	 */
 	@Override
-	public <T> T getObject(Class<T> clazz, String responseBody) throws Exception {
+	public <T> T getObject(Class<T> clazz, String obj) throws Exception {
+		return getAdapter(clazz).fromJson(obj);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see io.github.szrnkapeter.firebase.hosting.serializer.Serializer#toJson(java.lang.Class, java.lang.Object)
+	 */
+	@Override
+	public <T> String toJson(Class<T> clazz, T obj) throws Exception {
+		return getAdapter(clazz).toJson(obj);
+	}
+	
+	private <T> JsonAdapter<T> getAdapter(Class<T> clazz) {
 		Moshi moshi = new Moshi.Builder().add(Date.class, new Rfc3339DateJsonAdapter()).build();
-		JsonAdapter<T> jsonAdapter = moshi.adapter(clazz);
-		return jsonAdapter.fromJson(responseBody);
+		return moshi.adapter(clazz);
 	}
 }

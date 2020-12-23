@@ -11,9 +11,21 @@ public interface Serializer {
 	 * 
 	 * @param <T> The T Type
 	 * @param clazz Result class.
-	 * @param responseBody The JSON response body
+	 * @param json The JSON response body
 	 * @return a T class
 	 * @throws Exception The unexpected exception
 	 */
-	<T> T getObject(Class<T> clazz, String responseBody) throws Exception;
+	<T> T getObject(Class<T> clazz, String json) throws Exception;
+
+	/**
+	 * Object to JSON conversion.
+	 * 
+	 * @param clazz Input class.
+	 * @param obj The input object
+	 * @return The JSON representation of the given object
+	 * @throws Exception
+	 * 
+	 * @since 0.2
+	 */
+	<T> String toJson(Class<T> clazz, T obj) throws Exception;
 }
