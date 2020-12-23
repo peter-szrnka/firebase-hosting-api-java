@@ -45,8 +45,8 @@
 
 	<scm>
 		<url>https://github.com/szrnka-peter/firebase-hosting-api-java</url>
-		<connection>scm:git:https://git@github.com/szrnka-peter/firebase-hosting-api-java.git</connection>
-		<developerConnection>scm:git:https://git@github.com/szrnka-peter/firebase-hosting-api-java.git</developerConnection>
+		<connection>scm:git:https://github.com/szrnka-peter/firebase-hosting-api-java.git</connection>
+		<developerConnection>scm:git:https://github.com/szrnka-peter/firebase-hosting-api-java.git</developerConnection>
   </scm>
 
 	<distributionManagement>
