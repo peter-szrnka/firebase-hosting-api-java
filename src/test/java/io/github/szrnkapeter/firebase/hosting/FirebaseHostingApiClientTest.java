@@ -2,7 +2,6 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
-import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
 import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
@@ -216,22 +214,5 @@ public class FirebaseHostingApiClientTest {
 		PopulateFilesResponse response = client.populateFiles(request, VERSION_NAME);
 		Assert.assertNotNull(response);
 		Assert.assertFalse(response.getUploadRequiredHashes().isEmpty());
-	}
-
-	@Test
-	public void test011_UploadFile() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-		.thenReturn(ACCESS_TOKEN);
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
-		
-		UploadFileRequest request = new UploadFileRequest();
-		request.setFileContent(Files.readAllBytes(new File("src/test/resources/test1.txt").toPath()));
-		request.setVersion(VERSION_NAME);
-
-		client.uploadFile(request);
-		
-		request.setUploadUrl("http://test.com");
-		
-		client.uploadFile(request);
 	}
 }
