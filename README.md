@@ -32,7 +32,7 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 <dependency>
 	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 </dependency>
 ```
 
