@@ -5,6 +5,7 @@ import java.io.InputStream;
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
 import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
 import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
+import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
 import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 
 /**
@@ -23,6 +24,7 @@ public class FirebaseHostingApiConfig {
 	private String siteName;
 	private HttpResponseListener httpResponseListener;
 	private ServiceResponseListener serviceResponseListener;
+	private Serializer customSerializer;
 
 	public String getSiteName() {
 		return siteName;
@@ -78,6 +80,14 @@ public class FirebaseHostingApiConfig {
 
 	public void setServiceResponseListener(ServiceResponseListener serviceResponseListener) {
 		this.serviceResponseListener = serviceResponseListener;
+	}
+
+	public Serializer getCustomSerializer() {
+		return customSerializer;
+	}
+
+	public void setCustomSerializer(Serializer customSerializer) {
+		this.customSerializer = customSerializer;
 	}
 
 	/*

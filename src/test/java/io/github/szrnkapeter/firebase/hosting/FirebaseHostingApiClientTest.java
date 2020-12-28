@@ -41,12 +41,13 @@ import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
 import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
+import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 
 @SuppressWarnings("unchecked")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class })
+@PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class, FileUtils.class })
 public class FirebaseHostingApiClientTest {
 
 	private static final String SEPARATOR = " / ";
@@ -57,6 +58,7 @@ public class FirebaseHostingApiClientTest {
 	public void setUp() {
 		PowerMockito.mockStatic(GoogleCredentialUtils.class);
 		PowerMockito.mockStatic(ConnectionUtils.class);
+		PowerMockito.mockStatic(FileUtils.class);
 	}
 
 	private FirebaseHostingApiConfig getFirebaseRestApiConfig() throws Exception {
@@ -307,6 +309,9 @@ public class FirebaseHostingApiClientTest {
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.eq(Version.class),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockVersionResponse);
+		
+		// Mocking fileUtils
+		Mockito.when(FileUtils.getRemoteFile(ArgumentMatchers.anyString())).thenReturn(new byte[0]);
 
 		// Service call
 		DeployRequest request = new DeployRequest();

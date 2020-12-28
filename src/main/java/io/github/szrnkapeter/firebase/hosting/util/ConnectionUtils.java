@@ -39,7 +39,7 @@ public class ConnectionUtils {
 
 		try (Scanner scanner = new Scanner(streamResponse)) {
 			String responseBody = scanner.useDelimiter("\\A").next();
-			return SerializerFactory.getSerializer(config.getSerializer()).getObject(clazz, responseBody);
+			return SerializerFactory.getSerializer(config).getObject(clazz, responseBody);
 		} finally {
 			streamResponse.close();
 		}
@@ -98,7 +98,7 @@ public class ConnectionUtils {
 		try (Scanner scanner = new Scanner(streamResponse)) {
 			String responseBody = scanner.useDelimiter("\\A").next();
 			return clazz == null ? null
-					: SerializerFactory.getSerializer(config.getSerializer()).getObject(clazz, responseBody);
+					: SerializerFactory.getSerializer(config).getObject(clazz, responseBody);
 		} finally {
 			streamResponse.close();
 		}

@@ -248,7 +248,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws Exception {
-		String data = SerializerFactory.getSerializer(config.getSerializer()).toJson(PopulateFilesRequest.class, request);
+		String data = SerializerFactory.getSerializer(config).toJson(PopulateFilesRequest.class, request);
 		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
 		if(config.getServiceResponseListener() != null) {
