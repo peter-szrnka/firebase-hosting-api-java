@@ -146,6 +146,8 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 
 ## Adding response listeners
 
+If you need the HTTP sub service responses of createDeploy() method, you can add listeners, which'll returns with the HTTP return codes, messages, and service response objects. In the example below, you'll get all HTTP responses, and service response objects.
+
 	...
 	FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 	...
@@ -164,3 +166,18 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 						}
 					})
 	...
+**Example log:	**
+
+	createVersion / 200 / OK
+	createVersion / Version [name=sites/<site-name>/versions/<version-name>, status=CREATED, config={}, labels=null, createTime=null, createUser=null, finalizeTime=null, finalizeUser=null, fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
+	populateFiles / 200 / OK
+	populateFiles / PopulateFilesResponse [uploadRequiredHashes=null, uploadUrl=https://upload-firebasehosting.googleapis.com/upload/sites/<site-name>/versions/<version-name>/files]
+	uploadFile / 200 / OK
+	uploadFile / 200 / OK
+	uploadFile / 200 / OK
+	uploadFile / 200 / OK
+	uploadFile / 200 / OK
+	finalizeVersion / 200 / OK
+	finalizeVersion / Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
+	createRelease / 200 / OK
+	createRelease / Release [name=sites/<site-name>/releases/<release-id>, type=DEPLOY, releaseTime=Mon Dec 28 17:20:29 CET 2020, releaseUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], version=Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview={}]]
