@@ -56,26 +56,26 @@ public class ConnectionUtils {
 	 * @param accessToken   Firebase access token
 	 * @param url           The input url that we want to call
 	 * @param data          The input data
+	 * @param function The called functions name.
 	 * @return The T type
 	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.2
 	 */
 	public static <T> T openSimpleHTTPConnection(String requestMethod, FirebaseHostingApiConfig config, Class<T> clazz,
-			String accessToken, String url, String data) throws Exception {
-		return openSimpleHTTPConnection(requestMethod, config, clazz, accessToken, url, data, "application/json");
+			String accessToken, String url, String data, String function) throws Exception {
+		return openSimpleHTTPConnection(requestMethod, config, clazz, accessToken, url, data, "application/json", function);
 	}
 
 	private static <T> T openSimpleHTTPConnection(String requestMethod, FirebaseHostingApiConfig config, Class<T> clazz,
-			String accessToken, String url, String data, String contentType) throws Exception {
+			String accessToken, String url, String data, String contentType, String function) throws Exception {
 		byte[] postData = data == null ? new byte[0] : data.getBytes();
 
 		HttpURLConnection connection = (HttpURLConnection) new URL(Constants.FIREBASE_API_URL + url).openConnection();
 		connection = (HttpURLConnection) initURLConnection(config, connection, accessToken, contentType);
 		connection.setDoOutput(true);
-		// connection.setInstanceFollowRedirects(false);
 		connection.setUseCaches(false);
-		// connection.setRequestProperty("charset", Constants.CHARSET);
+		connection.setRequestProperty("charset", Constants.CHARSET);
 		connection.setRequestProperty("Content-Length", String.valueOf(postData.length));
 
 		if (Constants.PATCH.equals(requestMethod)) {
@@ -87,6 +87,10 @@ public class ConnectionUtils {
 
 		try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
 			wr.write(postData);
+		}
+
+		if(config.getHttpResponseListener() != null) {
+			config.getHttpResponseListener().getResponseInfo(function, connection.getResponseCode(), connection.getResponseMessage());
 		}
 
 		InputStream streamResponse = connection.getInputStream();
@@ -102,7 +106,7 @@ public class ConnectionUtils {
 
 	/**
 	 * Calls
-	 * {@link #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String)}
+	 * {@link #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String, String, String)}
 	 * method with POST parameter.
 	 * 
 	 * @param             <T> T type
@@ -111,12 +115,13 @@ public class ConnectionUtils {
 	 * @param accessToken Firebase access token
 	 * @param url         The input url that we want to call
 	 * @param data        The input data
+	 * @param function The called functions name.
 	 * @return The T type
 	 * @throws Exception The unexpected exception
 	 */
 	public static <T> T openSimpleHTTPPostConnection(FirebaseHostingApiConfig config, Class<T> clazz, String accessToken,
-			String url, String data) throws Exception {
-		return openSimpleHTTPConnection(Constants.POST, config, clazz, accessToken, url, data);
+			String url, String data, String function) throws Exception {
+		return openSimpleHTTPConnection(Constants.POST, config, clazz, accessToken, url, data, function);
 	}
 
 	private static URLConnection initURLConnection(FirebaseHostingApiConfig config, URLConnection connection,
@@ -155,16 +160,19 @@ public class ConnectionUtils {
 
 		byte[] buffer = new byte[4096];
 		int bytesRead = -1;
-		
+
 		ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
 
 		while ((bytesRead = bis.read(buffer)) != -1) {
 			request.write(buffer, 0, bytesRead);
 		}
-
+		connection.connect();
 		bis.close();
 		request.flush();
 		request.close();
-		connection.connect();
+		
+		if(config.getHttpResponseListener() != null) {
+			config.getHttpResponseListener().getResponseInfo("uploadFile", connection.getResponseCode(), connection.getResponseMessage());
+		}
 	}
 }

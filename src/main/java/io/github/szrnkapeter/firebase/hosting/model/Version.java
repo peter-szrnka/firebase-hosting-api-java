@@ -24,6 +24,7 @@ public class Version implements Serializable {
 	private String versionBytes;
 	private User deleteUser;
 	private Date deleteTime;
+	private Map<String, String> preview;
 	
 	public Date getDeleteTime() {
 		return deleteTime;
@@ -121,6 +122,14 @@ public class Version implements Serializable {
 		this.deleteUser = deleteUser;
 	}
 
+	public Map<String, String> getPreview() {
+		return preview;
+	}
+
+	public void setPreview(Map<String, String> preview) {
+		this.preview = preview;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -130,6 +139,6 @@ public class Version implements Serializable {
 		return "Version [name=" + name + ", status=" + status + ", config=" + config + ", labels=" + labels
 				+ ", createTime=" + createTime + ", createUser=" + createUser + ", finalizeTime=" + finalizeTime
 				+ ", finalizeUser=" + finalizeUser + ", fileCount=" + fileCount + ", versionBytes=" + versionBytes
-				+ ", deleteUser=" + deleteUser + ", deleteTime=" + deleteTime + "]";
+				+ ", deleteUser=" + deleteUser + ", deleteTime=" + deleteTime + ", preview=" + preview + "]";
 	}
 }

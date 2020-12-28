@@ -2,6 +2,9 @@ package io.github.szrnkapeter.firebase.hosting.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -60,24 +63,42 @@ public class FileUtils {
 	 * @since 0.2
 	 */
 	public static byte[] compressAndReadFile(byte[] fileContent) throws Exception {
-		ByteArrayInputStream fileStream = new ByteArrayInputStream(fileContent);
-
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		GZIPOutputStream gzipOS = new GZIPOutputStream(bos);
-		byte[] buffer = new byte[1024];
-		int len;
-		while ((len = fileStream.read(buffer)) != -1) {
-			gzipOS.write(buffer, 0, len);
+		GZIPOutputStream out = new GZIPOutputStream(bos);
+		out.write(fileContent);
+		out.close();
+		return bos.toByteArray();
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param urlString The input URL string
+	 * @return A new byte array
+	 * @throws Exception Any exception caused by the method process
+	 */
+	public static byte[] getRemoteFile(String urlString) throws Exception {
+		URL url = new URL(urlString);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream is = null;
+		try {
+			is = url.openStream();
+			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+			int n;
+
+			while ((n = is.read(byteChunk)) > 0) {
+				baos.write(byteChunk, 0, n);
+			}
+		} catch (IOException e) {
+			System.err.printf("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
+			e.printStackTrace();
+			// Perform any other exception handling that's appropriate.
+		} finally {
+			if (is != null) {
+				is.close();
+			}
 		}
 
-		// Read resources
-		byte[] output = bos.toByteArray();
-
-		// close resources
-		gzipOS.close();
-		bos.close();
-		fileStream.close();
-
-		return output;
+		return baos.toByteArray();
 	}
 }

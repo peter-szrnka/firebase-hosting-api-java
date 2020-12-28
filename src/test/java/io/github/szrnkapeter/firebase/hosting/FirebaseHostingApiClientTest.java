@@ -128,7 +128,7 @@ public class FirebaseHostingApiClientTest {
 		Release mockResponse = new Release();
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
-				ArgumentMatchers.isNull())).thenReturn(mockResponse);
+				ArgumentMatchers.isNull(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		Release response = client.createRelease(VERSION_NAME);
 		Assert.assertNotNull(response);
@@ -145,7 +145,7 @@ public class FirebaseHostingApiClientTest {
 		mockResponse.setName(randomName);
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
-				ArgumentMatchers.anyString())).thenReturn(mockResponse);
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		Version response = client.createVersion();
 		Assert.assertNotNull(response);
@@ -160,7 +160,7 @@ public class FirebaseHostingApiClientTest {
 
 		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.any(Class.class),
-				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.isNull()))
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.isNull(), ArgumentMatchers.anyString()))
 				.then(new Answer<Void>() {
 
 					@Override
@@ -185,7 +185,7 @@ public class FirebaseHostingApiClientTest {
 		mockResponse.setName(randomName);
 		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.any(Class.class),
-				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockResponse);
 
 		Version response = client.finalizeVersion(VERSION_NAME);
@@ -207,7 +207,7 @@ public class FirebaseHostingApiClientTest {
 
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
-				ArgumentMatchers.anyString())).thenReturn(mockResponse);
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		PopulateFilesRequest request = new PopulateFilesRequest();
 		request.setFiles(new HashMap<String, String>());

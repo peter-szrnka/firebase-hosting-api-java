@@ -3,6 +3,8 @@ package io.github.szrnkapeter.firebase.hosting.config;
 import java.io.InputStream;
 
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
+import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
+import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
 import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 
 /**
@@ -19,6 +21,8 @@ public class FirebaseHostingApiConfig {
 	private int defaultReadTimeout = 30000;
 	private SerializerType serializer = SerializerType.JACKSON;
 	private String siteName;
+	private HttpResponseListener httpResponseListener;
+	private ServiceResponseListener serviceResponnseListener;
 
 	public String getSiteName() {
 		return siteName;
@@ -58,6 +62,22 @@ public class FirebaseHostingApiConfig {
 
 	public void setDefaultReadTimeout(int defaultReadTimeout) {
 		this.defaultReadTimeout = defaultReadTimeout;
+	}
+
+	public HttpResponseListener getHttpResponseListener() {
+		return httpResponseListener;
+	}
+
+	public void setHttpResponseListener(HttpResponseListener httpResponseListener) {
+		this.httpResponseListener = httpResponseListener;
+	}
+
+	public ServiceResponseListener getServiceResponnseListener() {
+		return serviceResponnseListener;
+	}
+
+	public void setServiceResponnseListener(ServiceResponseListener serviceResponnseListener) {
+		this.serviceResponnseListener = serviceResponnseListener;
 	}
 
 	/*
