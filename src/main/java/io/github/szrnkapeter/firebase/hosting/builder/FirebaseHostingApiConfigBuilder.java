@@ -55,8 +55,8 @@ public class FirebaseHostingApiConfigBuilder {
 		return this;
 	}
 	
-	public FirebaseHostingApiConfigBuilder withServiceResponseListener(ServiceResponseListener serviceResponnseListener) {
-		config.setServiceResponnseListener(serviceResponnseListener);
+	public FirebaseHostingApiConfigBuilder withServiceResponseListener(ServiceResponseListener serviceResponseListener) {
+		config.setServiceResponseListener(serviceResponseListener);
 		return this;
 	}
 

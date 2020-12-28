@@ -93,7 +93,7 @@ public class FirebaseHostingApiClient {
 			for(FileDetails file : getVersionFiles.getFiles()) {
 				String fileName = file.getPath().substring(1);
 
-				if(file.getPath().startsWith("__/") || newFileNames.contains(fileName)) {
+				if(fileName.startsWith("__/") || newFileNames.contains(fileName)) {
 					continue;
 				}
 
@@ -152,8 +152,8 @@ public class FirebaseHostingApiClient {
 		Release newRelease =  ConnectionUtils.openSimpleHTTPPostConnection(config, Release.class, accessToken,
 			SITES + config.getSiteName() + "/releases?versionName=" + getVersionName(version), null, "createRelease");
 		
-		if(config.getServiceResponnseListener() != null) {
-			config.getServiceResponnseListener().getResponse("createRelease", newRelease);
+		if(config.getServiceResponseListener() != null) {
+			config.getServiceResponseListener().getResponse("createRelease", newRelease);
 		}
 		
 		return newRelease;
@@ -171,8 +171,8 @@ public class FirebaseHostingApiClient {
 		Version newVersion = ConnectionUtils.openSimpleHTTPPostConnection(config, Version.class, accessToken,
 				SITES + config.getSiteName() + "/versions", "{}", "createVersion");
 		
-		if(config.getServiceResponnseListener() != null) {
-			config.getServiceResponnseListener().getResponse("createVersion", newVersion);
+		if(config.getServiceResponseListener() != null) {
+			config.getServiceResponseListener().getResponse("createVersion", newVersion);
 		}
 		
 		return newVersion;
@@ -203,8 +203,8 @@ public class FirebaseHostingApiClient {
 		Version newVersion = ConnectionUtils.openSimpleHTTPConnection("PATCH", config, Version.class, accessToken,
 				SITES + config.getSiteName() + VERSIONS + version + "?update_mask=status", "{ \"status\": \"FINALIZED\" }", "finalizeVersion");
 
-		if(config.getServiceResponnseListener() != null) {
-			config.getServiceResponnseListener().getResponse("finalizeVersion", newVersion);
+		if(config.getServiceResponseListener() != null) {
+			config.getServiceResponseListener().getResponse("finalizeVersion", newVersion);
 		}
 
 		return newVersion;
@@ -251,8 +251,8 @@ public class FirebaseHostingApiClient {
 		String data = SerializerFactory.getSerializer(config.getSerializer()).toJson(PopulateFilesRequest.class, request);
 		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
-		if(config.getServiceResponnseListener() != null) {
-			config.getServiceResponnseListener().getResponse("populateFiles", response);
+		if(config.getServiceResponseListener() != null) {
+			config.getServiceResponseListener().getResponse("populateFiles", response);
 		}
 
 		return response;

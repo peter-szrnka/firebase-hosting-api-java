@@ -22,7 +22,7 @@ public class FirebaseHostingApiConfig {
 	private SerializerType serializer = SerializerType.JACKSON;
 	private String siteName;
 	private HttpResponseListener httpResponseListener;
-	private ServiceResponseListener serviceResponnseListener;
+	private ServiceResponseListener serviceResponseListener;
 
 	public String getSiteName() {
 		return siteName;
@@ -72,12 +72,12 @@ public class FirebaseHostingApiConfig {
 		this.httpResponseListener = httpResponseListener;
 	}
 
-	public ServiceResponseListener getServiceResponnseListener() {
-		return serviceResponnseListener;
+	public ServiceResponseListener getServiceResponseListener() {
+		return serviceResponseListener;
 	}
 
-	public void setServiceResponnseListener(ServiceResponseListener serviceResponnseListener) {
-		this.serviceResponnseListener = serviceResponnseListener;
+	public void setServiceResponseListener(ServiceResponseListener serviceResponseListener) {
+		this.serviceResponseListener = serviceResponseListener;
 	}
 
 	/*

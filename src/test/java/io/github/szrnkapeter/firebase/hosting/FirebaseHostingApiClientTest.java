@@ -2,9 +2,12 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -25,6 +28,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
+import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
+import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
+import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
+import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
+import io.github.szrnkapeter.firebase.hosting.model.FileDetails;
 import io.github.szrnkapeter.firebase.hosting.model.GetReleasesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
@@ -41,6 +49,7 @@ import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 @PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class })
 public class FirebaseHostingApiClientTest {
 
+	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
 
@@ -54,6 +63,20 @@ public class FirebaseHostingApiClientTest {
 		return FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("src/test/resources/test.json")).withSiteName("test")
 				.withDefaultConnectionTimeout(60000).withDefaultReadTimeout(60000)
+				.withHttpResponseListener(new HttpResponseListener() {
+					
+					@Override
+					public void getResponseInfo(String function, int code, String responseMessage) {
+						System.out.println(function + SEPARATOR + code + SEPARATOR + responseMessage);
+					}
+				})
+				.withServiceResponseListener(new ServiceResponseListener() {
+					
+					@Override
+					public <T> void getResponse(String function, T response) {
+						System.out.println(function + SEPARATOR + response);
+					}
+				})
 				.withSerializer(SerializerType.JACKSON).build();
 	}
 
@@ -214,5 +237,91 @@ public class FirebaseHostingApiClientTest {
 		PopulateFilesResponse response = client.populateFiles(request, VERSION_NAME);
 		Assert.assertNotNull(response);
 		Assert.assertFalse(response.getUploadRequiredHashes().isEmpty());
+	}
+	
+	@Test
+	public void test011_CreateDeploy() throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
+		.thenReturn(ACCESS_TOKEN);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		
+		// Mocking getReleases()
+		ObjectMapper objectMapper = new ObjectMapper();
+		GetReleasesResponse mockGetReleasesResponse = objectMapper.readValue(
+				new File("src/test/resources/sample-response-get-releases1.json"), GetReleasesResponse.class);
+
+		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+				ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+				.thenReturn(mockGetReleasesResponse);
+		
+		// Mocking getVersionFiles()
+		GetVersionFilesResponse getVersionFilesResponse = new GetVersionFilesResponse();
+		List<FileDetails> mockFiles = new ArrayList<>();
+		FileDetails fd1 = new FileDetails();
+		fd1.setHash(UUID.randomUUID().toString());
+		fd1.setPath("/x1.txt");
+		fd1.setStatus("DEPLOYED");
+		mockFiles.add(fd1);
+
+		FileDetails fd2 = new FileDetails();
+		fd2.setHash(UUID.randomUUID().toString());
+		fd2.setPath("/__/x2.txt");
+		fd2.setStatus("DEPLOYED");
+		mockFiles.add(fd2);
+		
+		FileDetails fd3 = new FileDetails();
+		fd3.setHash(UUID.randomUUID().toString());
+		fd3.setPath("/test2.txt");
+		fd3.setStatus("DEPLOYED");
+		mockFiles.add(fd3);
+		
+		getVersionFilesResponse.setFiles(mockFiles);
+		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+				ArgumentMatchers.eq(GetVersionFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+				.thenReturn(getVersionFilesResponse);
+		
+		// Mocking createVersion()
+		String randomName = UUID.randomUUID().toString();
+		Version mockResponse = new Version();
+		mockResponse.setName(randomName);
+		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+				ArgumentMatchers.eq(Version.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
+
+		// Mocking populateFiles()
+		String randomHash = UUID.randomUUID().toString();
+		PopulateFilesResponse mockPopResponse = new PopulateFilesResponse();
+		List<String> mockHashes = new ArrayList<>();
+		mockHashes.add(randomHash);
+		mockPopResponse.setUploadRequiredHashes(mockHashes);
+
+		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+				ArgumentMatchers.eq(PopulateFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockPopResponse);
+
+		// Mock finalizeVersion()
+		String randomVersionName = UUID.randomUUID().toString();
+		Version mockVersionResponse = new Version();
+		mockResponse.setName(randomVersionName);
+		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
+				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.eq(Version.class),
+				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+				.thenReturn(mockVersionResponse);
+
+		// Service call
+		DeployRequest request = new DeployRequest();
+		request.setCleanDeploy(false);
+		DeployItem di1 = new DeployItem();
+		di1.setName("test1.txt");
+		di1.setContent(Files.readAllBytes(new File("src/test/resources/test1.txt").toPath()));
+		
+		DeployItem di2 = new DeployItem();
+		di2.setName("test2.txt");
+		di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
+		Set<DeployItem> fileList = new HashSet<>();
+		fileList.add(di1);
+		fileList.add(di2);
+		request.setFiles(fileList);
+		client.createDeploy(request);
 	}
 }
