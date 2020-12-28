@@ -47,7 +47,6 @@
 		<url>https://github.com/szrnka-peter/firebase-hosting-api-java</url>
 		<connection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</developerConnection>
-    <tag>0.4</tag>
   </scm>
 
 	<distributionManagement>
