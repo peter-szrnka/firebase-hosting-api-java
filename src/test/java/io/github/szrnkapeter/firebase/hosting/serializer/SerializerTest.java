@@ -7,14 +7,16 @@ import io.github.szrnkapeter.firebase.hosting.serializer.obj.DummyObject;
 
 public class SerializerTest {
 	
+	private static final String JSON_BODY = "{\"attr1\":\"test\"}";
+
 	private <T extends Serializer> void runTests(Class<T> clazz) throws Exception {
 		T serializer = clazz.newInstance();
-		DummyObject response = serializer.getObject(DummyObject.class, "{ \"attr1\" : \"test\" }");
+		DummyObject response = serializer.getObject(DummyObject.class, JSON_BODY);
 		Assert.assertNotNull(response);
 		Assert.assertEquals("test", response.getAttr1());
 		
 		String response2 = serializer.toJson(DummyObject.class, response);
-		Assert.assertEquals("{ \"attr1\" : \"test\" }", response2);
+		Assert.assertEquals(JSON_BODY, response2);
 	}
 
 	@Test
