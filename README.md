@@ -3,7 +3,11 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 **IMPORTANT: This library is compatible only with V1BETA1 services!!**
 
-[![codecov](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java/branch/main/graph/badge.svg?token=2TNS2ZU8ZF)](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java)
+## Current status
+
+| Build | Code coverage |
+| ------------- | ------------- |
+| [![Build Status](https://travis-ci.org/szrnka-peter/firebase-hosting-api-java.svg?branch=main)](https://travis-ci.org/szrnka-peter/firebase-hosting-api-java) | [![codecov](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java/branch/main/graph/badge.svg?token=2TNS2ZU8ZF)](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java) |
 
 # Used technologies
 
