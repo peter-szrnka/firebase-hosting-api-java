@@ -6,6 +6,12 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter;
 
+/**
+ * Moshi based serializer/deserializer.
+ * 
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class MoshiSerializer implements Serializer {
 
 	/*

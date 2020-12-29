@@ -1,5 +1,6 @@
 package io.github.szrnkapeter.firebase.hosting.serializer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -16,8 +17,7 @@ public class JacksonSerializer implements Serializer {
 	 */
 	@Override
 	public <T> T getObject(Class<T> clazz, String obj) throws Exception {
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.readValue(obj, clazz);
+		return getObjectMapper().readValue(obj, clazz);
 	}
 
 	/*
@@ -26,7 +26,12 @@ public class JacksonSerializer implements Serializer {
 	 */
 	@Override
 	public <T> String toJson(Class<T> clazz, T obj) throws Exception {
+		return getObjectMapper().writeValueAsString(obj);
+	}
+	
+	private ObjectMapper getObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.writeValueAsString(obj);
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+		return objectMapper;
 	}
 }
