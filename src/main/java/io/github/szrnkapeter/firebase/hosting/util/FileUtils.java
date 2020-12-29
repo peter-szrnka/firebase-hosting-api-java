@@ -71,11 +71,13 @@ public class FileUtils {
 	}
 
 	/**
-	 * TODO
+	 * Downloads a remote file as a byte array.
 	 * 
 	 * @param urlString The input URL string
 	 * @return A new byte array
 	 * @throws Exception Any exception caused by the method process
+	 * 
+	 * @since0.4
 	 */
 	public static byte[] getRemoteFile(String urlString) throws Exception {
 		URL url = new URL(urlString);
