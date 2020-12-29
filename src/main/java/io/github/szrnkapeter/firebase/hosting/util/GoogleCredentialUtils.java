@@ -3,7 +3,7 @@ package io.github.szrnkapeter.firebase.hosting.util;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.auth.oauth2.GoogleCredentials;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 
@@ -25,10 +25,8 @@ public class GoogleCredentialUtils {
 	 * @throws IOException Any IO exception.
 	 */
 	public static String getAccessToken(FirebaseHostingApiConfig config) throws IOException {
-		// TODO Refactor this to use the newest Google client API library.
-		GoogleCredential googleCredential = GoogleCredential.fromStream(config.getConfigStream())
-				.createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
-		googleCredential.refreshToken();
-		return googleCredential.getAccessToken();
+		GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getConfigStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
+		googleCredential.refreshIfExpired();
+		return googleCredential.getAccessToken().getTokenValue();
 	}
 }
