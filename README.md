@@ -3,6 +3,8 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 
 **IMPORTANT: This library is compatible only with V1BETA1 services!!**
 
+[![codecov](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java/branch/main/graph/badge.svg?token=2TNS2ZU8ZF)](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java)
+
 # Used technologies
 
 - Java 8
