@@ -6,7 +6,7 @@ import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
  * @author Peter Szrnka
  * @since 0.1
  */
-public class SerializerFactory {
+public final class SerializerFactory {
 
 	/**
 	 * Creates a new {@link Serializer} instance.
