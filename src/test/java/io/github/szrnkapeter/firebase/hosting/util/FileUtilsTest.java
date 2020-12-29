@@ -1,5 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
+import java.util.zip.GZIPInputStream;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,8 +15,9 @@ public class FileUtilsTest {
 	}
 
 	@Test
-	public void test02_() throws Exception {
+	public void test02_CompressAndReadFile() throws Exception {
 		byte[] response = FileUtils.compressAndReadFile("test".getBytes());
 		Assert.assertEquals(24, response.length);
+		Assert.assertEquals((byte) (GZIPInputStream.GZIP_MAGIC >> 8), response[1]);
 	}
 }
