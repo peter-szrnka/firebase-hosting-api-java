@@ -88,11 +88,6 @@
 			<artifactId>moshi-adapters</artifactId>
 			<version>${moshi.version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.google.api-client</groupId> -->
-<!-- 			<artifactId>google-api-client</artifactId> -->
-<!-- 			<version>${google-api-client.version}</version> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>com.google.auth</groupId>
 			<artifactId>google-auth-library-oauth2-http</artifactId>
