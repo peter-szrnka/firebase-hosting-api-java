@@ -34,5 +34,16 @@ public class SerializerFactoryTest {
 		config.setCustomSerializer(new MoshiSerializer());
 		response = SerializerFactory.getSerializer(config);
 		Assert.assertTrue(response instanceof MoshiSerializer);
+		
+		// Test5
+		response = SerializerFactory.get(config);
+		Assert.assertTrue(response instanceof MoshiSerializer);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testExcepion() {
+		FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
+				.build();
+		SerializerFactory.get(config);
 	}
 }

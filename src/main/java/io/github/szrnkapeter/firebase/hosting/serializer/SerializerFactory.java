@@ -13,6 +13,8 @@ public final class SerializerFactory {
 	 * 
 	 * @param config {@link FirebaseHostingApiConfig} instance.
 	 * @return A new {@link Serializer} instance.
+	 * 
+	 * @deprecated Please use {@link #get(FirebaseHostingApiConfig)}
 	 */
 	public static Serializer getSerializer(FirebaseHostingApiConfig config) {
 		if(config.getCustomSerializer() != null) {
@@ -27,5 +29,13 @@ public final class SerializerFactory {
 		default:
 			return new JacksonSerializer();
 		}
+	}
+	
+	public static Serializer get(FirebaseHostingApiConfig config) {
+		if(config.getCustomSerializer() == null) {
+			throw new IllegalArgumentException("Custom serializer is missing from FirebaseHostingApiConfig!");
+		}
+
+		return config.getCustomSerializer();
 	}
 }
