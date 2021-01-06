@@ -12,6 +12,7 @@ public class DeployRequest implements Serializable {
 	private static final long serialVersionUID = -4937390204485837951L;
 
 	private boolean cleanDeploy = true;
+	private boolean deletePreviousVersions = false;
 	private Set<DeployItem> files;
 
 	public boolean isCleanDeploy() {
@@ -30,12 +31,21 @@ public class DeployRequest implements Serializable {
 		this.files = files;
 	}
 
+	public boolean isDeletePreviousVersions() {
+		return deletePreviousVersions;
+	}
+
+	public void setDeletePreviousVersions(boolean deletePreviousVersions) {
+		this.deletePreviousVersions = deletePreviousVersions;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "DeployRequest [cleanDeploy=" + cleanDeploy + ", files=" + files + "]";
+		return "DeployRequest [cleanDeploy=" + cleanDeploy + ", deletePreviousVersions=" + deletePreviousVersions
+				+ ", files=" + files + "]";
 	}
 }

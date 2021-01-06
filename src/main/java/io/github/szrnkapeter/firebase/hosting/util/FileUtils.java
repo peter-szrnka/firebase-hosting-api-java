@@ -77,7 +77,7 @@ public class FileUtils {
 	 * @return A new byte array
 	 * @throws Exception Any exception caused by the method process
 	 * 
-	 * @since0.4
+	 * @since 0.4
 	 */
 	public static byte[] getRemoteFile(String urlString) throws Exception {
 		URL url = new URL(urlString);

@@ -139,6 +139,6 @@ public class Version implements Serializable {
 		return "Version [name=" + name + ", status=" + status + ", config=" + config + ", labels=" + labels
 				+ ", createTime=" + createTime + ", createUser=" + createUser + ", finalizeTime=" + finalizeTime
 				+ ", finalizeUser=" + finalizeUser + ", fileCount=" + fileCount + ", versionBytes=" + versionBytes
-				+ ", deleteUser=" + deleteUser + ", deleteTime=" + deleteTime + ", preview=" + preview + "]";
+				+ ", deleteUser=" + deleteUser + ", deleteTime=" + deleteTime + ", preview=" + preview + "]\r\n";
 	}
 }

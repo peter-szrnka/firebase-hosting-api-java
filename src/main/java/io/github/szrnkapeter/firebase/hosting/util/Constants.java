@@ -6,6 +6,7 @@ package io.github.szrnkapeter.firebase.hosting.util;
  */
 public class Constants {
 
+	public static final String FINALIZED = "FINALIZED";
 	public static final String POST = "POST";
 	public static final String PATCH = "PATCH";
 	public static final String FIREBASE_API_URL = "https://firebasehosting.googleapis.com/v1beta1/";

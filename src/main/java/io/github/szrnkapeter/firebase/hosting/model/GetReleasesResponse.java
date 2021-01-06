@@ -35,6 +35,6 @@ public class GetReleasesResponse implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "GetReleasesResponse [releases=" + releases + ", nextPageToken=" + nextPageToken + "]";
+		return "GetReleasesResponse [releases=" + releases + ", nextPageToken=" + nextPageToken + "]\r\n";
 	}
 }

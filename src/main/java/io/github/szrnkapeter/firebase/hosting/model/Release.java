@@ -64,6 +64,6 @@ public class Release implements Serializable {
 	@Override
 	public String toString() {
 		return "Release [name=" + name + ", type=" + type + ", releaseTime=" + releaseTime + ", releaseUser="
-				+ releaseUser + ", version=" + version + "]";
+				+ releaseUser + ", version=" + version + "]\r\n";
 	}
 }

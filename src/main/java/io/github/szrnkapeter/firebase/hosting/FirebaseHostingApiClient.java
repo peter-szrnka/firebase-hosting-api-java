@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -122,9 +123,26 @@ public class FirebaseHostingApiClient {
 
 		// Finalize the new version
 		finalizeVersion(versionId);
+		
+		// Create the release
+		Release newRelease = createRelease(versionId);
+		
+		// Post delete earlier deployments
+		if(request.isDeletePreviousVersions()) {
+			GetReleasesResponse response = getReleases();
+			AtomicInteger i = new AtomicInteger(0);
+			
+			for(Release release : response.getReleases()) {
+				if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
+					deleteVersion(release.getVersion().getName());
+				}
+				
+				i.incrementAndGet();
+			}
+		}
 
 		// Create the release
-		return new DeployResponse(createRelease(versionId));
+		return new DeployResponse(newRelease);
 	}
 
 	private Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws Exception {
@@ -187,7 +205,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public void deleteVersion(String version) throws Exception {
-		ConnectionUtils.openSimpleHTTPConnection("DELETE", config, null, accessToken, SITES + config.getSiteName() + VERSIONS + version, null, "deleteVersion");
+		ConnectionUtils.openSimpleHTTPConnection("DELETE", config, null, accessToken, getVersionName(version), null, "deleteVersion");
 	}
 
 	/**

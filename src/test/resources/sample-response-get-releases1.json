@@ -33,7 +33,7 @@
       "name": "sites/test/releases/1603355184738958",
       "version": {
         "name": "sites/test/versions/1942ab7d92ae8a56",
-        "status": "DELETED",
+        "status": "FINALIZED",
         "config": {},
         "labels": {
           "deployment-tool": "cli-firebase"

@@ -328,5 +328,9 @@ public class FirebaseHostingApiClientTest {
 		fileList.add(di2);
 		request.setFiles(fileList);
 		client.createDeploy(request);
+		
+		// Test2
+		request.setDeletePreviousVersions(true);
+		client.createDeploy(request);
 	}
 }
