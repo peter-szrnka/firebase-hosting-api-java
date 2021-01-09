@@ -14,7 +14,7 @@ A simple Java library for Firebase Hosting REST API (https://firebase.google.com
 - Java 8
 - Maven
 - Jackson mapper
-- Org.json
+- Moshi
 - Gson
 
 # Implemented services
