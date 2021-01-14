@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.5</version>
+	<version>0.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Firebase Hosting API library Java</name>
 	<description>Firebase Hosting API library for Java</description>
@@ -48,7 +48,6 @@
 		<url>https://github.com/szrnka-peter/firebase-hosting-api-java</url>
 		<connection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</developerConnection>
-	  <tag>firebase-hosting-api-java-0.5</tag>
   </scm>
 
 	<distributionManagement>
