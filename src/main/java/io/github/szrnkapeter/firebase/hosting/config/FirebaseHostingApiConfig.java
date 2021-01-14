@@ -20,6 +20,8 @@ public class FirebaseHostingApiConfig {
 	private InputStream configStream;
 	private int defaultConnectionTimeout = 30000;
 	private int defaultReadTimeout = 30000;
+	
+	@Deprecated
 	private SerializerType serializer = SerializerType.JACKSON;
 	private String siteName;
 	private HttpResponseListener httpResponseListener;
