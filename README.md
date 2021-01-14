@@ -38,11 +38,13 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 <dependency>
 	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.4</version>
+	<version>0.5</version>
 </dependency>
 ```
 
 ## Object serializers
+
+Built-in object serializers will be deprecated from version 0.5. 
 
 - Jackson (default)
 - Moshi
