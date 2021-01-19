@@ -174,7 +174,7 @@ If you need the HTTP sub service responses of createDeploy() method, you can add
 						}
 					})
 	...
-**Example log:	**
+**Example log**
 
 	createVersion / 200 / OK
 	createVersion / Version [name=sites/<site-name>/versions/<version-name>, status=CREATED, config={}, labels=null, createTime=null, createUser=null, finalizeTime=null, finalizeUser=null, fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
