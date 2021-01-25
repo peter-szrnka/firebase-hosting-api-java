@@ -2,15 +2,11 @@ package io.github.szrnkapeter.firebase.hosting.serializer;
 
 import com.google.gson.Gson;
 
-import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-
 /**
- * Gson based serializer/deserializer.
+ * Gson based serializer/deserializer example.
  * 
  * @author Peter Szrnka
- * @since 0.1
- * 
- * @deprecated All internal {@link Serializer} implementation is obsolete, please implement your own {@link Serializer} and set it in {@link FirebaseHostingApiConfig#setCustomSerializer(Serializer)},
+ * @since 0.6
  */
 public class GsonSerializer implements Serializer {
 

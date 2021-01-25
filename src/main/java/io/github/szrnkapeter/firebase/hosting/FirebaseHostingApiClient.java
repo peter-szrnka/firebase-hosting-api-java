@@ -22,7 +22,6 @@ import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
-import io.github.szrnkapeter.firebase.hosting.serializer.SerializerFactory;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import io.github.szrnkapeter.firebase.hosting.util.Constants;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
@@ -266,7 +265,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws Exception {
-		String data = SerializerFactory.getSerializer(config).toJson(PopulateFilesRequest.class, request);
+		String data = config.getCustomSerializer().toJson(PopulateFilesRequest.class, request);
 		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
 		if(config.getServiceResponseListener() != null) {

@@ -39,7 +39,7 @@ import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
-import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
+import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
@@ -64,6 +64,7 @@ public class FirebaseHostingApiClientTest {
 	private FirebaseHostingApiConfig getFirebaseRestApiConfig() throws Exception {
 		return FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("src/test/resources/test.json")).withSiteName("test")
+				.withCustomSerializer(new GsonSerializer())
 				.withDefaultConnectionTimeout(60000).withDefaultReadTimeout(60000)
 				.withHttpResponseListener(new HttpResponseListener() {
 					
@@ -79,7 +80,7 @@ public class FirebaseHostingApiClientTest {
 						System.out.println(function + SEPARATOR + response);
 					}
 				})
-				.withSerializer(SerializerType.JACKSON).build();
+				.build();
 	}
 
 	@Test

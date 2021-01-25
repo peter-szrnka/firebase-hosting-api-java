@@ -6,7 +6,6 @@ import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBu
 import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
 import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
 import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
-import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 
 /**
  * Configuration holder class. Please use {@link FirebaseHostingApiConfigBuilder}
@@ -20,9 +19,6 @@ public class FirebaseHostingApiConfig {
 	private InputStream configStream;
 	private int defaultConnectionTimeout = 30000;
 	private int defaultReadTimeout = 30000;
-	
-	@Deprecated
-	private SerializerType serializer = SerializerType.JACKSON;
 	private String siteName;
 	private HttpResponseListener httpResponseListener;
 	private ServiceResponseListener serviceResponseListener;
@@ -42,14 +38,6 @@ public class FirebaseHostingApiConfig {
 
 	public void setConfigStream(InputStream configStream) {
 		this.configStream = configStream;
-	}
-
-	public SerializerType getSerializer() {
-		return serializer;
-	}
-
-	public void setSerializer(SerializerType serializer) {
-		this.serializer = serializer;
 	}
 
 	public int getDefaultConnectionTimeout() {
@@ -99,7 +87,7 @@ public class FirebaseHostingApiConfig {
 	@Override
 	public String toString() {
 		return "FirebaseRestApiConfig [configStream=" + configStream + ", defaultConnectionTimeout="
-				+ defaultConnectionTimeout + ", defaultReadTimeout=" + defaultReadTimeout + ", serializer=" + serializer
+				+ defaultConnectionTimeout + ", defaultReadTimeout=" + defaultReadTimeout
 				+ ", siteName=" + siteName + "]";
 	}
 }
