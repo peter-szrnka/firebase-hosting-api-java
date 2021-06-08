@@ -292,11 +292,8 @@ public class FirebaseHostingApiClientTest {
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		// Mocking populateFiles()
-		String randomHash = UUID.randomUUID().toString();
 		PopulateFilesResponse mockPopResponse = new PopulateFilesResponse();
-		List<String> mockHashes = new ArrayList<>();
-		mockHashes.add(randomHash);
-		mockPopResponse.setUploadRequiredHashes(mockHashes);
+		mockPopResponse.setUploadRequiredHashes(null);
 
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(PopulateFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),

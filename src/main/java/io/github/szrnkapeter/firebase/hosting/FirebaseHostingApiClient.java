@@ -114,7 +114,7 @@ public class FirebaseHostingApiClient {
 			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
 			String checkSum = FileUtils.getSHA256Checksum(fileContent);
 			
-			if(!populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
+			if(populateFilesResponse.getUploadRequiredHashes() != null && !populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
 				continue;
 			}
 			
