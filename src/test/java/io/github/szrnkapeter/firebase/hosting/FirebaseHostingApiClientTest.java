@@ -2,6 +2,7 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,7 @@ public class FirebaseHostingApiClientTest {
 	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
+	private static int mockCounter = 0;
 
 	@Before
 	public void setUp() {
@@ -244,8 +246,12 @@ public class FirebaseHostingApiClientTest {
 	
 	@Test
 	public void test011_CreateDeploy() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-		.thenReturn(ACCESS_TOKEN);
+		initCreateDeploy(true);
+		initCreateDeploy(false);
+	}
+
+	private void initCreateDeploy(boolean cleanDeploy) throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		// Mocking getReleases()
@@ -293,7 +299,9 @@ public class FirebaseHostingApiClientTest {
 
 		// Mocking populateFiles()
 		PopulateFilesResponse mockPopResponse = new PopulateFilesResponse();
-		mockPopResponse.setUploadRequiredHashes(null);
+		List<String> mockHashes = new ArrayList<>();
+		mockHashes.add("asd1");
+		mockPopResponse.setUploadRequiredHashes(mockHashes);
 
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(PopulateFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
@@ -310,20 +318,40 @@ public class FirebaseHostingApiClientTest {
 		
 		// Mocking fileUtils
 		Mockito.when(FileUtils.getRemoteFile(ArgumentMatchers.anyString())).thenReturn(new byte[0]);
+		
+		byte[] mockCompressedFile = FileUtils.compressAndReadFile((Files.readAllBytes(new File("src/test/resources/test1.txt").toPath())));
+		Mockito.when(FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
+		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.eq(mockCompressedFile))).thenAnswer(new Answer<String>() {
+
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				mockCounter++;
+				
+				if(mockCounter % 2 == 1) {
+					return "asd1";
+				}
+
+				return "asd2";
+			}
+		});
 
 		// Service call
 		DeployRequest request = new DeployRequest();
-		request.setCleanDeploy(false);
+		request.setCleanDeploy(cleanDeploy);
+		Set<DeployItem> fileList = new HashSet<>();
+
 		DeployItem di1 = new DeployItem();
 		di1.setName("test1.txt");
 		di1.setContent(Files.readAllBytes(new File("src/test/resources/test1.txt").toPath()));
-		
-		DeployItem di2 = new DeployItem();
-		di2.setName("test2.txt");
-		di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
-		Set<DeployItem> fileList = new HashSet<>();
 		fileList.add(di1);
-		fileList.add(di2);
+		
+		if(cleanDeploy) {
+			DeployItem di2 = new DeployItem();
+			di2.setName("test2.txt");
+			di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
+			fileList.add(di2);
+		}
+
 		request.setFiles(fileList);
 		client.createDeploy(request);
 		
