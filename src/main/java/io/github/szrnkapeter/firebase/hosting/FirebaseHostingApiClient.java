@@ -22,7 +22,6 @@ import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
-import io.github.szrnkapeter.firebase.hosting.serializer.SerializerFactory;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import io.github.szrnkapeter.firebase.hosting.util.Constants;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
@@ -93,7 +92,6 @@ public class FirebaseHostingApiClient {
 
 			for(FileDetails file : getVersionFiles.getFiles()) {
 				String fileName = file.getPath().substring(1);
-
 				if(fileName.startsWith("__/") || newFileNames.contains(fileName)) {
 					continue;
 				}
@@ -110,14 +108,20 @@ public class FirebaseHostingApiClient {
 		// Populate the files
 		PopulateFilesRequest populateRequest = new PopulateFilesRequest();
 		populateRequest.setFiles(generateFileListAndHash(request.getFiles()));
-		populateFiles(populateRequest, versionId);
-
+		PopulateFilesResponse populateFilesResponse = populateFiles(populateRequest, versionId);
 		// Upload them
 		for(DeployItem item : request.getFiles()) {
 			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
+			String checkSum = FileUtils.getSHA256Checksum(fileContent);
+			
+			if(populateFilesResponse.getUploadRequiredHashes() != null && !populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
+				continue;
+			}
+			
 			UploadFileRequest uploadFilesRequest = new UploadFileRequest();
 			uploadFilesRequest.setVersion(versionId);
 			uploadFilesRequest.setFileContent(fileContent);
+			uploadFilesRequest.setFileName(item.getName());
 			uploadFile(uploadFilesRequest);
 		}
 
@@ -266,7 +270,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws Exception {
-		String data = SerializerFactory.getSerializer(config).toJson(PopulateFilesRequest.class, request);
+		String data = config.getCustomSerializer().toJson(PopulateFilesRequest.class, request);
 		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
 		if(config.getServiceResponseListener() != null) {
@@ -317,6 +321,6 @@ public class FirebaseHostingApiClient {
 			url = request.getUploadUrl() + "/" + calculatedHash;
 		}
 
-		ConnectionUtils.uploadFile(config, accessToken, url, request.getFileContent());
+		ConnectionUtils.uploadFile(config, accessToken, request.getFileName(), url, request.getFileContent());
 	}
 }

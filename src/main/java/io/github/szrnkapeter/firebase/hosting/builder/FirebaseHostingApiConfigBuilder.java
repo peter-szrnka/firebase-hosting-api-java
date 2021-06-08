@@ -6,7 +6,6 @@ import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
 import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
 import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
-import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
 
 /**
  * Builder class to create {@link FirebaseHostingApiConfig} instances.
@@ -33,11 +32,6 @@ public class FirebaseHostingApiConfigBuilder {
 	
 	public FirebaseHostingApiConfigBuilder withSiteName(String siteName) {
 		config.setSiteName(siteName);
-		return this;
-	}
-	
-	public FirebaseHostingApiConfigBuilder withSerializer(SerializerType serializer) {
-		config.setSerializer(serializer);
 		return this;
 	}
 	

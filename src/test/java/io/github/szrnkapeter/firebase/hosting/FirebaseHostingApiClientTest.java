@@ -38,8 +38,9 @@ import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
+import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
-import io.github.szrnkapeter.firebase.hosting.type.SerializerType;
+import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
@@ -53,6 +54,7 @@ public class FirebaseHostingApiClientTest {
 	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
+	private static int mockCounter = 0;
 
 	@Before
 	public void setUp() {
@@ -64,6 +66,7 @@ public class FirebaseHostingApiClientTest {
 	private FirebaseHostingApiConfig getFirebaseRestApiConfig() throws Exception {
 		return FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("src/test/resources/test.json")).withSiteName("test")
+				.withCustomSerializer(new GsonSerializer())
 				.withDefaultConnectionTimeout(60000).withDefaultReadTimeout(60000)
 				.withHttpResponseListener(new HttpResponseListener() {
 					
@@ -79,7 +82,7 @@ public class FirebaseHostingApiClientTest {
 						System.out.println(function + SEPARATOR + response);
 					}
 				})
-				.withSerializer(SerializerType.JACKSON).build();
+				.build();
 	}
 
 	@Test
@@ -243,8 +246,36 @@ public class FirebaseHostingApiClientTest {
 	
 	@Test
 	public void test011_CreateDeploy() throws Exception {
+		initCreateDeploy(true);
+		initCreateDeploy(false);
+	}
+	
+	@Test
+	public void test012_UploadFile() throws Exception {
 		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
 		.thenReturn(ACCESS_TOKEN);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		
+		mockCounter = 0;
+		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.any(byte[].class))).thenAnswer(new Answer<String>() {
+
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				mockCounter++;
+				return "testSha";
+			}
+		});
+		
+		UploadFileRequest request = new UploadFileRequest();
+		request.setFileContent("test".getBytes());
+		request.setUploadUrl("http://www.test.com");
+		client.uploadFile(request);
+		
+		Assert.assertEquals(1, mockCounter);
+	}
+
+	private void initCreateDeploy(boolean cleanDeploy) throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		// Mocking getReleases()
@@ -291,10 +322,9 @@ public class FirebaseHostingApiClientTest {
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		// Mocking populateFiles()
-		String randomHash = UUID.randomUUID().toString();
 		PopulateFilesResponse mockPopResponse = new PopulateFilesResponse();
 		List<String> mockHashes = new ArrayList<>();
-		mockHashes.add(randomHash);
+		mockHashes.add("asd1");
 		mockPopResponse.setUploadRequiredHashes(mockHashes);
 
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
@@ -312,20 +342,42 @@ public class FirebaseHostingApiClientTest {
 		
 		// Mocking fileUtils
 		Mockito.when(FileUtils.getRemoteFile(ArgumentMatchers.anyString())).thenReturn(new byte[0]);
+		
+		mockCounter = 0;
+		
+		byte[] mockCompressedFile = FileUtils.compressAndReadFile((Files.readAllBytes(new File("src/test/resources/test1.txt").toPath())));
+		Mockito.when(FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
+		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.eq(mockCompressedFile))).thenAnswer(new Answer<String>() {
+
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				mockCounter++;
+				
+				if(mockCounter % 2 == 1) {
+					return "asd1";
+				}
+
+				return "asd2";
+			}
+		});
 
 		// Service call
 		DeployRequest request = new DeployRequest();
-		request.setCleanDeploy(false);
+		request.setCleanDeploy(cleanDeploy);
+		Set<DeployItem> fileList = new HashSet<>();
+
 		DeployItem di1 = new DeployItem();
 		di1.setName("test1.txt");
 		di1.setContent(Files.readAllBytes(new File("src/test/resources/test1.txt").toPath()));
-		
-		DeployItem di2 = new DeployItem();
-		di2.setName("test2.txt");
-		di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
-		Set<DeployItem> fileList = new HashSet<>();
 		fileList.add(di1);
-		fileList.add(di2);
+		
+		if(cleanDeploy) {
+			DeployItem di2 = new DeployItem();
+			di2.setName("test2.txt");
+			di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
+			fileList.add(di2);
+		}
+
 		request.setFiles(fileList);
 		client.createDeploy(request);
 		

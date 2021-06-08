@@ -1,0 +1,5 @@
+ignore:
+  - "**/model/**"
+  - "**/builder/**"
+  - "**/config/**" 
+  - "**/util/ConnectionUtils.java"
