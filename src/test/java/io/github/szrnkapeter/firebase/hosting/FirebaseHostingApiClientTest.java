@@ -2,7 +2,6 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +38,7 @@ import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
 import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
+import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
 import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
@@ -249,6 +249,30 @@ public class FirebaseHostingApiClientTest {
 		initCreateDeploy(true);
 		initCreateDeploy(false);
 	}
+	
+	@Test
+	public void test012_UploadFile() throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
+		.thenReturn(ACCESS_TOKEN);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		
+		mockCounter = 0;
+		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.any(byte[].class))).thenAnswer(new Answer<String>() {
+
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				mockCounter++;
+				return "testSha";
+			}
+		});
+		
+		UploadFileRequest request = new UploadFileRequest();
+		request.setFileContent("test".getBytes());
+		request.setUploadUrl("http://www.test.com");
+		client.uploadFile(request);
+		
+		Assert.assertEquals(1, mockCounter);
+	}
 
 	private void initCreateDeploy(boolean cleanDeploy) throws Exception {
 		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
@@ -318,6 +342,8 @@ public class FirebaseHostingApiClientTest {
 		
 		// Mocking fileUtils
 		Mockito.when(FileUtils.getRemoteFile(ArgumentMatchers.anyString())).thenReturn(new byte[0]);
+		
+		mockCounter = 0;
 		
 		byte[] mockCompressedFile = FileUtils.compressAndReadFile((Files.readAllBytes(new File("src/test/resources/test1.txt").toPath())));
 		Mockito.when(FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
