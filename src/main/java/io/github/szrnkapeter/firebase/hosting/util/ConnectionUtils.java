@@ -144,7 +144,7 @@ public class ConnectionUtils {
 	 * 
 	 * @since 0.2
 	 */
-	public static void uploadFile(FirebaseHostingApiConfig config, String accessToken, String url, byte[] fileContent) throws Exception {
+	public static void uploadFile(FirebaseHostingApiConfig config, String accessToken, String fileName, String url, byte[] fileContent) throws Exception {
 
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection = (HttpURLConnection) initURLConnection(config, connection, accessToken, "application/octet-stream");
@@ -171,7 +171,7 @@ public class ConnectionUtils {
 		request.close();
 		
 		if(config.getHttpResponseListener() != null) {
-			config.getHttpResponseListener().getResponseInfo("uploadFile", connection.getResponseCode(), connection.getResponseMessage());
+			config.getHttpResponseListener().getResponseInfo("uploadFile", connection.getResponseCode(), "File: " + fileName + " / message: " + connection.getResponseMessage());
 		}
 	}
 }

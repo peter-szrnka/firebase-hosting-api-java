@@ -92,7 +92,6 @@ public class FirebaseHostingApiClient {
 
 			for(FileDetails file : getVersionFiles.getFiles()) {
 				String fileName = file.getPath().substring(1);
-
 				if(fileName.startsWith("__/") || newFileNames.contains(fileName)) {
 					continue;
 				}
@@ -109,14 +108,20 @@ public class FirebaseHostingApiClient {
 		// Populate the files
 		PopulateFilesRequest populateRequest = new PopulateFilesRequest();
 		populateRequest.setFiles(generateFileListAndHash(request.getFiles()));
-		populateFiles(populateRequest, versionId);
-
+		PopulateFilesResponse populateFilesResponse = populateFiles(populateRequest, versionId);
 		// Upload them
 		for(DeployItem item : request.getFiles()) {
 			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
+			String checkSum = FileUtils.getSHA256Checksum(fileContent);
+			
+			if(!populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
+				continue;
+			}
+			
 			UploadFileRequest uploadFilesRequest = new UploadFileRequest();
 			uploadFilesRequest.setVersion(versionId);
 			uploadFilesRequest.setFileContent(fileContent);
+			uploadFilesRequest.setFileName(item.getName());
 			uploadFile(uploadFilesRequest);
 		}
 
@@ -316,6 +321,6 @@ public class FirebaseHostingApiClient {
 			url = request.getUploadUrl() + "/" + calculatedHash;
 		}
 
-		ConnectionUtils.uploadFile(config, accessToken, url, request.getFileContent());
+		ConnectionUtils.uploadFile(config, accessToken, request.getFileName(), url, request.getFileContent());
 	}
 }

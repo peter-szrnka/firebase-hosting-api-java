@@ -1,6 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author Peter Szrnka
@@ -11,6 +12,7 @@ public class UploadFileRequest implements Serializable {
 	private static final long serialVersionUID = -1537341206199522293L;
 
 	private String version;
+	private String fileName;
 	private byte[] fileContent;
 	private String uploadUrl;
 
@@ -38,12 +40,21 @@ public class UploadFileRequest implements Serializable {
 		this.uploadUrl = uploadUrl;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "UploadFileRequest [version=" + version + ", uploadUrl=" + uploadUrl + "]";
+		return "UploadFileRequest [version=" + version + ", fileName=" + fileName + ", fileContent="
+				+ Arrays.toString(fileContent) + ", uploadUrl=" + uploadUrl + "]";
 	}
 }
