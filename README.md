@@ -91,6 +91,7 @@ A new deployment can be started by calling **client.createDeploy()**. The **clea
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
+				.withCustomSerializer(new GsonSerializer())
 				.withSiteName("my-site-name")
     			.build();
 
@@ -112,7 +113,7 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
-    			.withSerializer(SerializerType.GSON)
+    			.withCustomSerializer(new MoshiSerializer())
     			.build();
 
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
@@ -133,6 +134,7 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 				.withSiteName("my-site-name")
+				.withCustomSerializer(new GsonSerializer())
     			.withDefaultConnectionTimeout(90000)
 				.withDefaultReadTimeout(90000)
     			.build();
