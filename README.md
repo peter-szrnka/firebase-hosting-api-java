@@ -41,11 +41,13 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ## Object serializers
 
-Built-in object serializers will be deprecated from version 0.5. 
+Built-in object serializers will be deprecated from version 0.5:
 
 - Jackson (default)
 - Moshi
 - Gson
+
+From version 0.6, they're totally removed from the package. You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/szrnka-peter/firebase-hosting-api-java/wiki/Serializers
 
 # Usage
 
@@ -53,138 +55,143 @@ Built-in object serializers will be deprecated from version 0.5.
 
 A new deployment can be started by calling **client.createDeploy()**. The **cleanDeploy** is an important parameter that determines the new deployment should remove the existing files or not.
 
-	FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-					.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
+```java
+FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
+	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
 	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000).withCustomSerializer(new GsonSerializer())
-					.withHttpResponseListener(new HttpResponseListener() {
+	.withHttpResponseListener(new HttpResponseListener() {
 						
-						@Override
-						public void getResponseInfo(String function, int code, String responseMessage) {
-							System.out.println(function + " / " + code + " / " + responseMessage);
-						}
-					})
-					.withServiceResponseListener(new ServiceResponseListener() {
+		@Override
+		public void getResponseInfo(String function, int code, String responseMessage) {
+			System.out.println(function + " / " + code + " / " + responseMessage);
+		}
+	})
+	.withServiceResponseListener(new ServiceResponseListener() {
 						
-						@Override
-						public void getResponse(String function, Object response) {
-							System.out.println(function + " / " + response);
-						}
-					})
-					.withSiteName("my-site-name") //
-					.build();
+		@Override
+		public void getResponse(String function, Object response) {
+			System.out.println(function + " / " + response);
+		}
+	})
+	.withSiteName("my-site-name") //
+	.build();
 	
-			FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
+FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 	
-			// COMPLETE, WORKING DEPLOYMENT
-			DeployRequest request = new DeployRequest();
-			request.setCleanDeploy(false);
-			DeployItem di1 = new DeployItem();
-			di1.setName("test0.txt");
-			di1.setContent(Files.readAllBytes(new File("test0.txt").toPath()));
+// COMPLETE, WORKING DEPLOYMENT
+DeployRequest request = new DeployRequest();
+request.setCleanDeploy(false);
+DeployItem di1 = new DeployItem();
+di1.setName("test0.txt");
+di1.setContent(Files.readAllBytes(new File("test0.txt").toPath()));
 	
-			Set<DeployItem> fileList = new HashSet<>();
-			fileList.add(di1);
-			request.setFiles(fileList);
-			client.createDeploy(request);
+Set<DeployItem> fileList = new HashSet<>();
+fileList.add(di1);
+request.setFiles(fileList);
+client.createDeploy(request);
+```
 ## Get Releases
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-				.withCustomSerializer(new GsonSerializer())
-				.withSiteName("my-site-name")
-    			.build();
+	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
+	.withCustomSerializer(new GsonSerializer())
+	.withSiteName("my-site-name")
+    	.build();
 
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
+FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
-		// Call getReleases
-		GetReleasesResponse response = client.getReleases();
-		System.out.println("Response = " + response);
+// Call getReleases
+GetReleasesResponse response = client.getReleases();
+System.out.println("Response = " + response);
 		
-		System.out.println("\r\n");
+System.out.println("\r\n");
 		
-		GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
-		System.out.println("Files response = " + files);
+GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
+System.out.println("Files response = " + files);
 ```
 
 ## Custom serializer
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-				.withSiteName("my-site-name")
-    			.withCustomSerializer(new MoshiSerializer())
-    			.build();
+	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
+	.withSiteName("my-site-name")
+    	.withCustomSerializer(new MoshiSerializer())
+    	.build();
 
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
+FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
-		// Call getReleases
-		GetReleasesResponse response = client.getReleases();
-		System.out.println("Response = " + response);
+// Call getReleases
+GetReleasesResponse response = client.getReleases();
+System.out.println("Response = " + response);
 		
-		System.out.println("\r\n");
+System.out.println("\r\n");
 		
-		GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
-		System.out.println("Files response = " + files);
+GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
+System.out.println("Files response = " + files);
 ```
 
 ## Custom timeouts
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-				.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-				.withSiteName("my-site-name")
-				.withCustomSerializer(new GsonSerializer())
-    			.withDefaultConnectionTimeout(90000)
-				.withDefaultReadTimeout(90000)
-    			.build();
+	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
+	.withSiteName("my-site-name")
+	.withCustomSerializer(new GsonSerializer())
+    	.withDefaultConnectionTimeout(90000)
+	.withDefaultReadTimeout(90000)
+    	.build();
 
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
+FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
-		// Call getReleases
-		GetReleasesResponse response = client.getReleases();
-		System.out.println("Response = " + response);
+// Call getReleases
+GetReleasesResponse response = client.getReleases();
+System.out.println("Response = " + response);
 		
-		System.out.println("\r\n");
+System.out.println("\r\n");
 		
-		GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
-		System.out.println("Files response = " + files);
+GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
+System.out.println("Files response = " + files);
 ```
 
 ## Adding response listeners
 
 If you need the HTTP sub service responses of createDeploy() method, you can add listeners, which'll returns with the HTTP return codes, messages, and service response objects. In the example below, you'll get all HTTP responses, and service response objects.
 
+```java
+...
+FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
+...
+	.withHttpResponseListener(new HttpResponseListener() {
+		@Override
+		public void getResponseInfo(String function, int code, String responseMessage) {
+			System.out.println(function + " / " + code + " / " + responseMessage);
+		}
+	})
 	...
-	FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	...
-					.withHttpResponseListener(new HttpResponseListener() {
-						@Override
-						public void getResponseInfo(String function, int code, String responseMessage) {
-							System.out.println(function + " / " + code + " / " + responseMessage);
-						}
-					})
-	...
-					.withServiceResponseListener(new ServiceResponseListener() {
+	.withServiceResponseListener(new ServiceResponseListener() {
 						
-						@Override
-						public void getResponse(String function, Object response) {
-							System.out.println(function + " / " + response);
-						}
-					})
-	...
+		@Override
+		public void getResponse(String function, Object response) {
+			System.out.println(function + " / " + response);
+		}
+	})
+```
 **Example log**
 
-	createVersion / 200 / OK
-	createVersion / Version [name=sites/<site-name>/versions/<version-name>, status=CREATED, config={}, labels=null, createTime=null, createUser=null, finalizeTime=null, finalizeUser=null, fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
-	populateFiles / 200 / OK
-	populateFiles / PopulateFilesResponse [uploadRequiredHashes=null, uploadUrl=https://upload-firebasehosting.googleapis.com/upload/sites/<site-name>/versions/<version-name>/files]
-	uploadFile / 200 / OK
-	uploadFile / 200 / OK
-	uploadFile / 200 / OK
-	uploadFile / 200 / OK
-	uploadFile / 200 / OK
-	finalizeVersion / 200 / OK
-	finalizeVersion / Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
-	createRelease / 200 / OK
-	createRelease / Release [name=sites/<site-name>/releases/<release-id>, type=DEPLOY, releaseTime=Mon Dec 28 17:20:29 CET 2020, releaseUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], version=Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview={}]]
+```
+createVersion / 200 / OK
+createVersion / Version [name=sites/<site-name>/versions/<version-name>, status=CREATED, config={}, labels=null, createTime=null, createUser=null, finalizeTime=null, finalizeUser=null, fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
+populateFiles / 200 / OK
+populateFiles / PopulateFilesResponse [uploadRequiredHashes=null, uploadUrl=https://upload-firebasehosting.googleapis.com/upload/sites/<site-name>/versions/<version-name>/files]
+uploadFile / 200 / OK
+uploadFile / 200 / OK
+uploadFile / 200 / OK
+uploadFile / 200 / OK
+uploadFile / 200 / OK
+finalizeVersion / 200 / OK
+finalizeVersion / Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview=null]
+createRelease / 200 / OK
+createRelease / Release [name=sites/<site-name>/releases/<release-id>, type=DEPLOY, releaseTime=Mon Dec 28 17:20:29 CET 2020, releaseUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], version=Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview={}]]
+```
