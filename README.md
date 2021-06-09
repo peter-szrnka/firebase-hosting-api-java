@@ -13,9 +13,6 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 - Java 8
 - Maven
-- Jackson mapper
-- Moshi
-- Gson
 
 # Implemented services
 
@@ -38,7 +35,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 <dependency>
 	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.5</version>
+	<version>0.6</version>
 </dependency>
 ```
 
