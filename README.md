@@ -55,7 +55,7 @@ A new deployment can be started by calling **client.createDeploy()**. The **clea
 
 	FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 					.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000).withSerializer(SerializerType.JACKSON)
+	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000).withCustomSerializer(new GsonSerializer())
 					.withHttpResponseListener(new HttpResponseListener() {
 						
 						@Override
@@ -70,7 +70,7 @@ A new deployment can be started by calling **client.createDeploy()**. The **clea
 							System.out.println(function + " / " + response);
 						}
 					})
-					.withSiteName("budapest-parkolas") //
+					.withSiteName("my-site-name") //
 					.build();
 	
 			FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
