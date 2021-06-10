@@ -1,5 +1,6 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
+import java.io.File;
 import java.util.zip.GZIPInputStream;
 
 import org.junit.Assert;
@@ -19,5 +20,17 @@ public class FileUtilsTest {
 		byte[] response = FileUtils.compressAndReadFile("test".getBytes());
 		Assert.assertEquals(24, response.length);
 		Assert.assertEquals((byte) (GZIPInputStream.GZIP_MAGIC >> 8), response[1]);
+	}
+	
+	@Test
+	public void test03_GetRemoteFile_Fail() throws Exception {
+		byte[] response = FileUtils.getRemoteFile( new File("src/test/resources/test0.txt").toURI().toURL().toString());
+		Assert.assertEquals(0, response.length);
+	}
+	
+	@Test
+	public void test04_GetRemoteFile_Success() throws Exception {
+		byte[] response = FileUtils.getRemoteFile( new File("src/test/resources/test1.txt").toURI().toURL().toString());
+		Assert.assertEquals(7, response.length);
 	}
 }

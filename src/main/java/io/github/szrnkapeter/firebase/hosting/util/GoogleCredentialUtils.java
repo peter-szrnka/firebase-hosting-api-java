@@ -16,6 +16,9 @@ import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 public class GoogleCredentialUtils {
 	
 	private static final String FIREBASE_DEFAULT_SCOPE = "https://www.googleapis.com/auth/firebase";
+	
+	private GoogleCredentialUtils() {
+	}
 
 	/**
 	 * Returns with the access token by the Firebase credential JSON.
