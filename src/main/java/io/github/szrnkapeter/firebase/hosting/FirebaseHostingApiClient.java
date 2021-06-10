@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
 import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
@@ -100,7 +102,7 @@ public class FirebaseHostingApiClient {
 				request.getFiles().add(new DeployItem(fileName, fileContent));
 			}
 		}
-		
+
 		// Creation of the new version
 		Version newVersion = createVersion();
 		String versionId = getVersionId(newVersion.getName());
@@ -280,7 +282,8 @@ public class FirebaseHostingApiClient {
 		return response;
 	}
 	
-	private String getVersionId(String version) {
+	@VisibleForTesting
+	String getVersionId(String version) {
 		if(version == null || version.isEmpty()) {
 			return null;
 		}

@@ -2,6 +2,7 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.SocketTimeoutException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
 import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
 import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
 import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
+import io.github.szrnkapeter.firebase.hosting.model.DeployResponse;
 import io.github.szrnkapeter.firebase.hosting.model.FileDetails;
 import io.github.szrnkapeter.firebase.hosting.model.GetReleasesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
@@ -51,6 +53,7 @@ import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 @PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class, FileUtils.class })
 public class FirebaseHostingApiClientTest {
 
+	private static final String THIS_IS_A_MOCKED_EXCEPTION = "This is a mocked exception!";
 	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
@@ -246,8 +249,9 @@ public class FirebaseHostingApiClientTest {
 	
 	@Test
 	public void test011_CreateDeploy() throws Exception {
-		initCreateDeploy(true);
-		initCreateDeploy(false);
+		initCreateDeploy(true, false);
+		initCreateDeploy(false, false);
+		initCreateDeploy(false, true);
 	}
 	
 	@Test
@@ -273,8 +277,37 @@ public class FirebaseHostingApiClientTest {
 		
 		Assert.assertEquals(1, mockCounter);
 	}
+	
+	@Test
+	public void test013_GetVersionId_Fail1() throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
+		.thenReturn(ACCESS_TOKEN);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		
+		client.getVersionId(null);
+	}
+	
+	@Test
+	public void test013_GetVersionId_Fail2() throws Exception {
+		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
+		.thenReturn(ACCESS_TOKEN);
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		
+		client.getVersionId("");
+	}
 
-	private void initCreateDeploy(boolean cleanDeploy) throws Exception {
+	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease) throws Exception {
+		DeployRequest request = new DeployRequest();
+		request.setCleanDeploy(cleanDeploy);
+		Set<DeployItem> fileList = new HashSet<>();
+		fileList.add(FirebaseHostingApiClientTestHelper.createDeployItem("test1.txt", "src/test/resources/test1.txt"));
+		
+		if(cleanDeploy) {
+			fileList.add(FirebaseHostingApiClientTestHelper.createDeployItem("test2.txt", "src/test/resources/test2.txt"));
+		}
+
+		request.setFiles(fileList);
+		
 		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
@@ -290,23 +323,9 @@ public class FirebaseHostingApiClientTest {
 		// Mocking getVersionFiles()
 		GetVersionFilesResponse getVersionFilesResponse = new GetVersionFilesResponse();
 		List<FileDetails> mockFiles = new ArrayList<>();
-		FileDetails fd1 = new FileDetails();
-		fd1.setHash(UUID.randomUUID().toString());
-		fd1.setPath("/x1.txt");
-		fd1.setStatus("DEPLOYED");
-		mockFiles.add(fd1);
-
-		FileDetails fd2 = new FileDetails();
-		fd2.setHash(UUID.randomUUID().toString());
-		fd2.setPath("/__/x2.txt");
-		fd2.setStatus("DEPLOYED");
-		mockFiles.add(fd2);
-		
-		FileDetails fd3 = new FileDetails();
-		fd3.setHash(UUID.randomUUID().toString());
-		fd3.setPath("/test2.txt");
-		fd3.setStatus("DEPLOYED");
-		mockFiles.add(fd3);
+		mockFiles.add(FirebaseHostingApiClientTestHelper.createFileDetails("/x1.txt", "DEPLOYED"));
+		mockFiles.add(FirebaseHostingApiClientTestHelper.createFileDetails("/__/x2.txt", "DEPLOYED"));
+		mockFiles.add(FirebaseHostingApiClientTestHelper.createFileDetails("/test2.txt", "DEPLOYED"));
 		
 		getVersionFilesResponse.setFiles(mockFiles);
 		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
@@ -314,8 +333,8 @@ public class FirebaseHostingApiClientTest {
 				.thenReturn(getVersionFilesResponse);
 		
 		// Mocking createVersion()
-		String randomName = UUID.randomUUID().toString();
 		Version mockResponse = new Version();
+		String randomName = UUID.randomUUID().toString();
 		mockResponse.setName(randomName);
 		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(Version.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
@@ -362,27 +381,36 @@ public class FirebaseHostingApiClientTest {
 		});
 
 		// Service call
-		DeployRequest request = new DeployRequest();
-		request.setCleanDeploy(cleanDeploy);
-		Set<DeployItem> fileList = new HashSet<>();
-
-		DeployItem di1 = new DeployItem();
-		di1.setName("test1.txt");
-		di1.setContent(Files.readAllBytes(new File("src/test/resources/test1.txt").toPath()));
-		fileList.add(di1);
-		
-		if(cleanDeploy) {
-			DeployItem di2 = new DeployItem();
-			di2.setName("test2.txt");
-			di2.setContent(Files.readAllBytes(new File("src/test/resources/test2.txt").toPath()));
-			fileList.add(di2);
-		}
-
-		request.setFiles(fileList);
-		client.createDeploy(request);
+		DeployResponse response = client.createDeploy(request);
+		Assert.assertNotNull(response);
 		
 		// Test2
 		request.setDeletePreviousVersions(true);
-		client.createDeploy(request);
+		response = client.createDeploy(request);
+		Assert.assertNotNull(response);
+
+		if(nullRelease && !cleanDeploy) {
+			mockGetReleasesResponse = objectMapper.readValue(
+					new File("src/test/resources/sample-response-get-releases2.json"), GetReleasesResponse.class);
+			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+					.thenReturn(mockGetReleasesResponse);
+			response = client.createDeploy(request);
+			Assert.assertNull(response);
+			
+			mockGetReleasesResponse = objectMapper.readValue(
+					new File("src/test/resources/sample-response-get-releases3.json"), GetReleasesResponse.class);
+			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+					.thenReturn(mockGetReleasesResponse);
+			response = client.createDeploy(request);
+			Assert.assertNull(response);
+			
+			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+					.thenReturn(null);
+			response = client.createDeploy(request);
+			Assert.assertNull(response);
+		}
 	}
 }
