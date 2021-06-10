@@ -5,6 +5,9 @@ package io.github.szrnkapeter.firebase.hosting.util;
  * @since 0.2
  */
 public class Constants {
+	
+	private Constants() {
+	}
 
 	public static final String FINALIZED = "FINALIZED";
 	public static final String POST = "POST";
