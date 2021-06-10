@@ -41,7 +41,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ## Object serializers
 
-Built-in object serializers will be deprecated from version 0.5:
+Built-in object serializers are deprecated from version 0.5:
 
 - Jackson (default)
 - Moshi
