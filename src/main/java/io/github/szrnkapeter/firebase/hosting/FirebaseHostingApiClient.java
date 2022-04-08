@@ -2,6 +2,7 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -75,11 +76,12 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @param request A {@link DeployRequest} instance.
 	 * @return A new {@link DeployResponse} object.
-	 * @throws Exception Any exception occured in this service.
+	 * @throws IOException Any exception occured in this service.
+	 * @throws NoSuchAlgorithmException Any exception occured in this service.
 	 * 
 	 * @since 0.4
 	 */
-	public DeployResponse createDeploy(DeployRequest request) throws Exception {
+	public DeployResponse createDeploy(DeployRequest request) throws IOException, NoSuchAlgorithmException {
 		if(!request.isCleanDeploy()) {
 			GetReleasesResponse getReleases = getReleases();
 			
@@ -111,21 +113,9 @@ public class FirebaseHostingApiClient {
 		PopulateFilesRequest populateRequest = new PopulateFilesRequest();
 		populateRequest.setFiles(generateFileListAndHash(request.getFiles()));
 		PopulateFilesResponse populateFilesResponse = populateFiles(populateRequest, versionId);
+
 		// Upload them
-		for(DeployItem item : request.getFiles()) {
-			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
-			String checkSum = FileUtils.getSHA256Checksum(fileContent);
-			
-			if(populateFilesResponse.getUploadRequiredHashes() != null && !populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
-				continue;
-			}
-			
-			UploadFileRequest uploadFilesRequest = new UploadFileRequest();
-			uploadFilesRequest.setVersion(versionId);
-			uploadFilesRequest.setFileContent(fileContent);
-			uploadFilesRequest.setFileName(item.getName());
-			uploadFile(uploadFilesRequest);
-		}
+		uploadFiles(versionId, request, populateFilesResponse);
 
 		// Finalize the new version
 		finalizeVersion(versionId);
@@ -134,33 +124,27 @@ public class FirebaseHostingApiClient {
 		Release newRelease = createRelease(versionId);
 		
 		// Post delete earlier deployments
-		if(request.isDeletePreviousVersions()) {
-			GetReleasesResponse response = getReleases();
-			AtomicInteger i = new AtomicInteger(0);
-			
-			for(Release release : response.getReleases()) {
-				if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
-					deleteVersion(release.getVersion().getName());
-				}
-				
-				i.incrementAndGet();
-			}
-		}
+		deletePreviousVersion(request);
 
 		// Create the release
 		return new DeployResponse(newRelease);
 	}
 
-	private Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws Exception {
-		Map<String, String> result = new HashMap<>();
-
-		for(DeployItem file : files) {
-			byte[] gzippedContent = FileUtils.compressAndReadFile(file.getContent());
-			String checkSum = FileUtils.getSHA256Checksum(gzippedContent);
-			result.put("/" + file.getName(), checkSum);
+	private void deletePreviousVersion(DeployRequest request) throws IOException {
+		if(!request.isDeletePreviousVersions()) {
+			return;
 		}
-		
-		return result;
+
+		GetReleasesResponse response = getReleases();
+		AtomicInteger i = new AtomicInteger(0);
+			
+		for(Release release : response.getReleases()) {
+			if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
+				deleteVersion(release.getVersion().getName());
+			}
+				
+			i.incrementAndGet();
+		}
 	}
 
 	/**
@@ -168,11 +152,11 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @param version The version ID that we want to release
 	 * @return A new {@link Release}
-	 * @throws Exception An unwanted Exception
+	 * @throws IOException An unwanted Exception
 	 * 
 	 * @since 0.2
 	 */
-	public Release createRelease(String version) throws Exception {	
+	public Release createRelease(String version) throws IOException {	
 		Release newRelease =  ConnectionUtils.openSimpleHTTPPostConnection(config, Release.class, accessToken,
 			SITES + config.getSiteName() + "/releases?versionName=" + getVersionName(version), null, "createRelease");
 		
@@ -187,11 +171,12 @@ public class FirebaseHostingApiClient {
 	 * Creates a new version by the given parameters.
 	 * 
 	 * @return A new {@link Version}
+	 * @throws IOException 
 	 * @throws Exception Any unwanted Exception
 	 * 
 	 * @since 0.2
 	 */
-	public Version createVersion() throws Exception {
+	public Version createVersion() throws IOException {
 		Version newVersion = ConnectionUtils.openSimpleHTTPPostConnection(config, Version.class, accessToken,
 				SITES + config.getSiteName() + "/versions", "{}", "createVersion");
 		
@@ -206,11 +191,12 @@ public class FirebaseHostingApiClient {
 	 * Deletes a version by ID. 
 	 * 
 	 * @param version The version ID that we want to delete.
+	 * @throws IOException 
 	 * @throws Exception Any unwanted Exception
 	 * 
 	 * @since 0.2
 	 */
-	public void deleteVersion(String version) throws Exception {
+	public void deleteVersion(String version) throws IOException {
 		ConnectionUtils.openSimpleHTTPConnection("DELETE", config, null, accessToken, getVersionName(version), null, "deleteVersion");
 	}
 
@@ -219,11 +205,12 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @param version The version ID that we want to finalize.
 	 * @return A new {@link Version}
+	 * @throws IOException 
 	 * @throws Exception Any unwanted Exception
 	 * 
 	 * @since 0.2
 	 */
-	public Version finalizeVersion(String version) throws Exception {
+	public Version finalizeVersion(String version) throws IOException {
 		Version newVersion = ConnectionUtils.openSimpleHTTPConnection("PATCH", config, Version.class, accessToken,
 				SITES + config.getSiteName() + VERSIONS + version + "?update_mask=status", "{ \"status\": \"FINALIZED\" }", "finalizeVersion");
 
@@ -243,7 +230,7 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @since 0.2
 	 */
-	public GetReleasesResponse getReleases() throws Exception {
+	public GetReleasesResponse getReleases() throws IOException {
 		return ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,
 				SITES + config.getSiteName() + "/releases");
 	}
@@ -253,11 +240,12 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @param version Firebase version name
 	 * @return A {@link GetVersionFilesResponse} response
+	 * @throws IOException 
 	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.2
 	 */
-	public GetVersionFilesResponse getVersionFiles(String version) throws Exception {
+	public GetVersionFilesResponse getVersionFiles(String version) throws IOException {
 		return ConnectionUtils.openHTTPGetConnection(config, GetVersionFilesResponse.class, accessToken, getVersionName(version) + FILES);
 	}
 
@@ -267,11 +255,11 @@ public class FirebaseHostingApiClient {
 	 * @param request A {@link PopulateFilesRequest} request object
 	 * @param version Firebase version name
 	 * @return A {@link PopulateFilesResponse} response.
-	 * @throws Exception The unexpected exception
+	 * @throws IOException The unexpected exception
 	 * 
 	 * @since 0.2
 	 */
-	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws Exception {
+	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws IOException {
 		String data = config.getCustomSerializer().toJson(PopulateFilesRequest.class, request);
 		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
@@ -281,7 +269,29 @@ public class FirebaseHostingApiClient {
 
 		return response;
 	}
+
 	
+	/**
+	 * Uploads a file.
+	 * 
+	 * @param request A {@link UploadFileRequest} instance.
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws Exception The unexpected exception
+	 * 
+	 * @since 0.2
+	 */
+	public void uploadFile(UploadFileRequest request) throws NoSuchAlgorithmException, IOException {
+		String calculatedHash = FileUtils.getSHA256Checksum(request.getFileContent());
+		String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteName() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
+		
+		if(request.getUploadUrl() != null) {
+			url = request.getUploadUrl() + "/" + calculatedHash;
+		}
+
+		ConnectionUtils.uploadFile(config, accessToken, request.getFileName(), url, request.getFileContent());
+	}
+
 	@VisibleForTesting
 	String getVersionId(String version) {
 		if(version == null || version.isEmpty()) {
@@ -308,22 +318,32 @@ public class FirebaseHostingApiClient {
 		return versionName;
 	}
 	
-	/**
-	 * Uploads a file.
-	 * 
-	 * @param request A {@link UploadFileRequest} instance.
-	 * @throws Exception The unexpected exception
-	 * 
-	 * @since 0.2
-	 */
-	public void uploadFile(UploadFileRequest request) throws Exception {
-		String calculatedHash = FileUtils.getSHA256Checksum(request.getFileContent());
-		String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteName() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
-		
-		if(request.getUploadUrl() != null) {
-			url = request.getUploadUrl() + "/" + calculatedHash;
+	private void uploadFiles(String versionId, DeployRequest request, PopulateFilesResponse populateFilesResponse) throws IOException, NoSuchAlgorithmException {
+		for(DeployItem item : request.getFiles()) {
+			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
+			String checkSum = FileUtils.getSHA256Checksum(fileContent);
+			
+			if(populateFilesResponse.getUploadRequiredHashes() != null && !populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
+				continue;
+			}
+			
+			UploadFileRequest uploadFilesRequest = new UploadFileRequest();
+			uploadFilesRequest.setVersion(versionId);
+			uploadFilesRequest.setFileContent(fileContent);
+			uploadFilesRequest.setFileName(item.getName());
+			uploadFile(uploadFilesRequest);
 		}
+	}
 
-		ConnectionUtils.uploadFile(config, accessToken, request.getFileName(), url, request.getFileContent());
+	private Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws IOException, NoSuchAlgorithmException {
+		Map<String, String> result = new HashMap<>();
+
+		for(DeployItem file : files) {
+			byte[] gzippedContent = FileUtils.compressAndReadFile(file.getContent());
+			String checkSum = FileUtils.getSHA256Checksum(gzippedContent);
+			result.put("/" + file.getName(), checkSum);
+		}
+		
+		return result;
 	}
 }
