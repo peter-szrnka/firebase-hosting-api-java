@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -16,6 +18,8 @@ import java.util.zip.GZIPOutputStream;
  * @since 0.2
  */
 public class FileUtils {
+	
+	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());  
 
 	private FileUtils() {
 	}
@@ -25,11 +29,13 @@ public class FileUtils {
 	 * 
 	 * @param fileContent File content in byte array.
 	 * @return The SHA-256 hash
+	 * @throws NoSuchAlgorithmException 
+	 * @throws IOException 
 	 * @throws Exception Any exception thrown by the method.
 	 * 
 	 * @since 0.2
 	 */
-	public static String getSHA256Checksum(byte[] fileContent) throws Exception {
+	public static String getSHA256Checksum(byte[] fileContent) throws NoSuchAlgorithmException, IOException {
 		MessageDigest shaDigest = MessageDigest.getInstance("SHA-256");
 		byte[] byteArray = new byte[1024];
 		int bytesCount = 0;
@@ -58,11 +64,11 @@ public class FileUtils {
 	 * @param fileContent File content in byte array.
 	 * 
 	 * @return A new {@link GZIPInputStream} instance.
-	 * @throws Exception Any unwanted exception
+	 * @throws IOException Any unwanted exception
 	 * 
 	 * @since 0.2
 	 */
-	public static byte[] compressAndReadFile(byte[] fileContent) throws Exception {
+	public static byte[] compressAndReadFile(byte[] fileContent) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		GZIPOutputStream out = new GZIPOutputStream(bos);
 		out.write(fileContent);
@@ -75,11 +81,11 @@ public class FileUtils {
 	 * 
 	 * @param urlString The input URL string
 	 * @return A new byte array
-	 * @throws Exception Any exception caused by the method process
+	 * @throws IOException Any exception caused by the method process
 	 * 
 	 * @since 0.4
 	 */
-	public static byte[] getRemoteFile(String urlString) throws Exception {
+	public static byte[] getRemoteFile(String urlString) throws IOException {
 		URL url = new URL(urlString);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream is = null;
@@ -92,8 +98,7 @@ public class FileUtils {
 				baos.write(byteChunk, 0, n);
 			}
 		} catch (IOException e) {
-			System.err.printf("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
-			e.printStackTrace();
+			logger.warning(String.format("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage()));
 			// Perform any other exception handling that's appropriate.
 		} finally {
 			if (is != null) {
