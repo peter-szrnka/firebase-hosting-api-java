@@ -15,7 +15,7 @@ public class GsonSerializer implements Serializer {
 	 * @see hu.szrnkapeter.firebase.hosting.serializer.Serializer#getObject(java.lang.Class, java.lang.String)
 	 */
 	@Override
-	public <T> T getObject(Class<T> clazz, String obj) throws Exception {
+	public <T> T getObject(Class<T> clazz, String obj) {
 		return new Gson().fromJson(obj, clazz);
 	}
 
@@ -24,7 +24,7 @@ public class GsonSerializer implements Serializer {
 	 * @see io.github.szrnkapeter.firebase.hosting.serializer.Serializer#toJson(java.lang.Class, java.lang.Object)
 	 */
 	@Override
-	public <T> String toJson(Class<T> clazz, T obj) throws Exception {
+	public <T> String toJson(Class<T> clazz, T obj) {
 		return new Gson().toJson(obj);
 	}
 }

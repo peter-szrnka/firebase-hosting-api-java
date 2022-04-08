@@ -17,7 +17,7 @@ public interface Serializer {
 	 * 
 	 * @since 0.1
 	 */
-	<T> T getObject(Class<T> clazz, String json) throws Exception;
+	<T> T getObject(Class<T> clazz, String json);
 
 	/**
 	 * Object to JSON conversion.
@@ -30,5 +30,5 @@ public interface Serializer {
 	 * 
 	 * @since 0.2
 	 */
-	<T> String toJson(Class<T> clazz, T obj) throws Exception;
+	<T> String toJson(Class<T> clazz, T obj);
 }

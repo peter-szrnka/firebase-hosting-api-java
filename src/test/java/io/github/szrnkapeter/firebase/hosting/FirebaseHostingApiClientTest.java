@@ -2,7 +2,6 @@ package io.github.szrnkapeter.firebase.hosting;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.SocketTimeoutException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +52,6 @@ import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 @PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class, FileUtils.class })
 public class FirebaseHostingApiClientTest {
 
-	private static final String THIS_IS_A_MOCKED_EXCEPTION = "This is a mocked exception!";
 	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
@@ -284,7 +282,8 @@ public class FirebaseHostingApiClientTest {
 		.thenReturn(ACCESS_TOKEN);
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
-		client.getVersionId(null);
+		String response = client.getVersionId(null);
+		Assert.assertNull(response);
 	}
 	
 	@Test
@@ -293,7 +292,8 @@ public class FirebaseHostingApiClientTest {
 		.thenReturn(ACCESS_TOKEN);
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
-		client.getVersionId("");
+		String response = client.getVersionId("");
+		Assert.assertNull(response);
 	}
 
 	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease) throws Exception {
@@ -366,7 +366,7 @@ public class FirebaseHostingApiClientTest {
 		
 		byte[] mockCompressedFile = FileUtils.compressAndReadFile((Files.readAllBytes(new File("src/test/resources/test1.txt").toPath())));
 		Mockito.when(FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
-		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.eq(mockCompressedFile))).thenAnswer(new Answer<String>() {
+		Mockito.when(FileUtils.getSHA256Checksum(mockCompressedFile)).thenAnswer(new Answer<String>() {
 
 			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable {
