@@ -1,4 +1,4 @@
-ame: Code coverage
+name: Code coverage
 
 on:
   pull_request:
