@@ -3,3 +3,4 @@ ignore:
   - "**/builder/**"
   - "**/config/**" 
   - "**/util/ConnectionUtils.java"
+  - "**/util/SimpleHttpConnectionInput.java"
