@@ -1,5 +1,12 @@
 package io.github.szrnkapeter.firebase.hosting;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -10,19 +17,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,21 +49,27 @@ import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 
 @SuppressWarnings("unchecked")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ GoogleCredentialUtils.class, ConnectionUtils.class, FileUtils.class })
-public class FirebaseHostingApiClientTest {
+class FirebaseHostingApiClientTest {
 
 	private static final String SEPARATOR = " / ";
 	private static final String ACCESS_TOKEN = "TOKEN";
 	private static final String VERSION_NAME = "version1";
 	private static int mockCounter = 0;
-
-	@Before
-	public void setUp() {
-		PowerMockito.mockStatic(GoogleCredentialUtils.class);
-		PowerMockito.mockStatic(ConnectionUtils.class);
-		PowerMockito.mockStatic(FileUtils.class);
+	
+	private static MockedStatic<GoogleCredentialUtils> mockedGoogleCredentialUtils = mockStatic(GoogleCredentialUtils.class);
+	private static MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class);
+	private static MockedStatic<FileUtils> mockedFileUtilsUtils = mockStatic(FileUtils.class);
+	
+	@BeforeEach
+	public void setup() {
+		mockedGoogleCredentialUtils.when(() -> GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
+	}
+	
+	@AfterAll
+	public static void tearAllDown() {
+		mockedGoogleCredentialUtils.close();
+		mockedConnectionUtilsUtils.close();
+		mockedFileUtilsUtils.close();
 	}
 
 	private FirebaseHostingApiConfig getFirebaseRestApiConfig() throws Exception {
@@ -87,107 +95,97 @@ public class FirebaseHostingApiClientTest {
 	}
 
 	@Test
-	public void test001_GetReleases() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test001_GetReleases() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		GetReleasesResponse mockGetReleasesResponse = objectMapper.readValue(
 				new File("src/test/resources/sample-response-get-releases1.json"), GetReleasesResponse.class);
 
-		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockGetReleasesResponse);
 
 		GetReleasesResponse response = client.getReleases();
 
-		Assert.assertNotNull(response);
-		Assert.assertEquals("XY012345", response.getNextPageToken());
-		Assert.assertEquals(25, response.getReleases().size());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void test002_GetVersionFiles_VersionNull() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
-
-		client.getVersionFiles(null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void test003_GetVersionFiles_VersionEmpty() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
-
-		client.getVersionFiles("");
+		assertNotNull(response);
+		assertEquals("XY012345", response.getNextPageToken());
+		assertEquals(25, response.getReleases().size());
 	}
 
 	@Test
-	public void test004_GetVersionFiles_VersionEmpty() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test002_GetVersionFiles_VersionNull() throws Exception {
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> client.getVersionFiles(null));
+		
+		assertEquals("Version field is mandatory!", exception.getMessage());
+	}
+
+	@Test
+	void test003_GetVersionFiles_VersionEmpty() throws Exception {
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> client.getVersionFiles(""));
+		assertEquals("Version field is mandatory!", exception.getMessage());
+	}
+
+	@Test
+	void test004_GetVersionFiles_VersionEmpty() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		GetVersionFilesResponse getVersionFilesResponse = new GetVersionFilesResponse();
-		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() ->ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(getVersionFilesResponse);
 
 		GetVersionFilesResponse response = client.getVersionFiles(VERSION_NAME);
-		Assert.assertNotNull(response);
+		assertNotNull(response);
 
 		response = client.getVersionFiles("sites/test/versions/72e01552bb5498a1");
-		Assert.assertNotNull(response);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void test005_BadConstructor() throws Exception {
-		new FirebaseHostingApiClient(null);
+		assertNotNull(response);
 	}
 
 	@Test
-	public void test006_CreateRelease() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test005_BadConstructor() throws Exception {
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new FirebaseHostingApiClient(null));
+		assertEquals("FirebaseRestApiConfig field is mandatory!", exception.getMessage());
+	}
+
+	@Test
+	void test006_CreateRelease() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		Release mockResponse = new Release();
-		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() ->ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
 				ArgumentMatchers.isNull(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		Release response = client.createRelease(VERSION_NAME);
-		Assert.assertNotNull(response);
+		assertNotNull(response);
 	}
 
 	@Test
-	public void test007_CreateVersion() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test007_CreateVersion() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		String randomName = UUID.randomUUID().toString();
 		Version mockResponse = new Version();
 		mockResponse.setName(randomName);
-		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() ->ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		Version response = client.createVersion();
-		Assert.assertNotNull(response);
-		Assert.assertEquals(randomName, response.getName());
+		assertNotNull(response);
+		assertEquals(randomName, response.getName());
 	}
 
 	@Test
-	public void test008_DeleteVersion() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test008_DeleteVersion() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
-		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
+		mockedConnectionUtilsUtils.when(() ->ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.any(Class.class),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.isNull(), ArgumentMatchers.anyString()))
 				.then(new Answer<Void>() {
@@ -195,7 +193,7 @@ public class FirebaseHostingApiClientTest {
 					@Override
 					public Void answer(InvocationOnMock invocation) throws Throwable {
 						String version = invocation.getArgument(0);
-						Assert.assertEquals(VERSION_NAME, version);
+						assertEquals(VERSION_NAME, version);
 						return null;
 					}
 				});
@@ -204,28 +202,24 @@ public class FirebaseHostingApiClientTest {
 	}
 
 	@Test
-	public void test009_FinalizeVersion() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test009_FinalizeVersion() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		String randomName = UUID.randomUUID().toString();
 		Version mockResponse = new Version();
 		mockResponse.setName(randomName);
-		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
+		mockedConnectionUtilsUtils.when(() ->ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.any(Class.class),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockResponse);
 
 		Version response = client.finalizeVersion(VERSION_NAME);
-		Assert.assertNotNull(response);
-		Assert.assertEquals(randomName, response.getName());
+		assertNotNull(response);
+		assertEquals(randomName, response.getName());
 	}
 
 	@Test
-	public void test010_PopulateFiles() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-				.thenReturn(ACCESS_TOKEN);
+	void test010_PopulateFiles() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 
 		String randomHash = UUID.randomUUID().toString();
@@ -234,32 +228,30 @@ public class FirebaseHostingApiClientTest {
 		mockHashes.add(randomHash);
 		mockResponse.setUploadRequiredHashes(mockHashes);
 
-		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.any(Class.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
 		PopulateFilesRequest request = new PopulateFilesRequest();
 		request.setFiles(new HashMap<String, String>());
 		PopulateFilesResponse response = client.populateFiles(request, VERSION_NAME);
-		Assert.assertNotNull(response);
-		Assert.assertFalse(response.getUploadRequiredHashes().isEmpty());
+		assertNotNull(response);
+		assertFalse(response.getUploadRequiredHashes().isEmpty());
 	}
 	
 	@Test
-	public void test011_CreateDeploy() throws Exception {
+	void test011_CreateDeploy() throws Exception {
 		initCreateDeploy(true, false);
 		initCreateDeploy(false, false);
 		initCreateDeploy(false, true);
 	}
 	
 	@Test
-	public void test012_UploadFile() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-		.thenReturn(ACCESS_TOKEN);
+	void test012_UploadFile() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		mockCounter = 0;
-		Mockito.when(FileUtils.getSHA256Checksum(ArgumentMatchers.any(byte[].class))).thenAnswer(new Answer<String>() {
+		mockedFileUtilsUtils.when(() ->FileUtils.getSHA256Checksum(ArgumentMatchers.any(byte[].class))).thenAnswer(new Answer<String>() {
 
 			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable {
@@ -273,27 +265,23 @@ public class FirebaseHostingApiClientTest {
 		request.setUploadUrl("http://www.test.com");
 		client.uploadFile(request);
 		
-		Assert.assertEquals(1, mockCounter);
+		assertEquals(1, mockCounter);
 	}
 	
 	@Test
-	public void test013_GetVersionId_Fail1() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-		.thenReturn(ACCESS_TOKEN);
+	void test013_GetVersionId_Fail1() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		String response = client.getVersionId(null);
-		Assert.assertNull(response);
+		assertNull(response);
 	}
 	
 	@Test
-	public void test013_GetVersionId_Fail2() throws Exception {
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class)))
-		.thenReturn(ACCESS_TOKEN);
+	void test013_GetVersionId_Fail2() throws Exception {
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		String response = client.getVersionId("");
-		Assert.assertNull(response);
+		assertNull(response);
 	}
 
 	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease) throws Exception {
@@ -307,8 +295,7 @@ public class FirebaseHostingApiClientTest {
 		}
 
 		request.setFiles(fileList);
-		
-		Mockito.when(GoogleCredentialUtils.getAccessToken(ArgumentMatchers.any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
+
 		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
 		
 		// Mocking getReleases()
@@ -316,7 +303,7 @@ public class FirebaseHostingApiClientTest {
 		GetReleasesResponse mockGetReleasesResponse = objectMapper.readValue(
 				new File("src/test/resources/sample-response-get-releases1.json"), GetReleasesResponse.class);
 
-		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockGetReleasesResponse);
 		
@@ -328,7 +315,7 @@ public class FirebaseHostingApiClientTest {
 		mockFiles.add(FirebaseHostingApiClientTestHelper.createFileDetails("/test2.txt", "DEPLOYED"));
 		
 		getVersionFilesResponse.setFiles(mockFiles);
-		Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(GetVersionFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(getVersionFilesResponse);
 		
@@ -336,7 +323,7 @@ public class FirebaseHostingApiClientTest {
 		Version mockResponse = new Version();
 		String randomName = UUID.randomUUID().toString();
 		mockResponse.setName(randomName);
-		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(Version.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockResponse);
 
@@ -346,7 +333,7 @@ public class FirebaseHostingApiClientTest {
 		mockHashes.add("asd1");
 		mockPopResponse.setUploadRequiredHashes(mockHashes);
 
-		Mockito.when(ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openSimpleHTTPPostConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 				ArgumentMatchers.eq(PopulateFilesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockPopResponse);
 
@@ -354,7 +341,7 @@ public class FirebaseHostingApiClientTest {
 		String randomVersionName = UUID.randomUUID().toString();
 		Version mockVersionResponse = new Version();
 		mockResponse.setName(randomVersionName);
-		Mockito.when(ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
+		mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openSimpleHTTPConnection(ArgumentMatchers.anyString(),
 				ArgumentMatchers.any(FirebaseHostingApiConfig.class), ArgumentMatchers.eq(Version.class),
 				ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 				.thenReturn(mockVersionResponse);
@@ -365,8 +352,8 @@ public class FirebaseHostingApiClientTest {
 		mockCounter = 0;
 		
 		byte[] mockCompressedFile = FileUtils.compressAndReadFile((Files.readAllBytes(new File("src/test/resources/test1.txt").toPath())));
-		Mockito.when(FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
-		Mockito.when(FileUtils.getSHA256Checksum(mockCompressedFile)).thenAnswer(new Answer<String>() {
+		mockedFileUtilsUtils.when(() -> FileUtils.compressAndReadFile(ArgumentMatchers.any(byte[].class))).thenReturn(mockCompressedFile);
+		mockedFileUtilsUtils.when(() -> FileUtils.getSHA256Checksum(mockCompressedFile)).thenAnswer(new Answer<String>() {
 
 			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable {
@@ -382,35 +369,35 @@ public class FirebaseHostingApiClientTest {
 
 		// Service call
 		DeployResponse response = client.createDeploy(request);
-		Assert.assertNotNull(response);
+		assertNotNull(response);
 		
 		// Test2
 		request.setDeletePreviousVersions(true);
 		response = client.createDeploy(request);
-		Assert.assertNotNull(response);
+		assertNotNull(response);
 
 		if(nullRelease && !cleanDeploy) {
 			mockGetReleasesResponse = objectMapper.readValue(
 					new File("src/test/resources/sample-response-get-releases2.json"), GetReleasesResponse.class);
-			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+			mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 					.thenReturn(mockGetReleasesResponse);
 			response = client.createDeploy(request);
-			Assert.assertNull(response);
+			assertNull(response);
 			
 			mockGetReleasesResponse = objectMapper.readValue(
 					new File("src/test/resources/sample-response-get-releases3.json"), GetReleasesResponse.class);
-			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+			mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 					.thenReturn(mockGetReleasesResponse);
 			response = client.createDeploy(request);
-			Assert.assertNull(response);
+			assertNull(response);
 			
-			Mockito.when(ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
+			mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(ArgumentMatchers.any(FirebaseHostingApiConfig.class),
 					ArgumentMatchers.eq(GetReleasesResponse.class), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
 					.thenReturn(null);
 			response = client.createDeploy(request);
-			Assert.assertNull(response);
+			assertNull(response);
 		}
 	}
 }
