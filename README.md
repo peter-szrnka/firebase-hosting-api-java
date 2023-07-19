@@ -7,7 +7,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 | Build                                                        | Code coverage                                                | Code quality                                                 |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [![CodeQL](https://github.com/szrnka-peter/firebase-hosting-api-java/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/szrnka-peter/firebase-hosting-api-java/actions/workflows/codeql-analysis.yml) | [![codecov](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java/branch/main/graph/badge.svg?token=2TNS2ZU8ZF)](https://codecov.io/gh/szrnka-peter/firebase-hosting-api-java) | [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=szrnka-peter_firebase-hosting-api-java&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=szrnka-peter_firebase-hosting-api-java) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=szrnka-peter_firebase-hosting-api-java&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=szrnka-peter_firebase-hosting-api-java) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=szrnka-peter_firebase-hosting-api-java&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=szrnka-peter_firebase-hosting-api-java) |
+| [![CodeQL](https://github.com/peter-szrnka/firebase-hosting-api-java/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/peter-szrnka/firebase-hosting-api-java/actions/workflows/codeql-analysis.yml) | ![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_firebase-hosting-api-java&metric=coverage) | [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_firebase-hosting-api-java&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_firebase-hosting-api-java) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_firebase-hosting-api-java&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_firebase-hosting-api-java) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=peter-szrnka_firebase-hosting-api-java&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=peter-szrnka_firebase-hosting-api-java) |
 
 # Used technologies
 
@@ -33,7 +33,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ```xml
 <dependency>
-	<groupId>io.github.szrnka-peter</groupId>
+	<groupId>io.github.peter-szrnka</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
 	<version>0.6</version>
 </dependency>
@@ -47,7 +47,7 @@ Built-in object serializers are deprecated from version 0.5:
 - Moshi
 - Gson
 
-From version 0.6, they're totally removed from the package. You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/szrnka-peter/firebase-hosting-api-java/wiki/Serializers
+From version 0.6, they're totally removed from the package. You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Serializers
 
 # Usage
 
