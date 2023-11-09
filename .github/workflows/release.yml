@@ -15,6 +15,9 @@ jobs:
           working_directory: ./code/
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         with:
           java-version: '11'
           distribution: 'temurin'
@@ -26,6 +29,7 @@ jobs:
       - name: Publish package
         run: mvn -Prelease --batch-mode deploy -f ./code/pom.xml
         env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
