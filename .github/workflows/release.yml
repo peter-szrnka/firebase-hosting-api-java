@@ -3,8 +3,6 @@ on:
   workflow_dispatch:
 jobs:
   publish:
-    env:
-      working_directory: ./code/
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,5 +17,6 @@ jobs:
       - name: Publish package
         run: mvn --batch-mode deploy
         env:
+          working_directory: ./code/
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
