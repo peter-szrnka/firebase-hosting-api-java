@@ -24,7 +24,7 @@ jobs:
           gpg-private-key: MAVEN_GPG_SIGNING_KEY
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Publish package
-        run: mvn --batch-mode deploy -f ./code/pom.xml
+        run: mvn -Prelease --batch-mode deploy -f ./code/pom.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
