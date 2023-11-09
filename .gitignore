@@ -14,3 +14,4 @@ buildNumber.properties
 /target
 /.classpath
 /.idea
+/code/.idea
