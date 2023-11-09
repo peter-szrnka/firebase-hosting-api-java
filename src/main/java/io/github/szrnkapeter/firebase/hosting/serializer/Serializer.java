@@ -13,7 +13,6 @@ public interface Serializer {
 	 * @param clazz Result class.
 	 * @param json The JSON response body
 	 * @return a T class
-	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.1
 	 */
@@ -26,7 +25,6 @@ public interface Serializer {
 	 * @param clazz Input class.
 	 * @param obj The input object
 	 * @return The JSON representation of the given object
-	 * @throws Exception The unexpected exception
 	 * 
 	 * @since 0.2
 	 */

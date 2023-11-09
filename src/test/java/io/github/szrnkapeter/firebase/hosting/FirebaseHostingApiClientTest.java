@@ -56,9 +56,9 @@ class FirebaseHostingApiClientTest {
 	private static final String VERSION_NAME = "version1";
 	private static int mockCounter = 0;
 	
-	private static MockedStatic<GoogleCredentialUtils> mockedGoogleCredentialUtils = mockStatic(GoogleCredentialUtils.class);
-	private static MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class);
-	private static MockedStatic<FileUtils> mockedFileUtilsUtils = mockStatic(FileUtils.class);
+	private static final MockedStatic<GoogleCredentialUtils> mockedGoogleCredentialUtils = mockStatic(GoogleCredentialUtils.class);
+	private static final MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class);
+	private static final MockedStatic<FileUtils> mockedFileUtilsUtils = mockStatic(FileUtils.class);
 	
 	@BeforeEach
 	public void setup() {
@@ -74,8 +74,9 @@ class FirebaseHostingApiClientTest {
 
 	private FirebaseHostingApiConfig getFirebaseRestApiConfig() throws Exception {
 		return FirebaseHostingApiConfigBuilder.builder()
-				.withConfigStream(new FileInputStream("src/test/resources/test.json")).withSiteName("test")
-				.withCustomSerializer(new GsonSerializer())
+				.withServiceAccountFileStream(new FileInputStream("src/test/resources/test.json"))
+				.withSiteId("test")
+				.withSerializer(new GsonSerializer())
 				.withDefaultConnectionTimeout(60000).withDefaultReadTimeout(60000)
 				.withHttpResponseListener(new HttpResponseListener() {
 					
@@ -282,6 +283,46 @@ class FirebaseHostingApiClientTest {
 		
 		String response = client.getVersionId("");
 		assertNull(response);
+	}
+
+	@Test
+	void test014_Init_Fail1_SiteIdNull() throws Exception {
+		FirebaseHostingApiConfig invalidConfig = getFirebaseRestApiConfig();
+		invalidConfig.setSiteId(null);
+
+		// act & assert
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new FirebaseHostingApiClient(invalidConfig));
+		assertEquals("Site name is mandatory!", exception.getMessage());
+	}
+
+	@Test
+	void test015_Init_Fail1_SiteIdEmpty() throws Exception {
+		FirebaseHostingApiConfig invalidConfig = getFirebaseRestApiConfig();
+		invalidConfig.setSiteId("");
+
+		// act & assert
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new FirebaseHostingApiClient(invalidConfig));
+		assertEquals("Site name is mandatory!", exception.getMessage());
+	}
+
+	@Test
+	void test016_Init_Fail1_ServiceAccountStreamNull() throws Exception {
+		FirebaseHostingApiConfig invalidConfig = getFirebaseRestApiConfig();
+		invalidConfig.setServiceAccountFileStream(null);
+
+		// act & assert
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new FirebaseHostingApiClient(invalidConfig));
+		assertEquals("Service account file stream is missing from the configuration!", exception.getMessage());
+	}
+
+	@Test
+	void test017_Init_Fail1_SiteIdEmpty() throws Exception {
+		FirebaseHostingApiConfig invalidConfig = getFirebaseRestApiConfig();
+		invalidConfig.setSerializer(null);
+
+		// act & assert
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new FirebaseHostingApiClient(invalidConfig));
+		assertEquals("Serializer is missing from the configuration!", exception.getMessage());
 	}
 
 	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease) throws Exception {

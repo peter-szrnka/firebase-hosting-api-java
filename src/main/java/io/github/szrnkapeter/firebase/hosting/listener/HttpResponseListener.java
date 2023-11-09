@@ -2,6 +2,8 @@ package io.github.szrnkapeter.firebase.hosting.listener;
 
 /**
  * A simple (functional) interface for returning with HTTP responses.
+ *
+ * TODO Rename to HttpResponseCallback!
  * 
  * @author Peter Szrnka
  * @since 0.4

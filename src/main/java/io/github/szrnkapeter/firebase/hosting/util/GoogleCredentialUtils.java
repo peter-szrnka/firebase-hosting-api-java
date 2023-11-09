@@ -29,7 +29,7 @@ public class GoogleCredentialUtils {
 	 */
 	public static String getAccessToken(FirebaseHostingApiConfig config) {
 		try {
-			GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getConfigStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
+			GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getServiceAccountFileStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
 			googleCredential.refreshIfExpired();
 			return googleCredential.getAccessToken().getTokenValue();
 		} catch (Exception e) {

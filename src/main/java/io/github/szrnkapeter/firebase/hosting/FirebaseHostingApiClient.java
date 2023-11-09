@@ -42,21 +42,18 @@ public class FirebaseHostingApiClient {
 	private static final String VERSIONS = "/versions/";
 	private static final String SITES = "sites/";
 
-	private FirebaseHostingApiConfig config;
-	private String accessToken;
+	private final FirebaseHostingApiConfig config;
+	private final String accessToken;
 
 	/**
 	 * Default constructor.
 	 * 
 	 * @param firebaseRestApiConfig A new {@link FirebaseHostingApiConfig}
-	 * @throws IOException An unwanted IOException
 	 * 
 	 * @since 0.2
 	 */
-	public FirebaseHostingApiClient(FirebaseHostingApiConfig firebaseRestApiConfig) throws IOException {
-		if(firebaseRestApiConfig == null) {
-			throw new IllegalArgumentException("FirebaseRestApiConfig field is mandatory!");
-		}
+	public FirebaseHostingApiClient(FirebaseHostingApiConfig firebaseRestApiConfig) {
+		preValidateConfig(firebaseRestApiConfig);
 
 		config = firebaseRestApiConfig;
 		accessToken = GoogleCredentialUtils.getAccessToken(config);
@@ -92,7 +89,7 @@ public class FirebaseHostingApiClient {
 			String versionId = getVersionId(getReleases.getReleases().get(0).getVersion().getName());
 			GetVersionFilesResponse getVersionFiles = getVersionFiles(versionId);
 			
-			Set<String> newFileNames = request.getFiles().stream().map(file -> file.getName()).collect(Collectors.toSet());
+			Set<String> newFileNames = request.getFiles().stream().map(DeployItem::getName).collect(Collectors.toSet());
 
 			for(FileDetails file : getVersionFiles.getFiles()) {
 				String fileName = file.getPath().substring(1);
@@ -100,7 +97,7 @@ public class FirebaseHostingApiClient {
 					continue;
 				}
 
-				byte[] fileContent = FileUtils.getRemoteFile("https://" + config.getSiteName() + ".firebaseapp.com/" + fileName);
+				byte[] fileContent = FileUtils.getRemoteFile("https://" + config.getSiteId() + ".firebaseapp.com/" + fileName);
 				request.getFiles().add(new DeployItem(fileName, fileContent));
 			}
 		}
@@ -130,70 +127,48 @@ public class FirebaseHostingApiClient {
 		return new DeployResponse(newRelease);
 	}
 
-	private void deletePreviousVersion(DeployRequest request) throws IOException {
-		if(!request.isDeletePreviousVersions()) {
-			return;
-		}
-
-		GetReleasesResponse response = getReleases();
-		AtomicInteger i = new AtomicInteger(0);
-			
-		for(Release release : response.getReleases()) {
-			if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
-				deleteVersion(release.getVersion().getName());
-			}
-				
-			i.incrementAndGet();
-		}
-	}
-
 	/**
-	 * Creates a new release.
-	 * 
+	 * Creates a new release. Called endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.releases/create">sites.releases/create</a>
+	 *
 	 * @param version The version ID that we want to release
 	 * @return A new {@link Release}
 	 * @throws IOException An unwanted Exception
-	 * 
+	 *
 	 * @since 0.2
 	 */
 	public Release createRelease(String version) throws IOException {	
 		Release newRelease =  ConnectionUtils.openSimpleHTTPPostConnection(config, Release.class, accessToken,
-			SITES + config.getSiteName() + "/releases?versionName=" + getVersionName(version), null, "createRelease");
-		
-		if(config.getServiceResponseListener() != null) {
-			config.getServiceResponseListener().getResponse("createRelease", newRelease);
-		}
-		
+			SITES + config.getSiteId() + "/releases?versionName=" + getVersionName(version), null, "createRelease");
+
+		responseCallback("createRelease", newRelease);
 		return newRelease;
 	}
 
 	/**
-	 * Creates a new version by the given parameters.
-	 * 
+	 * Creates a new version by the given parameters. Called endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.versions/create">sites.versions/create</a>
+	 *
 	 * @return A new {@link Version}
-	 * @throws IOException 
-	 * @throws Exception Any unwanted Exception
-	 * 
+	 * @throws IOException Any unwanted Exception
+	 *
 	 * @since 0.2
 	 */
 	public Version createVersion() throws IOException {
 		Version newVersion = ConnectionUtils.openSimpleHTTPPostConnection(config, Version.class, accessToken,
-				SITES + config.getSiteName() + "/versions", "{}", "createVersion");
-		
-		if(config.getServiceResponseListener() != null) {
-			config.getServiceResponseListener().getResponse("createVersion", newVersion);
-		}
-		
+				SITES + config.getSiteId() + "/versions", "{}", "createVersion");
+
+		responseCallback("createVersion", newVersion);
 		return newVersion;
 	}
 
 	/**
-	 * Deletes a version by ID. 
-	 * 
+	 * Deletes a version by ID. Called endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.versions/delete">sites.versions/delete</a>
+	 *
 	 * @param version The version ID that we want to delete.
-	 * @throws IOException 
-	 * @throws Exception Any unwanted Exception
-	 * 
+	 * @throws IOException Any unwanted Exception
+	 *
 	 * @since 0.2
 	 */
 	public void deleteVersion(String version) throws IOException {
@@ -201,72 +176,74 @@ public class FirebaseHostingApiClient {
 	}
 
 	/**
-	 * Updates the status of the given version to finalized.
-	 * 
+	 * Updates the status of the given version to finalized. Called endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.versions/patch">sites.versions/patch</a>
+	 *
 	 * @param version The version ID that we want to finalize.
 	 * @return A new {@link Version}
-	 * @throws IOException 
-	 * @throws Exception Any unwanted Exception
-	 * 
+	 * @throws IOException Any unwanted Exception
+	 *
 	 * @since 0.2
 	 */
 	public Version finalizeVersion(String version) throws IOException {
 		Version newVersion = ConnectionUtils.openSimpleHTTPConnection("PATCH", config, Version.class, accessToken,
-				SITES + config.getSiteName() + VERSIONS + version + "?update_mask=status", "{ \"status\": \"FINALIZED\" }", "finalizeVersion");
+				SITES + config.getSiteId() + VERSIONS + version + "?update_mask=status", "{ \"status\": \"FINALIZED\" }", "finalizeVersion");
 
-		if(config.getServiceResponseListener() != null) {
-			config.getServiceResponseListener().getResponse("finalizeVersion", newVersion);
-		}
-
+		responseCallback("finalizeVersion", newVersion);
 		return newVersion;
 	}
 
 	/**
-	 * Returns with the list of releases.
-	 * 
+	 * Returns with the list of releases. It calls the list releases endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.releases/list">sites.releases/list</a>
+	 *
 	 * @throws MalformedURLException The unexpected MalformedURLException
 	 * @throws IOException The unexpected IOException
 	 * @return A new {@link GetReleasesResponse} instance
-	 * 
+	 *
 	 * @since 0.2
 	 */
 	public GetReleasesResponse getReleases() throws IOException {
-		return ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,
-				SITES + config.getSiteName() + "/releases");
+		GetReleasesResponse response = ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,
+				SITES + config.getSiteId() + "/releases");
+
+		responseCallback("getReleases", response);
+		return response;
 	}
 
 	/**
-	 * Returns with all files of a given version.
-	 * 
+	 * Returns with all files of a given version. Called endpoint:
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.versions.files/list">sites.versions.files/list</a>
+	 *
 	 * @param version Firebase version name
 	 * @return A {@link GetVersionFilesResponse} response
-	 * @throws IOException 
-	 * @throws Exception The unexpected exception
-	 * 
+	 * @throws IOException The unexpected exception
+	 *
 	 * @since 0.2
 	 */
 	public GetVersionFilesResponse getVersionFiles(String version) throws IOException {
-		return ConnectionUtils.openHTTPGetConnection(config, GetVersionFilesResponse.class, accessToken, getVersionName(version) + FILES);
+		GetVersionFilesResponse response = ConnectionUtils.openHTTPGetConnection(config, GetVersionFilesResponse.class, accessToken, getVersionName(version) + FILES);
+
+		responseCallback("getVersionFiles", response);
+		return response;
 	}
 
 	/**
 	 * Calls the populateFiles endpoint.
-	 * 
+	 * <a href="https://firebase.google.com/docs/reference/hosting/rest/v1beta1/sites.versions/populateFiles">sites.versions/populateFiles</a>
+	 *
 	 * @param request A {@link PopulateFilesRequest} request object
 	 * @param version Firebase version name
 	 * @return A {@link PopulateFilesResponse} response.
 	 * @throws IOException The unexpected exception
-	 * 
+	 *
 	 * @since 0.2
 	 */
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws IOException {
-		String data = config.getCustomSerializer().toJson(PopulateFilesRequest.class, request);
-		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteName() + VERSIONS + version + ":populateFiles", data, "populateFiles");
+		String data = config.getSerializer().toJson(PopulateFilesRequest.class, request);
+		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteId() + VERSIONS + version + ":populateFiles", data, "populateFiles");
 
-		if(config.getServiceResponseListener() != null) {
-			config.getServiceResponseListener().getResponse("populateFiles", response);
-		}
-
+		responseCallback("populateFiles", response);
 		return response;
 	}
 
@@ -275,15 +252,14 @@ public class FirebaseHostingApiClient {
 	 * Uploads a file.
 	 * 
 	 * @param request A {@link UploadFileRequest} instance.
-	 * @throws IOException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws Exception The unexpected exception
+	 * @throws NoSuchAlgorithmException Thrown by getSHA256Checksum
+	 * @throws IOException The unexpected exception
 	 * 
 	 * @since 0.2
 	 */
 	public void uploadFile(UploadFileRequest request) throws NoSuchAlgorithmException, IOException {
 		String calculatedHash = FileUtils.getSHA256Checksum(request.getFileContent());
-		String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteName() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
+		String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteId() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
 		
 		if(request.getUploadUrl() != null) {
 			url = request.getUploadUrl() + "/" + calculatedHash;
@@ -300,15 +276,40 @@ public class FirebaseHostingApiClient {
 
 		return version.substring(version.lastIndexOf("/") + 1);
 	}
-	
+
+	private void responseCallback(String function, Object response) {
+		if(config.getServiceResponseListener() == null) {
+			return;
+		}
+
+		config.getServiceResponseListener().getResponse(function, response);
+	}
+
+	private void deletePreviousVersion(DeployRequest request) throws IOException {
+		if(!request.isDeletePreviousVersions()) {
+			return;
+		}
+
+		GetReleasesResponse response = getReleases();
+		AtomicInteger i = new AtomicInteger(0);
+
+		for(Release release : response.getReleases()) {
+			if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
+				deleteVersion(release.getVersion().getName());
+			}
+
+			i.incrementAndGet();
+		}
+	}
+
 	private String getVersionName(String version) {
 		if(version == null || version.isEmpty()) {
 			throw new IllegalArgumentException("Version field is mandatory!");
 		}
 
-		String versionName = SITES + config.getSiteName() + VERSIONS + version;
+		String versionName = SITES + config.getSiteId() + VERSIONS + version;
 
-		Pattern p = Pattern.compile(SITES + config.getSiteName() + VERSIONS + ".*");
+		Pattern p = Pattern.compile(SITES + config.getSiteId() + VERSIONS + ".*");
 		Matcher m = p.matcher(version);
 
 		if (m.matches()) {
@@ -345,5 +346,23 @@ public class FirebaseHostingApiClient {
 		}
 		
 		return result;
+	}
+
+	private void preValidateConfig(FirebaseHostingApiConfig firebaseRestApiConfig) {
+		if (firebaseRestApiConfig == null) {
+			throw new IllegalArgumentException("FirebaseRestApiConfig field is mandatory!");
+		}
+
+		if (firebaseRestApiConfig.getSiteId() == null || firebaseRestApiConfig.getSiteId().isEmpty()) {
+			throw new IllegalArgumentException("Site name is mandatory!");
+		}
+
+		if (firebaseRestApiConfig.getServiceAccountFileStream() == null) {
+			throw new IllegalArgumentException("Service account file stream is missing from the configuration!");
+		}
+
+		if (firebaseRestApiConfig.getSerializer() == null) {
+			throw new IllegalArgumentException("Serializer is missing from the configuration!");
+		}
 	}
 }

@@ -15,7 +15,7 @@ import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
  */
 public class FirebaseHostingApiConfigBuilder {
 	
-	private FirebaseHostingApiConfig config;
+	private final FirebaseHostingApiConfig config;
 	
 	private FirebaseHostingApiConfigBuilder() {
 		config = new FirebaseHostingApiConfig();
@@ -25,13 +25,13 @@ public class FirebaseHostingApiConfigBuilder {
 		return new FirebaseHostingApiConfigBuilder();
 	}
 	
-	public FirebaseHostingApiConfigBuilder withConfigStream(InputStream configStream) {
-		config.setConfigStream(configStream);
+	public FirebaseHostingApiConfigBuilder withServiceAccountFileStream(InputStream serviceAccountFileStream) {
+		config.setServiceAccountFileStream(serviceAccountFileStream);
 		return this;
 	}
 	
-	public FirebaseHostingApiConfigBuilder withSiteName(String siteName) {
-		config.setSiteName(siteName);
+	public FirebaseHostingApiConfigBuilder withSiteId(String siteId) {
+		config.setSiteId(siteId);
 		return this;
 	}
 	
@@ -55,8 +55,8 @@ public class FirebaseHostingApiConfigBuilder {
 		return this;
 	}
 	
-	public FirebaseHostingApiConfigBuilder withCustomSerializer(Serializer customSerializer) {
-		config.setCustomSerializer(customSerializer);
+	public FirebaseHostingApiConfigBuilder withSerializer(Serializer serializer) {
+		config.setSerializer(serializer);
 		return this;
 	}
 

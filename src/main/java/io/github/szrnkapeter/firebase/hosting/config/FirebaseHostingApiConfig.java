@@ -16,28 +16,28 @@ import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
  */
 public class FirebaseHostingApiConfig {
 
-	private InputStream configStream;
+	private InputStream serviceAccountFileStream;
 	private int defaultConnectionTimeout = 30000;
 	private int defaultReadTimeout = 30000;
-	private String siteName;
+	private String siteId;
 	private HttpResponseListener httpResponseListener;
 	private ServiceResponseListener serviceResponseListener;
-	private Serializer customSerializer;
+	private Serializer serializer;
 
-	public String getSiteName() {
-		return siteName;
+	public String getSiteId() {
+		return siteId;
 	}
 
-	public void setSiteName(String siteName) {
-		this.siteName = siteName;
+	public void setSiteId(String siteId) {
+		this.siteId = siteId;
 	}
 
-	public InputStream getConfigStream() {
-		return configStream;
+	public InputStream getServiceAccountFileStream() {
+		return serviceAccountFileStream;
 	}
 
-	public void setConfigStream(InputStream configStream) {
-		this.configStream = configStream;
+	public void setServiceAccountFileStream(InputStream serviceAccountFileStream) {
+		this.serviceAccountFileStream = serviceAccountFileStream;
 	}
 
 	public int getDefaultConnectionTimeout() {
@@ -72,12 +72,12 @@ public class FirebaseHostingApiConfig {
 		this.serviceResponseListener = serviceResponseListener;
 	}
 
-	public Serializer getCustomSerializer() {
-		return customSerializer;
+	public Serializer getSerializer() {
+		return serializer;
 	}
 
-	public void setCustomSerializer(Serializer customSerializer) {
-		this.customSerializer = customSerializer;
+	public void setSerializer(Serializer serializer) {
+		this.serializer = serializer;
 	}
 
 	/*
@@ -86,8 +86,8 @@ public class FirebaseHostingApiConfig {
 	 */
 	@Override
 	public String toString() {
-		return "FirebaseRestApiConfig [configStream=" + configStream + ", defaultConnectionTimeout="
+		return "FirebaseRestApiConfig [defaultConnectionTimeout="
 				+ defaultConnectionTimeout + ", defaultReadTimeout=" + defaultReadTimeout
-				+ ", siteName=" + siteName + "]";
+				+ ", siteId=" + siteId + "]";
 	}
 }

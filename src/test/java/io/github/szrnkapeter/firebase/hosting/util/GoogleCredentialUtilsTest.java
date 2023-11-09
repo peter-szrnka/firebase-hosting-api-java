@@ -41,7 +41,7 @@ class GoogleCredentialUtilsTest {
 		Mockito.when(mockGoogleCredentials.getAccessToken()).thenReturn(mockAccessToken);
 
 		FirebaseHostingApiConfig config = new FirebaseHostingApiConfig();
-		config.setConfigStream(new FileInputStream(new File("src/test/resources/test1.txt")));
+		config.setServiceAccountFileStream(new FileInputStream(new File("src/test/resources/test1.txt")));
 		String response = GoogleCredentialUtils.getAccessToken(config);
 		assertEquals(mockAccessTokenValue, response);
 
@@ -57,7 +57,7 @@ class GoogleCredentialUtilsTest {
 		mockedGoogleCredentials.when(() -> GoogleCredentials.fromStream(any())).thenThrow(new IllegalArgumentException("Invalid!"));
 
 		FirebaseHostingApiConfig config = new FirebaseHostingApiConfig();
-		config.setConfigStream(new FileInputStream(new File("src/test/resources/test1.txt")));
+		config.setServiceAccountFileStream(new FileInputStream(new File("src/test/resources/test1.txt")));
 		RuntimeException failure = assertThrows(RuntimeException.class, () -> GoogleCredentialUtils.getAccessToken(config));
 
 		assertEquals("Unexpected exception occurred after parsing the service account JSON file! Please check that the file is valid!", failure.getMessage());
