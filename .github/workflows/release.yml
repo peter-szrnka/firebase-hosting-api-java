@@ -4,11 +4,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      branch: main
-      defaultBranch: main
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: main
         env:
           branch: main
           working_directory: ./code/
