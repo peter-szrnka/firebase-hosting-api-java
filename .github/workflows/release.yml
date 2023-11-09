@@ -4,9 +4,13 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      branch: main
+      defaultBranch: main
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         env:
+          branch: main
           working_directory: ./code/
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
