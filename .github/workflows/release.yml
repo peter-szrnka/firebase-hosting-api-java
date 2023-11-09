@@ -11,14 +11,14 @@ jobs:
       - name: Build and Test
         uses: qcastel/github-actions-maven-cmd@master
         with:
-          maven-project-folder: "./code/"
+          maven-project-folder: ./code/
           maven-args: "clean install"
       - name: Release
         uses: qcastel/github-actions-maven-release@master
         env:
           JAVA_HOME: /usr/lib/jvm/java-11-openjdk/
         with:
-          maven-project-folder: "./code/"
+          maven-project-folder: ./code/
           git-release-bot-name: "release-bot"
           git-release-bot-email: "release-bot@szrnkapeter.hu"
           release-branch-name: "main"
