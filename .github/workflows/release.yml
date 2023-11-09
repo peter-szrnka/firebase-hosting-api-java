@@ -5,8 +5,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      working_directory: ./code/
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - uses: actions/checkout@v3
@@ -14,14 +12,12 @@ jobs:
         uses: qcastel/github-actions-maven-cmd@master
         with:
           maven-args: "clean install"
-        env:
-          working_directory: ./code/
       - name: Release
         uses: qcastel/github-actions-maven-release@master
         env:
-          working_directory: ./code/
           JAVA_HOME: /usr/lib/jvm/java-11-openjdk/
         with:
+          maven-project-folder: "./code/"
           git-release-bot-name: "release-bot"
           git-release-bot-email: "release-bot@szrnkapeter.hu"
           release-branch-name: "main"
