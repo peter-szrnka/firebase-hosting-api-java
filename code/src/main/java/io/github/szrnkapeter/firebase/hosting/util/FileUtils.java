@@ -29,10 +29,8 @@ public class FileUtils {
 	 * 
 	 * @param fileContent File content in byte array.
 	 * @return The SHA-256 hash
-	 * @throws NoSuchAlgorithmException 
-	 * @throws IOException 
-	 * @throws Exception Any exception thrown by the method.
-	 * 
+	 * @throws NoSuchAlgorithmException Any exception thrown by the method.
+	 * @throws IOException  Any exception thrown by the method.
 	 * @since 0.2
 	 */
 	public static String getSHA256Checksum(byte[] fileContent) throws NoSuchAlgorithmException, IOException {
