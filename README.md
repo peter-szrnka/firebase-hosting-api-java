@@ -35,7 +35,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 <dependency>
 	<groupId>io.github.peter-szrnka</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.6</version>
+	<version>0.7</version>
 </dependency>
 ```
 
@@ -49,7 +49,30 @@ Built-in object serializers are deprecated from version 0.5:
 
 From version 0.6, they're totally removed from the package. You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Serializers
 
+## Input parameters
+
+| Name                        | Type                                                                     | Mandatory? | Description                                                                             |
+|-----------------------------|--------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------------------|
+| siteId                      | String                                                                   | Yes        | Unique identifier of the Firebase Hosting website                                       |
+| serializer                  | io.github.szrnkapeter.firebase.hosting.serializer.Serializer             | Yes        | JSON serializer class                                                                   |
+| service account file stream | InputStream                                                              | Yes        | Firebase service account JSON file                                                      |
+| default connection timeout  | int (default 30000)                                                      | No         | Connection timeout                                                                      |
+| default read timeout        | int (default 30000)                                                      | No         | Read timeout                                                                            |
+| httpResponseListener        | io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener     | No         | Callback function that returns with the value of the HTTP response for the give service |
+| serviceResponseListener     | io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener  | No         | Callback function that returns with the value of the given service                      |
+
+**IMPORTANT: If you do not set the:**
+- **httpResponseListener**
+- **serviceResponseListener**
+
+**parameters then you will not see any response codes or messages!**
+
+## Firebase configuration
+Detailed guide can be found [here](firebase-setup.md)
+
 # Usage
+
+**IMPORTANT:** Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
 
 ## New deployment
 
@@ -57,8 +80,9 @@ A new deployment can be started by calling **client.createDeploy()**. The **clea
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000).withCustomSerializer(new GsonSerializer())
+	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
+	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000)
+    .withSerializer(new GsonSerializer())
 	.withHttpResponseListener(new HttpResponseListener() {
 						
 		@Override
@@ -73,7 +97,7 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 			System.out.println(function + " / " + response);
 		}
 	})
-	.withSiteName("my-site-name") //
+	.withSiteId("my-site-name") //
 	.build();
 	
 FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
@@ -94,10 +118,10 @@ client.createDeploy(request);
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-	.withCustomSerializer(new GsonSerializer())
-	.withSiteName("my-site-name")
-    	.build();
+	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
+	.withSerializer(new GsonSerializer())
+	.withSiteId("my-site-name")
+    .build();
 
 FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
@@ -115,10 +139,10 @@ System.out.println("Files response = " + files);
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-	.withSiteName("my-site-name")
-    	.withCustomSerializer(new MoshiSerializer())
-    	.build();
+	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
+	.withSiteId("my-site-name")
+    .withSerializer(new MoshiSerializer())
+    .build();
 
 FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
@@ -136,12 +160,12 @@ System.out.println("Files response = " + files);
 
 ```java
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	.withConfigStream(new FileInputStream("firebase-adminsdk.json"))
-	.withSiteName("my-site-name")
-	.withCustomSerializer(new GsonSerializer())
-    	.withDefaultConnectionTimeout(90000)
+	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
+	.withSiteId("my-site-name")
+	.withSerializer(new GsonSerializer())
+    .withDefaultConnectionTimeout(90000)
 	.withDefaultReadTimeout(90000)
-    	.build();
+    .build();
 
 FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 
