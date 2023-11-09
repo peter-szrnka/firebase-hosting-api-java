@@ -27,9 +27,13 @@ public class GoogleCredentialUtils {
 	 * @return The queried access token.
 	 * @throws IOException Any IO exception.
 	 */
-	public static String getAccessToken(FirebaseHostingApiConfig config) throws IOException {
-		GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getConfigStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
-		googleCredential.refreshIfExpired();
-		return googleCredential.getAccessToken().getTokenValue();
+	public static String getAccessToken(FirebaseHostingApiConfig config) {
+		try {
+			GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getConfigStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
+			googleCredential.refreshIfExpired();
+			return googleCredential.getAccessToken().getTokenValue();
+		} catch (Exception e) {
+			throw new RuntimeException("Unexpected exception occurred after parsing the service account JSON file! Please check that the file is valid!", e);
+		}
 	}
 }
