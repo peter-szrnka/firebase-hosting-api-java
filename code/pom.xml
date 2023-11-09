@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
-		<google-auth-library.version>0.22.2</google-auth-library.version>
+		<google-auth-library.version>1.20.0</google-auth-library.version>
 
 		<junit.jupiter.version>5.8.2</junit.jupiter.version>
 		<junit.platform.version>1.8.2</junit.platform.version>
@@ -29,7 +29,7 @@
 		
 		<sonar.organization>peter-szrnka</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.exclusions>**/model/**,**/util/**</sonar.exclusions>
+		<sonar.exclusions>**/model/**,**/builder/**,**/config/**,**/util/**</sonar.exclusions>
 	</properties>
 
 	<developers>
@@ -206,7 +206,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-release-plugin</artifactId>
-						<version>3.0.0-M1</version>
+						<version>3.0.1</version>
 						<configuration>
 							<tagNameFormat>@{project.version}</tagNameFormat>
 						</configuration>

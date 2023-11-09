@@ -78,13 +78,7 @@ class FirebaseHostingApiClientTest {
 				.withSiteId("test")
 				.withSerializer(new GsonSerializer())
 				.withDefaultConnectionTimeout(60000).withDefaultReadTimeout(60000)
-				.withHttpResponseListener(new HttpResponseListener() {
-					
-					@Override
-					public void getResponseInfo(String function, int code, String responseMessage) {
-						System.out.println(function + SEPARATOR + code + SEPARATOR + responseMessage);
-					}
-				})
+				.withHttpResponseListener((function, code, responseMessage) -> System.out.println(function + SEPARATOR + code + SEPARATOR + responseMessage))
 				.withServiceResponseListener(new ServiceResponseListener() {
 					
 					@Override
@@ -242,9 +236,10 @@ class FirebaseHostingApiClientTest {
 	
 	@Test
 	void test011_CreateDeploy() throws Exception {
-		initCreateDeploy(true, false);
-		initCreateDeploy(false, false);
-		initCreateDeploy(false, true);
+		initCreateDeploy(true, false, false);
+		initCreateDeploy(false, false, false);
+		initCreateDeploy(false, true, false);
+		initCreateDeploy(false, false, true);
 	}
 	
 	@Test
@@ -325,7 +320,7 @@ class FirebaseHostingApiClientTest {
 		assertEquals("Serializer is missing from the configuration!", exception.getMessage());
 	}
 
-	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease) throws Exception {
+	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease, boolean nullResponseListener) throws Exception {
 		DeployRequest request = new DeployRequest();
 		request.setCleanDeploy(cleanDeploy);
 		Set<DeployItem> fileList = new HashSet<>();
@@ -337,7 +332,13 @@ class FirebaseHostingApiClientTest {
 
 		request.setFiles(fileList);
 
-		FirebaseHostingApiClient client = new FirebaseHostingApiClient(getFirebaseRestApiConfig());
+		FirebaseHostingApiConfig config = getFirebaseRestApiConfig();
+
+		if (nullResponseListener) {
+			config.setHttpResponseListener(null);
+		}
+
+		FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
 		
 		// Mocking getReleases()
 		ObjectMapper objectMapper = new ObjectMapper();
