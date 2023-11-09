@@ -38,19 +38,16 @@ public class ConnectionUtils {
 			String url) throws IOException {
 		URLConnection connection = initURLConnection(config, Constants.FIREBASE_API_URL + url, accessToken,
 				"application/json");
-		InputStream streamResponse = connection.getInputStream();
 
-		try (Scanner scanner = new Scanner(streamResponse)) {
+		try (InputStream streamResponse = connection.getInputStream(); Scanner scanner = new Scanner(streamResponse)) {
 			String responseBody = scanner.useDelimiter("\\A").next();
 			return config.getSerializer().getObject(clazz, responseBody);
-		} finally {
-			streamResponse.close();
 		}
 	}
 
 	/**
 	 * Opens an HTTP connection by the parameters. Based on
-	 * {@link #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String, String)}
+	 * #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String, String)
 	 * 
 	 * @param <T>           T type
 	 * @param requestMethod Request method: POST | PATCH
@@ -105,19 +102,15 @@ public class ConnectionUtils {
 					connection.getResponseMessage());
 		}
 
-		InputStream streamResponse = connection.getInputStream();
-
-		try (Scanner scanner = new Scanner(streamResponse)) {
+		try (InputStream streamResponse = connection.getInputStream(); Scanner scanner = new Scanner(streamResponse)) {
 			String responseBody = scanner.useDelimiter("\\A").next();
 			return input.getClazz() == null ? null : (T) input.getConfig().getSerializer().getObject(input.getClazz(), responseBody);
-		} finally {
-			streamResponse.close();
 		}
 	}
 
 	/**
 	 * Calls
-	 * {@link #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String, String, String)}
+	 * #openSimpleHTTPConnection(String, FirebaseHostingApiConfig, Class, String, String, String, String, String)
 	 * method with POST parameter.
 	 * 
 	 * @param <T>         T type

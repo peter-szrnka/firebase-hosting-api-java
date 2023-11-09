@@ -25,7 +25,6 @@ public class GoogleCredentialUtils {
 	 * 
 	 * @param config A {@link FirebaseHostingApiConfig} instance
 	 * @return The queried access token.
-	 * @throws IOException Any IO exception.
 	 */
 	public static String getAccessToken(FirebaseHostingApiConfig config) {
 		try {
