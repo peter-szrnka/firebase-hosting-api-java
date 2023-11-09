@@ -36,8 +36,9 @@
 		<developer>
 			<email>szrnka.peter@gmail.com</email>
 			<name>Péter Szrnka</name>
-			<url>https://github.com/szrnka-peter</url>
+			<url>https://github.com/peter-szrnka</url>
 			<roles>
+				<role>tech lead</role>
 				<role>developer</role>
 			</roles>
 		</developer>
@@ -52,9 +53,9 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/szrnka-peter/firebase-hosting-api-java</url>
-		<connection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/szrnka-peter/firebase-hosting-api-java.git</developerConnection>
+		<url>https://github.com/peter-szrnka/firebase-hosting-api-java</url>
+		<connection>scm:git:ssh://git@github.com/peter-szrnka/firebase-hosting-api-java.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/peter-szrnka/firebase-hosting-api-java.git</developerConnection>
     </scm>
 
 	<distributionManagement>
