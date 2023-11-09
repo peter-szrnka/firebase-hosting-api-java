@@ -15,3 +15,6 @@ buildNumber.properties
 /.classpath
 /.idea
 /code/.idea
+/examples/version_0.6/.idea
+/examples/version_0.6/.vscode
+/examples/version_0.6/src/main/resources/service-account.json

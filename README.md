@@ -72,6 +72,8 @@ Detailed guide can be found [here](firebase-setup.md)
 
 # Usage
 
+**IMPORTANT:** Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
+
 ## New deployment
 
 A new deployment can be started by calling **client.createDeploy()**. The **cleanDeploy** is an important parameter that determines the new deployment should remove the existing files or not.
