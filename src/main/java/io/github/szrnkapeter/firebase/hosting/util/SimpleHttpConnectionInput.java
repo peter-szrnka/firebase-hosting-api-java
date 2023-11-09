@@ -1,7 +1,5 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
-import javax.annotation.processing.Generated;
-
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 
 public class SimpleHttpConnectionInput {
@@ -58,12 +56,10 @@ public class SimpleHttpConnectionInput {
 		return function;
 	}
 
-	@Generated("SparkTools")
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	@Generated("SparkTools")
 	public static final class Builder {
 		private String requestMethod;
 		private FirebaseHostingApiConfig config;
