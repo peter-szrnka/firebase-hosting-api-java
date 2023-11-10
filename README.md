@@ -68,7 +68,7 @@ From version 0.6, they're totally removed from the package. You have to create y
 **parameters then you will not see any response codes or messages!**
 
 ## Firebase configuration
-Detailed guide can be found [here](firebase-setup.md)
+<u>Detailed guide can be found [here](FIREBASE_SETUP.md)</u>
 
 # Usage
 
@@ -219,3 +219,7 @@ finalizeVersion / Version [name=sites/<site-name>/versions/<version-name>, statu
 createRelease / 200 / OK
 createRelease / Release [name=sites/<site-name>/releases/<release-id>, type=DEPLOY, releaseTime=Mon Dec 28 17:20:29 CET 2020, releaseUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], version=Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview={}]]
 ```
+
+# Samples
+
+You can find samples under "examples" folder!
