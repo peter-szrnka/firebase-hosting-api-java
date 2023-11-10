@@ -74,6 +74,10 @@ From version 0.6, they're totally removed from the package. You have to create y
 
 **IMPORTANT:** Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
 
+## Samples
+
+You can find samples under "examples" folder!
+
 ## New deployment
 
 A new deployment can be started by calling **client.createDeploy()**. The **cleanDeploy** is an important parameter that determines the new deployment should remove the existing files or not.
@@ -219,7 +223,3 @@ finalizeVersion / Version [name=sites/<site-name>/versions/<version-name>, statu
 createRelease / 200 / OK
 createRelease / Release [name=sites/<site-name>/releases/<release-id>, type=DEPLOY, releaseTime=Mon Dec 28 17:20:29 CET 2020, releaseUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], version=Version [name=sites/<site-name>/versions/<version-name>, status=FINALIZED, config={}, labels=null, createTime=Mon Dec 28 17:20:18 CET 2020, createUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], finalizeTime=Mon Dec 28 17:20:29 CET 2020, finalizeUser=User [email=firebase-adminsdk-to1iz@<site-name>.iam.gserviceaccount.com, imageUrl=null], fileCount=null, versionBytes=null, deleteUser=null, deleteTime=null, preview={}]]
 ```
-
-# Samples
-
-You can find samples under "examples" folder!
