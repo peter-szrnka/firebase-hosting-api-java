@@ -10,10 +10,10 @@ jobs:
       - id: install-secret-key 
         name: Install gpg secret key 
         run: | 
-        # Install gpg secret key 
-        cat <(echo -e "${{ secrets.GPG_SIGNING_KEY }}") | gpg --batch --import 
-        # Verify gpg secret key 
-        gpg --list-secret-keys --keyid-format LONG
+          # Install gpg secret key 
+          cat <(echo -e "${{ secrets.GPG_SIGNING_KEY }}") | gpg --batch --import 
+          # Verify gpg secret key 
+          gpg --list-secret-keys --keyid-format LONG
       - uses: actions/checkout@v3
         with:
           ref: main
@@ -22,7 +22,7 @@ jobs:
           working_directory: ./code/
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
-        env:
+        # env:
           # GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           # MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         with:
