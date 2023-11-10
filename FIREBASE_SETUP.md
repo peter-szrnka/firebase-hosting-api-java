@@ -34,7 +34,7 @@ Click on "Service accounts" panel then "Generate new private key":
 
 Download the file and save it as "service-account.json" and save into "src/main/resources" folder.
 
-Run the application, and you have to see many HTTP 200's. 
+Run the sample v0.7 application, and you have to see many HTTP 200's. 
 
 ![log_example.png](assets/log_example.png)
 
