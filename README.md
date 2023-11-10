@@ -33,7 +33,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ```xml
 <dependency>
-	<groupId>io.github.peter-szrnka</groupId>
+	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
 	<version>0.7</version>
 </dependency>
@@ -41,13 +41,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ## Object serializers
 
-Built-in object serializers are deprecated from version 0.5:
-
-- Jackson (default)
-- Moshi
-- Gson
-
-From version 0.6, they're totally removed from the package. You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Serializers
+You have to create your own Serializer by implementing the io.github.szrnkapeter.firebase.hosting.serializer.Serializer interface. For further details, please check https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Serializers
 
 ## Input parameters
 
@@ -125,27 +119,6 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
 	.withSerializer(new GsonSerializer())
 	.withSiteId("my-site-name")
-    .build();
-
-FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
-
-// Call getReleases
-GetReleasesResponse response = client.getReleases();
-System.out.println("Response = " + response);
-		
-System.out.println("\r\n");
-		
-GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().get(0).getVersion().getName());
-System.out.println("Files response = " + files);
-```
-
-## Custom serializer
-
-```java
-FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
-	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
-	.withSiteId("my-site-name")
-    .withSerializer(new MoshiSerializer())
     .build();
 
 FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
