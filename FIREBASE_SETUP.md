@@ -3,6 +3,10 @@
 
 This file contains a detailed guide how to create and configure a Firebase project with Hosting to use the **firebase-hosting-api-java** client library.
 
+## Before you begin
+Enable the API usage:
+https://firebase.google.com/docs/hosting/api-deploy#enable-api
+
 ## Create a Firebase project in Firebase Console
 Open https://console.firebase.google.com/u/0/ and press on "Add project":
 
