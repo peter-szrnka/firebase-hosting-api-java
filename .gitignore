@@ -18,3 +18,5 @@ buildNumber.properties
 /examples/version_0.6/.idea
 /examples/version_0.6/.vscode
 /examples/version_0.6/src/main/resources/service-account.json
+/examples/version_0.7/.idea
+/examples/version_0.7/src/main/resources/service-account.json

@@ -68,11 +68,15 @@ From version 0.6, they're totally removed from the package. You have to create y
 **parameters then you will not see any response codes or messages!**
 
 ## Firebase configuration
-Detailed guide can be found [here](firebase-setup.md)
+<u>Detailed guide can be found [here](FIREBASE_SETUP.md)</u>
 
 # Usage
 
 **IMPORTANT:** Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
+
+## Samples
+
+You can find samples under "examples" folder!
 
 ## New deployment
 
