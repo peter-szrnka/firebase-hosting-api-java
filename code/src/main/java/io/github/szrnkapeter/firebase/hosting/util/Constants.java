@@ -9,6 +9,10 @@ public class Constants {
 	private Constants() {
 	}
 
+	public static final String FILES = "/files";
+	public static final String VERSIONS = "/versions/";
+	public static final String SITES = "sites/";
+
 	public static final String FINALIZED = "FINALIZED";
 	public static final String POST = "POST";
 	public static final String PATCH = "PATCH";

@@ -1,5 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
+import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,6 +9,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -22,6 +27,18 @@ public class FileUtils {
 	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());  
 
 	private FileUtils() {
+	}
+
+	public static Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws IOException, NoSuchAlgorithmException {
+		Map<String, String> result = new HashMap<>();
+
+		for(DeployItem file : files) {
+			byte[] gzippedContent = compressAndReadFile(file.getContent());
+			String checkSum = getSHA256Checksum(gzippedContent);
+			result.put("/" + file.getName(), checkSum);
+		}
+
+		return result;
 	}
 
 	/**
@@ -86,9 +103,7 @@ public class FileUtils {
 	public static byte[] getRemoteFile(String urlString) throws IOException {
 		URL url = new URL(urlString);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InputStream is = null;
-		try {
-			is = url.openStream();
+		try (InputStream is = url.openStream()) {
 			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
 			int n;
 
@@ -98,10 +113,6 @@ public class FileUtils {
 		} catch (IOException e) {
 			logger.warning(String.format("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage()));
 			// Perform any other exception handling that's appropriate.
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
 
 		return baos.toByteArray();
