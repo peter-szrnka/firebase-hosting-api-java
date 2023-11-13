@@ -9,6 +9,13 @@ public class Constants {
 	private Constants() {
 	}
 
+	public static final int CHECKSUM_BUFFER_SIZE = 1024;
+	public static final int STREAM_BUFFER_SIZE = 4096;
+
+	public static final String FILES = "/files";
+	public static final String VERSIONS = "/versions/";
+	public static final String SITES = "sites/";
+
 	public static final String FINALIZED = "FINALIZED";
 	public static final String POST = "POST";
 	public static final String PATCH = "PATCH";

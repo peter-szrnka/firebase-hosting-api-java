@@ -38,7 +38,7 @@ public class Main {
                     })*/
                     .withSiteId("hosting-api-java-test")
                     .build();
-            FirebaseHostingApiClient client = new FirebaseHostingApiClient(firebaseRestApiConfig);
+            FirebaseHostingApiClient client = FirebaseHostingApiClient.newClient(firebaseRestApiConfig);
 
             DeployRequest deployRequest = new DeployRequest();
             deployRequest.setCleanDeploy(true);

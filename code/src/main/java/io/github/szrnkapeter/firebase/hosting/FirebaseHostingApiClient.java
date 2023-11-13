@@ -1,18 +1,5 @@
 package io.github.szrnkapeter.firebase.hosting;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import com.google.common.annotations.VisibleForTesting;
-
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
 import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
@@ -25,10 +12,25 @@ import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
 import io.github.szrnkapeter.firebase.hosting.model.Version;
-import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
-import io.github.szrnkapeter.firebase.hosting.util.Constants;
+import io.github.szrnkapeter.firebase.hosting.service.FileService;
+import io.github.szrnkapeter.firebase.hosting.service.ReleaseService;
+import io.github.szrnkapeter.firebase.hosting.service.VersionService;
+import io.github.szrnkapeter.firebase.hosting.service.impl.FileServiceImpl;
+import io.github.szrnkapeter.firebase.hosting.service.impl.ReleaseServiceImpl;
+import io.github.szrnkapeter.firebase.hosting.service.impl.VersionServiceImpl;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static io.github.szrnkapeter.firebase.hosting.util.ConfigValidationUtils.preValidateConfig;
+import static io.github.szrnkapeter.firebase.hosting.util.FileUtils.generateFileListAndHash;
+import static io.github.szrnkapeter.firebase.hosting.util.VersionUtils.getVersionId;
+import static io.github.szrnkapeter.firebase.hosting.util.VersionUtils.getVersionName;
 
 /**
  * Firebase REST API client for Java
@@ -38,12 +40,21 @@ import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
  */
 public class FirebaseHostingApiClient {
 
-	private static final String FILES = "/files";
-	private static final String VERSIONS = "/versions/";
-	private static final String SITES = "sites/";
-
 	private final FirebaseHostingApiConfig config;
-	private final String accessToken;
+
+	private final ReleaseService releaseService;
+	private final VersionService versionService;
+	private final FileService fileService;
+
+	public static FirebaseHostingApiClient newClient(FirebaseHostingApiConfig config) {
+		String accessToken = GoogleCredentialUtils.getAccessToken(config);
+
+		ReleaseService releaseService = new ReleaseServiceImpl(config, accessToken);
+		VersionService versionService = new VersionServiceImpl(config, accessToken);
+		FileService fileService = new FileServiceImpl(config, accessToken);
+
+		return new FirebaseHostingApiClient(config, releaseService, versionService, fileService);
+	}
 
 	/**
 	 * Default constructor.
@@ -52,11 +63,14 @@ public class FirebaseHostingApiClient {
 	 * 
 	 * @since 0.2
 	 */
-	public FirebaseHostingApiClient(FirebaseHostingApiConfig firebaseRestApiConfig) {
+	protected FirebaseHostingApiClient(FirebaseHostingApiConfig firebaseRestApiConfig, ReleaseService releaseService,
+									   VersionService versionService, FileService fileService) {
 		preValidateConfig(firebaseRestApiConfig);
 
 		config = firebaseRestApiConfig;
-		accessToken = GoogleCredentialUtils.getAccessToken(config);
+		this.releaseService = releaseService;
+		this.versionService = versionService;
+		this.fileService = fileService;
 	}
 
 	/**
@@ -112,7 +126,7 @@ public class FirebaseHostingApiClient {
 		PopulateFilesResponse populateFilesResponse = populateFiles(populateRequest, versionId);
 
 		// Upload them
-		uploadFiles(versionId, request, populateFilesResponse);
+		fileService.uploadFiles(versionId, request.getFiles(), populateFilesResponse.getUploadRequiredHashes());
 
 		// Finalize the new version
 		finalizeVersion(versionId);
@@ -121,7 +135,7 @@ public class FirebaseHostingApiClient {
 		Release newRelease = createRelease(versionId);
 		
 		// Post delete earlier deployments
-		deletePreviousVersion(request);
+		versionService.deletePreviousVersions(request, getReleases().getReleases());
 
 		// Create the release
 		return new DeployResponse(newRelease);
@@ -137,12 +151,8 @@ public class FirebaseHostingApiClient {
 	 *
 	 * @since 0.2
 	 */
-	public Release createRelease(String version) throws IOException {	
-		Release newRelease =  ConnectionUtils.openSimpleHTTPPostConnection(config, Release.class, accessToken,
-			SITES + config.getSiteId() + "/releases?versionName=" + getVersionName(version), null, "createRelease");
-
-		responseCallback("createRelease", newRelease);
-		return newRelease;
+	public Release createRelease(String version) throws IOException {
+		return releaseService.createRelease(getVersionName(config, version));
 	}
 
 	/**
@@ -155,11 +165,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public Version createVersion() throws IOException {
-		Version newVersion = ConnectionUtils.openSimpleHTTPPostConnection(config, Version.class, accessToken,
-				SITES + config.getSiteId() + "/versions", "{}", "createVersion");
-
-		responseCallback("createVersion", newVersion);
-		return newVersion;
+		return versionService.createVersion();
 	}
 
 	/**
@@ -172,7 +178,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public void deleteVersion(String version) throws IOException {
-		ConnectionUtils.openSimpleHTTPConnection("DELETE", config, null, accessToken, getVersionName(version), null, "deleteVersion");
+		versionService.deleteVersion(getVersionName(config, version));
 	}
 
 	/**
@@ -186,11 +192,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public Version finalizeVersion(String version) throws IOException {
-		Version newVersion = ConnectionUtils.openSimpleHTTPConnection("PATCH", config, Version.class, accessToken,
-				SITES + config.getSiteId() + VERSIONS + version + "?update_mask=status", "{ \"status\": \"FINALIZED\" }", "finalizeVersion");
-
-		responseCallback("finalizeVersion", newVersion);
-		return newVersion;
+		return versionService.finalizeVersion(version);
 	}
 
 	/**
@@ -204,11 +206,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public GetReleasesResponse getReleases() throws IOException {
-		GetReleasesResponse response = ConnectionUtils.openHTTPGetConnection(config, GetReleasesResponse.class, accessToken,
-				SITES + config.getSiteId() + "/releases");
-
-		responseCallback("getReleases", response);
-		return response;
+		return releaseService.getReleases();
 	}
 
 	/**
@@ -222,10 +220,7 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public GetVersionFilesResponse getVersionFiles(String version) throws IOException {
-		GetVersionFilesResponse response = ConnectionUtils.openHTTPGetConnection(config, GetVersionFilesResponse.class, accessToken, getVersionName(version) + FILES);
-
-		responseCallback("getVersionFiles", response);
-		return response;
+		return fileService.getVersionFiles(getVersionName(config, version));
 	}
 
 	/**
@@ -240,13 +235,8 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws IOException {
-		String data = config.getSerializer().toJson(PopulateFilesRequest.class, request);
-		PopulateFilesResponse response = ConnectionUtils.openSimpleHTTPPostConnection(config, PopulateFilesResponse.class, accessToken, SITES + config.getSiteId() + VERSIONS + version + ":populateFiles", data, "populateFiles");
-
-		responseCallback("populateFiles", response);
-		return response;
+		return fileService.populateFiles(request, version);
 	}
-
 	
 	/**
 	 * Uploads a file.
@@ -258,111 +248,6 @@ public class FirebaseHostingApiClient {
 	 * @since 0.2
 	 */
 	public void uploadFile(UploadFileRequest request) throws NoSuchAlgorithmException, IOException {
-		String calculatedHash = FileUtils.getSHA256Checksum(request.getFileContent());
-		String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteId() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
-		
-		if(request.getUploadUrl() != null) {
-			url = request.getUploadUrl() + "/" + calculatedHash;
-		}
-
-		ConnectionUtils.uploadFile(config, accessToken, request.getFileName(), url, request.getFileContent());
-	}
-
-	@VisibleForTesting
-	String getVersionId(String version) {
-		if(version == null || version.isEmpty()) {
-			return null;
-		}
-
-		return version.substring(version.lastIndexOf("/") + 1);
-	}
-
-	private void responseCallback(String function, Object response) {
-		if(config.getServiceResponseListener() == null) {
-			return;
-		}
-
-		config.getServiceResponseListener().getResponse(function, response);
-	}
-
-	private void deletePreviousVersion(DeployRequest request) throws IOException {
-		if(!request.isDeletePreviousVersions()) {
-			return;
-		}
-
-		GetReleasesResponse response = getReleases();
-		AtomicInteger i = new AtomicInteger(0);
-
-		for(Release release : response.getReleases()) {
-			if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
-				deleteVersion(release.getVersion().getName());
-			}
-
-			i.incrementAndGet();
-		}
-	}
-
-	private String getVersionName(String version) {
-		if(version == null || version.isEmpty()) {
-			throw new IllegalArgumentException("Version field is mandatory!");
-		}
-
-		String versionName = SITES + config.getSiteId() + VERSIONS + version;
-
-		Pattern p = Pattern.compile(SITES + config.getSiteId() + VERSIONS + ".*");
-		Matcher m = p.matcher(version);
-
-		if (m.matches()) {
-			versionName = version;
-		}
-		
-		return versionName;
-	}
-	
-	private void uploadFiles(String versionId, DeployRequest request, PopulateFilesResponse populateFilesResponse) throws IOException, NoSuchAlgorithmException {
-		for(DeployItem item : request.getFiles()) {
-			byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
-			String checkSum = FileUtils.getSHA256Checksum(fileContent);
-			
-			if(populateFilesResponse.getUploadRequiredHashes() != null && !populateFilesResponse.getUploadRequiredHashes().contains(checkSum)) {
-				continue;
-			}
-			
-			UploadFileRequest uploadFilesRequest = new UploadFileRequest();
-			uploadFilesRequest.setVersion(versionId);
-			uploadFilesRequest.setFileContent(fileContent);
-			uploadFilesRequest.setFileName(item.getName());
-			uploadFile(uploadFilesRequest);
-		}
-	}
-
-	private Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws IOException, NoSuchAlgorithmException {
-		Map<String, String> result = new HashMap<>();
-
-		for(DeployItem file : files) {
-			byte[] gzippedContent = FileUtils.compressAndReadFile(file.getContent());
-			String checkSum = FileUtils.getSHA256Checksum(gzippedContent);
-			result.put("/" + file.getName(), checkSum);
-		}
-		
-		return result;
-	}
-
-	private void preValidateConfig(FirebaseHostingApiConfig firebaseRestApiConfig) {
-		if (firebaseRestApiConfig == null) {
-			throw new IllegalArgumentException("FirebaseRestApiConfig field is mandatory!");
-		}
-
-		if (firebaseRestApiConfig.getSiteId() == null || firebaseRestApiConfig.getSiteId().isEmpty()) {
-			throw new IllegalArgumentException("Site name is mandatory!");
-		}
-
-		if (firebaseRestApiConfig.getServiceAccountFileStream() == null) {
-			throw new IllegalArgumentException("Service account file stream is missing from the configuration!");
-		}
-
-		if (firebaseRestApiConfig.getSerializer() == null) {
-			throw new IllegalArgumentException("Serializer is missing from the configuration!");
-		}
+		fileService.uploadFile(request);
 	}
 }

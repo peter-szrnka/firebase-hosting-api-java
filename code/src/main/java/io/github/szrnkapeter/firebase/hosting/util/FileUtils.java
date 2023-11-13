@@ -1,5 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
+import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,9 +9,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.CHECKSUM_BUFFER_SIZE;
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.STREAM_BUFFER_SIZE;
 
 /**
  * Utility class to provide file related methods.
@@ -18,10 +26,25 @@ import java.util.zip.GZIPOutputStream;
  * @since 0.2
  */
 public class FileUtils {
-	
-	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());  
+
+	private static final int XFF = 0xff;
+	private static final int X_100 = 0x100;
+
+	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());
 
 	private FileUtils() {
+	}
+
+	public static Map<String, String> generateFileListAndHash(Set<DeployItem> files) throws IOException, NoSuchAlgorithmException {
+		Map<String, String> result = new HashMap<>();
+
+		for(DeployItem file : files) {
+			byte[] gzippedContent = compressAndReadFile(file.getContent());
+			String checkSum = getSHA256Checksum(gzippedContent);
+			result.put("/" + file.getName(), checkSum);
+		}
+
+		return result;
 	}
 
 	/**
@@ -35,7 +58,7 @@ public class FileUtils {
 	 */
 	public static String getSHA256Checksum(byte[] fileContent) throws NoSuchAlgorithmException, IOException {
 		MessageDigest shaDigest = MessageDigest.getInstance("SHA-256");
-		byte[] byteArray = new byte[1024];
+		byte[] byteArray = new byte[CHECKSUM_BUFFER_SIZE];
 		int bytesCount = 0;
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
@@ -48,9 +71,10 @@ public class FileUtils {
 
 		byte[] bytes = shaDigest.digest();
 
+
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bytes.length; i++) {
-			sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			sb.append(Integer.toString((bytes[i] & XFF) + X_100, 16).substring(1));
 		}
 
 		return sb.toString();
@@ -86,10 +110,8 @@ public class FileUtils {
 	public static byte[] getRemoteFile(String urlString) throws IOException {
 		URL url = new URL(urlString);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InputStream is = null;
-		try {
-			is = url.openStream();
-			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+		try (InputStream is = url.openStream()) {
+			byte[] byteChunk = new byte[STREAM_BUFFER_SIZE]; // Or whatever size you want to read in at a time.
 			int n;
 
 			while ((n = is.read(byteChunk)) > 0) {
@@ -98,10 +120,6 @@ public class FileUtils {
 		} catch (IOException e) {
 			logger.warning(String.format("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage()));
 			// Perform any other exception handling that's appropriate.
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
 
 		return baos.toByteArray();

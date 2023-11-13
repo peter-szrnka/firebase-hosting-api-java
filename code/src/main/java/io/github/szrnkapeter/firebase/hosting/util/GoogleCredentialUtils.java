@@ -1,6 +1,5 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import com.google.auth.oauth2.GoogleCredentials;

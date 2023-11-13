@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.STREAM_BUFFER_SIZE;
+
 /**
  * Connection manager class.
  * 
@@ -165,7 +167,7 @@ public class ConnectionUtils {
 		OutputStream outputStream = connection.getOutputStream();
 		DataOutputStream request = new DataOutputStream(outputStream);
 
-		byte[] buffer = new byte[4096];
+		byte[] buffer = new byte[STREAM_BUFFER_SIZE];
 		int bytesRead = -1;
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
