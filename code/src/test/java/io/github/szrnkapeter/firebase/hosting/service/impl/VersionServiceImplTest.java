@@ -112,8 +112,16 @@ class VersionServiceImplTest {
             release1.setVersion(version);
             Release release2  = new Release();
             release2.setVersion(version);
+            Release release3  = new Release();
+
+            Version version2 = new Version();
+            version2.setName("version-name");
+            version2.setStatus("TODO");
+            release3.setVersion(version2);
+
             releaseList.add(release1);
             releaseList.add(release2);
+            releaseList.add(release3);
 
             // act
             service.deletePreviousVersions(request, releaseList);

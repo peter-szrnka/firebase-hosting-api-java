@@ -2,16 +2,20 @@ package io.github.szrnkapeter.firebase.hosting.util;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 
+/**
+ * @author Peter Szrnka
+ * @since 0.1
+ */
 public class SimpleHttpConnectionInput {
 
-	private String requestMethod;
-	private FirebaseHostingApiConfig config;
-	private Class<?> clazz;
-	private String accessToken;
-	private String url;
-	private String data;
-	private String contentType;
-	private String function;
+	private final String requestMethod;
+	private final FirebaseHostingApiConfig config;
+	private final Class<?> clazz;
+	private final String accessToken;
+	private final String url;
+	private final String data;
+	private final String contentType;
+	private final String function;
 
 	private SimpleHttpConnectionInput(Builder builder) {
 		this.requestMethod = builder.requestMethod;

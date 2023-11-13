@@ -16,6 +16,9 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.CHECKSUM_BUFFER_SIZE;
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.STREAM_BUFFER_SIZE;
+
 /**
  * Utility class to provide file related methods.
  * 
@@ -23,8 +26,11 @@ import java.util.zip.GZIPOutputStream;
  * @since 0.2
  */
 public class FileUtils {
-	
-	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());  
+
+	private static final int XFF = 0xff;
+	private static final int X_100 = 0x100;
+
+	private static final Logger logger = Logger.getLogger(FileUtils.class.getName());
 
 	private FileUtils() {
 	}
@@ -52,7 +58,7 @@ public class FileUtils {
 	 */
 	public static String getSHA256Checksum(byte[] fileContent) throws NoSuchAlgorithmException, IOException {
 		MessageDigest shaDigest = MessageDigest.getInstance("SHA-256");
-		byte[] byteArray = new byte[1024];
+		byte[] byteArray = new byte[CHECKSUM_BUFFER_SIZE];
 		int bytesCount = 0;
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
@@ -65,9 +71,10 @@ public class FileUtils {
 
 		byte[] bytes = shaDigest.digest();
 
+
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bytes.length; i++) {
-			sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			sb.append(Integer.toString((bytes[i] & XFF) + X_100, 16).substring(1));
 		}
 
 		return sb.toString();
@@ -104,7 +111,7 @@ public class FileUtils {
 		URL url = new URL(urlString);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (InputStream is = url.openStream()) {
-			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+			byte[] byteChunk = new byte[STREAM_BUFFER_SIZE]; // Or whatever size you want to read in at a time.
 			int n;
 
 			while ((n = is.read(byteChunk)) > 0) {
