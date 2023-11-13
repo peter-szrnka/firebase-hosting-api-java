@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.8][UNRELEASED] - Unknown
+### Changed
+- FirebaseHostingApiClient.newClient(config) have to be used to instantiate a new FirebaseHostingApiClient
+
 ## [0.7] - 2023-11-10
 ### Added
 - Additional validation implemented to check configuration input
