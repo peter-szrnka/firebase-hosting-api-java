@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: New bug report
+about: Create a report to help me improve the library
 title: "[BUG] Short title"
 labels: bug
 assignees: peter-szrnka
