@@ -62,7 +62,7 @@ You have to create your own Serializer by implementing the io.github.szrnkapeter
 **parameters then you will not see any response codes or messages!**
 
 ## Firebase configuration
-<u>Detailed guide can be found [here](FIREBASE_SETUP.md)</u>
+<u>Detailed guide can be found [here](https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Firebase-project-setup)</u>
 
 # Usage
 
