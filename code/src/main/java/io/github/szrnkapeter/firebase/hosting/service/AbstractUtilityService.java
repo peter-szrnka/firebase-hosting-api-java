@@ -17,10 +17,10 @@ public abstract class AbstractUtilityService {
     }
 
     protected void responseCallback(String function, Object response) {
-        if(config.getServiceResponseListener() == null) {
+        if(config.getServiceResponseCallback() == null) {
             return;
         }
 
-        config.getServiceResponseListener().getResponse(function, response);
+        config.getServiceResponseCallback().getResponse(function, response);
     }
 }

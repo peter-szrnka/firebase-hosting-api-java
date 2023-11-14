@@ -3,8 +3,8 @@ package io.github.szrnkapeter.firebase.hosting.config;
 import java.io.InputStream;
 
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
-import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
-import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
+import io.github.szrnkapeter.firebase.hosting.callback.HttpResponseCallback;
+import io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback;
 import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
 
 /**
@@ -20,8 +20,8 @@ public class FirebaseHostingApiConfig {
 	private int defaultConnectionTimeout = 30000;
 	private int defaultReadTimeout = 30000;
 	private String siteId;
-	private HttpResponseListener httpResponseListener;
-	private ServiceResponseListener serviceResponseListener;
+	private HttpResponseCallback httpResponseCallback;
+	private ServiceResponseCallback serviceResponseCallback;
 	private Serializer serializer;
 
 	public String getSiteId() {
@@ -56,20 +56,20 @@ public class FirebaseHostingApiConfig {
 		this.defaultReadTimeout = defaultReadTimeout;
 	}
 
-	public HttpResponseListener getHttpResponseListener() {
-		return httpResponseListener;
+	public HttpResponseCallback getHttpResponseCallback() {
+		return httpResponseCallback;
 	}
 
-	public void setHttpResponseListener(HttpResponseListener httpResponseListener) {
-		this.httpResponseListener = httpResponseListener;
+	public void setHttpResponseCallback(HttpResponseCallback httpResponseCallback) {
+		this.httpResponseCallback = httpResponseCallback;
 	}
 
-	public ServiceResponseListener getServiceResponseListener() {
-		return serviceResponseListener;
+	public ServiceResponseCallback getServiceResponseCallback() {
+		return serviceResponseCallback;
 	}
 
-	public void setServiceResponseListener(ServiceResponseListener serviceResponseListener) {
-		this.serviceResponseListener = serviceResponseListener;
+	public void setServiceResponseCallback(ServiceResponseCallback serviceResponseCallback) {
+		this.serviceResponseCallback = serviceResponseCallback;
 	}
 
 	public Serializer getSerializer() {

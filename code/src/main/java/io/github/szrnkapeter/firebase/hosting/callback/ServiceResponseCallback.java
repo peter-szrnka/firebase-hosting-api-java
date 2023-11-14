@@ -1,14 +1,12 @@
-package io.github.szrnkapeter.firebase.hosting.listener;
+package io.github.szrnkapeter.firebase.hosting.callback;
 
 /**
  * A simple (functional) interface for returning the service responses of the deployment subprocesses.
  *
- * TODO Rename to ServiceResponseCallback!
- * 
  * @author Peter Szrnka
  * @since 0.4
  */
-public interface ServiceResponseListener {
+public interface ServiceResponseCallback {
 
 	/**
 	 * Returns with the subservice response object.

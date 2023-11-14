@@ -99,8 +99,8 @@ public class ConnectionUtils {
 			wr.write(postData);
 		}
 
-		if (input.getConfig().getHttpResponseListener() != null) {
-			input.getConfig().getHttpResponseListener().getResponseInfo(input.getFunction(), connection.getResponseCode(),
+		if (input.getConfig().getHttpResponseCallback() != null) {
+			input.getConfig().getHttpResponseCallback().getResponseInfo(input.getFunction(), connection.getResponseCode(),
 					connection.getResponseMessage());
 		}
 
@@ -180,8 +180,8 @@ public class ConnectionUtils {
 		request.flush();
 		request.close();
 
-		if (config.getHttpResponseListener() != null) {
-			config.getHttpResponseListener().getResponseInfo("uploadFile", connection.getResponseCode(),
+		if (config.getHttpResponseCallback() != null) {
+			config.getHttpResponseCallback().getResponseInfo("uploadFile", connection.getResponseCode(),
 					"File: " + fileName + " / message: " + connection.getResponseMessage());
 		}
 	}

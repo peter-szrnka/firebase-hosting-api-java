@@ -3,8 +3,8 @@ package io.github.szrnkapeter.firebase.hosting.builder;
 import java.io.InputStream;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener;
-import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
+import io.github.szrnkapeter.firebase.hosting.callback.HttpResponseCallback;
+import io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback;
 import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
 
 /**
@@ -45,13 +45,13 @@ public class FirebaseHostingApiConfigBuilder {
 		return this;
 	}
 
-	public FirebaseHostingApiConfigBuilder withHttpResponseListener(HttpResponseListener httpResponseListener) {
-		config.setHttpResponseListener(httpResponseListener);
+	public FirebaseHostingApiConfigBuilder withHttpResponseCallback(HttpResponseCallback httpResponseCallback) {
+		config.setHttpResponseCallback(httpResponseCallback);
 		return this;
 	}
 	
-	public FirebaseHostingApiConfigBuilder withServiceResponseListener(ServiceResponseListener serviceResponseListener) {
-		config.setServiceResponseListener(serviceResponseListener);
+	public FirebaseHostingApiConfigBuilder withServiceResponseCallback(ServiceResponseCallback serviceResponseCallback) {
+		config.setServiceResponseCallback(serviceResponseCallback);
 		return this;
 	}
 	

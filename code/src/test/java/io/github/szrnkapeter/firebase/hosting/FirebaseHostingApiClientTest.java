@@ -235,7 +235,7 @@ class FirebaseHostingApiClientTest {
 		initCreateDeploy(false, false, true);
 	}
 
-	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease, boolean nullResponseListener) throws Exception {
+	private void initCreateDeploy(boolean cleanDeploy, boolean nullRelease, boolean nullResponseCallback) throws Exception {
 		MockedStatic<FileUtils> mockedFileUtils = mockStatic(FileUtils.class);
 		DeployRequest request = new DeployRequest();
 		request.setCleanDeploy(cleanDeploy);
@@ -250,8 +250,8 @@ class FirebaseHostingApiClientTest {
 
 		FirebaseHostingApiConfig config = getFirebaseRestApiConfig();
 
-		if (nullResponseListener) {
-			config.setHttpResponseListener(null);
+		if (nullResponseCallback) {
+			config.setHttpResponseCallback(null);
 		}
 
 		releaseService = mock(ReleaseService.class);
