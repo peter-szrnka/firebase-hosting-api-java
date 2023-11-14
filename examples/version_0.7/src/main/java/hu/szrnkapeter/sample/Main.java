@@ -3,7 +3,6 @@ package hu.szrnkapeter.sample;
 import io.github.szrnkapeter.firebase.hosting.FirebaseHostingApiClient;
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
 import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
 import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
 
@@ -12,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Sample usage with v0.6
+ * Sample usage with v0.7
  */
 public class Main {
 

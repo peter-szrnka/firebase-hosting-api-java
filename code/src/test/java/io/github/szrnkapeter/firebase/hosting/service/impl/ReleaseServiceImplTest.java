@@ -2,7 +2,7 @@ package io.github.szrnkapeter.firebase.hosting.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener;
+import io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback;
 import io.github.szrnkapeter.firebase.hosting.model.GetReleasesResponse;
 import io.github.szrnkapeter.firebase.hosting.model.Release;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
@@ -50,11 +50,11 @@ class ReleaseServiceImplTest {
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
-    void shouldCreateRelease(boolean addResponseListener) {
-        ServiceResponseListener mockServiceResponseListener = mock(ServiceResponseListener.class);
-        if (addResponseListener) {
-            doNothing().when(mockServiceResponseListener).getResponse(anyString(), any());
-            when(config.getServiceResponseListener()).thenReturn(mockServiceResponseListener);
+    void shouldCreateRelease(boolean addResponseCallback) {
+        ServiceResponseCallback mockServiceResponseCallback = mock(ServiceResponseCallback.class);
+        if (addResponseCallback) {
+            doNothing().when(mockServiceResponseCallback).getResponse(anyString(), any());
+            when(config.getServiceResponseCallback()).thenReturn(mockServiceResponseCallback);
         }
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
@@ -76,10 +76,10 @@ class ReleaseServiceImplTest {
             assertEquals("sites/test/releases?versionName=version1", urlCaptor.getValue());
         }
 
-        verify(config, times(addResponseListener ? 2 : 1)).getServiceResponseListener();
-        if (addResponseListener) {
+        verify(config, times(addResponseCallback ? 2 : 1)).getServiceResponseCallback();
+        if (addResponseCallback) {
             ArgumentCaptor<String> functionCaptor = ArgumentCaptor.forClass(String.class);
-            verify(config.getServiceResponseListener()).getResponse(functionCaptor.capture(), any());
+            verify(config.getServiceResponseCallback()).getResponse(functionCaptor.capture(), any());
             assertEquals("createRelease", functionCaptor.getValue());
         }
     }
@@ -87,10 +87,10 @@ class ReleaseServiceImplTest {
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
-    void shouldGetReleases(boolean addResponseListener) {
-        ServiceResponseListener mockServiceResponseListener = mock(ServiceResponseListener.class);
-        if (addResponseListener) {
-            when(config.getServiceResponseListener()).thenReturn(mockServiceResponseListener);
+    void shouldGetReleases(boolean addResponseCallback) {
+        ServiceResponseCallback mockServiceResponseCallback = mock(ServiceResponseCallback.class);
+        if (addResponseCallback) {
+            when(config.getServiceResponseCallback()).thenReturn(mockServiceResponseCallback);
         }
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
@@ -114,9 +114,9 @@ class ReleaseServiceImplTest {
             assertEquals("sites/test/releases", urlCaptor.getValue());
         }
 
-        if (addResponseListener) {
+        if (addResponseCallback) {
             ArgumentCaptor<String> functionCaptor = ArgumentCaptor.forClass(String.class);
-            verify(config.getServiceResponseListener()).getResponse(functionCaptor.capture(), any());
+            verify(config.getServiceResponseCallback()).getResponse(functionCaptor.capture(), any());
             assertEquals("getReleases", functionCaptor.getValue());
         }
     }
