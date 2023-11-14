@@ -3,6 +3,7 @@
 ## [0.8][UNRELEASED] - Unknown
 ### Changed
 - FirebaseHostingApiClient.newClient(config) have to be used to instantiate a new FirebaseHostingApiClient
+- Classes and settings ending with "Listener" renamed to ".*Callback"
 
 ## [0.7] - 2023-11-10
 ### Added
