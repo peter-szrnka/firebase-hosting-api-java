@@ -10,7 +10,7 @@ This is a working example of firebase-hosting-api-java library with version 0.6.
 - You will not see anything if you do not set any listener!
 - Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
 
-Firebase setup:[link](../../FIREBASE_SETUP.md)
+Firebase setup:[link](https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Firebase-project-setup)
 
 # Sample log messages
 

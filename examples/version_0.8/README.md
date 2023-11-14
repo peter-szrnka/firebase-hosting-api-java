@@ -1,7 +1,7 @@
 # firebase-hosting-api-java v0.8(unreleased) example
 This is a working example of firebase-hosting-api-java library with version **0.8-SNAPSHOT**.
 
-**Firebase setup:[link](../../FIREBASE_SETUP.md)**
+**Firebase setup:[link](https://github.com/peter-szrnka/firebase-hosting-api-java/wiki/Firebase-project-setup)**
 
 **IMPORTANT:**
 - You have to add a "service-account.json" file under src/main/resources folder!
