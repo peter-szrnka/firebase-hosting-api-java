@@ -25,6 +25,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
       - uses: actions/checkout@v3
         with:
+          token: ${{ secrets.PAT }}
           ref: main
         env:
           branch: main
