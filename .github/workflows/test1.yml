@@ -28,7 +28,4 @@ jobs:
           branch: main
           working_directory: ./code/
       - name: Update version in pom.xml
-        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false
-        env:
-          branch: main
-          working_directory: ./code/
+        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
