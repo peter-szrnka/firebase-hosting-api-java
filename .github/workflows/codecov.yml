@@ -2,7 +2,11 @@ name: Code coverage
 
 on:
   pull_request:
+    paths:
+      - ./code/**
   push:
+    paths:
+      - ./code/**
 jobs:
   build:
     runs-on: ubuntu-latest
