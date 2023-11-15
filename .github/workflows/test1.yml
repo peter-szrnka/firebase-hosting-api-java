@@ -13,6 +13,8 @@ on:
 jobs:
   testRun:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - id: install-secret-key 
         name: Install gpg secret key 
@@ -30,3 +32,5 @@ jobs:
       - name: Update version in pom.xml
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
       - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Version updated to ${{ github.event.inputs.releaseVersion }}
