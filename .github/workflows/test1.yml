@@ -29,3 +29,4 @@ jobs:
           working_directory: ./code/
       - name: Update version in pom.xml
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
+      - uses: stefanzweifel/git-auto-commit-action@v5
