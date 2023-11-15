@@ -25,6 +25,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
       - uses: actions/checkout@v3
         with:
+          token: ${{ secrets.PAT }}
           ref: main
         env:
           branch: main
@@ -37,9 +38,25 @@ jobs:
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+      - name: Update pom.xml to releaseVersion
+        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
+      - name: Commit version change
+        run: |
+          git config --global user.name ${{ secrets.GH_USERNAME }}
+          git config --global user.email ${{ secrets.GH_EMAIL }}
+          git commit -am "Version updated to ${{ github.event.inputs.releaseVersion }}"
+          git push
       - name: Publish package
         run: mvn -Prelease --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} deploy -f ./code/pom.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Update pom.xml to developmentVersion
+        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
+      - name: Commit version change to next SNAPSHOT version
+        run: |
+          git config --global user.name ${{ secrets.GH_USERNAME }}
+          git config --global user.email ${{ secrets.GH_EMAIL }}
+          git commit -am "Version updated to ${{ github.event.inputs.developmentVersion }}"
+          git push
