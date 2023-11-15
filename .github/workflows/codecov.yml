@@ -3,9 +3,6 @@ name: Code coverage
 on:
   pull_request:
   push:
-    paths:
-      - .github/
-      - code/**
 jobs:
   build:
     runs-on: ubuntu-latest
