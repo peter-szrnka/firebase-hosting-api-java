@@ -1,10 +1,17 @@
 name: Test Action
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+    inputs:
+      releaseVersion:
+        description: "Default version to use when preparing a release."
+        required: true
+        default: "X.Y.Z"
+      developmentVersion:
+        description: "Default version to use for new local working copy."
+        required: true
+        default: "X.Y.Z-SNAPSHOT"
 jobs:
-  publish:
+  testRun:
     runs-on: ubuntu-latest
     steps:
       - id: install-secret-key 
@@ -20,3 +27,5 @@ jobs:
         env:
           branch: main
           working_directory: ./code/
+      - name: Update version in pom.xml
+        run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false
