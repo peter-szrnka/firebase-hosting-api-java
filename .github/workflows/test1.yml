@@ -31,6 +31,12 @@ jobs:
           working_directory: ./code/
       - name: Update version in pom.xml
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Version updated to ${{ github.event.inputs.releaseVersion }}
+      - name: Commit report
+        run: |
+          git config --global user.name ${{ secrets.username }}
+          git config --global user.email ${{ secrets.email }}
+          git commit -am "Version updated to ${{ github.event.inputs.releaseVersion }}"
+          git push
+      #- uses: stefanzweifel/git-auto-commit-action@v5
+      #  with:
+      #    commit_message: Version updated to ${{ github.event.inputs.releaseVersion }}
