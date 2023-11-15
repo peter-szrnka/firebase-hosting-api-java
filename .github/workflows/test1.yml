@@ -39,6 +39,7 @@ jobs:
           git commit -am "Version updated to ${{ github.event.inputs.releaseVersion }}"
           git push
       - name: "TODO Release library in this step"
+        run: echo "TODO"
       - name: Update pom.xml to developmentVersion
         run: mvn -B versions:set -DnewVersion=${{ github.event.inputs.developmentVersion }} -DgenerateBackupPoms=false -f ./code/pom.xml
       - name: Commit version change to next SNAPSHOT version
