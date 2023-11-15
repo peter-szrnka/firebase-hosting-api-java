@@ -1,5 +1,5 @@
 name: Test Action
-on:
+on: 
   workflow_dispatch:
     inputs:
       releaseVersion:
