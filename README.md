@@ -35,7 +35,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 <dependency>
 	<groupId>io.github.szrnka-peter</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.7</version>
+	<version>0.8</version>
 </dependency>
 ```
 
