@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>io.github.szrnka-peter</groupId>
 			<artifactId>firebase-hosting-api-java</artifactId>
-			<version>0.8-SNAPSHOT</version>
+			<version>0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
