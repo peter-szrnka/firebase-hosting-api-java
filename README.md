@@ -45,19 +45,19 @@ You have to create your own Serializer by implementing the io.github.szrnkapeter
 
 ## Input parameters
 
-| Name                        | Type                                                                     | Mandatory? | Description                                                                             |
-|-----------------------------|--------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------------------|
-| siteId                      | String                                                                   | Yes        | Unique identifier of the Firebase Hosting website                                       |
-| serializer                  | io.github.szrnkapeter.firebase.hosting.serializer.Serializer             | Yes        | JSON serializer class                                                                   |
-| service account file stream | InputStream                                                              | Yes        | Firebase service account JSON file                                                      |
-| default connection timeout  | int (default 30000)                                                      | No         | Connection timeout                                                                      |
-| default read timeout        | int (default 30000)                                                      | No         | Read timeout                                                                            |
-| httpResponseListener        | io.github.szrnkapeter.firebase.hosting.listener.HttpResponseListener     | No         | Callback function that returns with the value of the HTTP response for the give service |
-| serviceResponseListener     | io.github.szrnkapeter.firebase.hosting.listener.ServiceResponseListener  | No         | Callback function that returns with the value of the given service                      |
+| Name                        | Type                                                         | Mandatory? | Description                                                  |
+| --------------------------- | ------------------------------------------------------------ | ---------- | ------------------------------------------------------------ |
+| siteId                      | String                                                       | Yes        | Unique identifier of the Firebase Hosting website            |
+| serializer                  | io.github.szrnkapeter.firebase.hosting.serializer.Serializer | Yes        | JSON serializer class                                        |
+| service account file stream | InputStream                                                  | Yes        | Firebase service account JSON file                           |
+| default connection timeout  | int (default 30000)                                          | No         | Connection timeout                                           |
+| default read timeout        | int (default 30000)                                          | No         | Read timeout                                                 |
+| httpResponseCallback        | io.github.szrnkapeter.firebase.hosting.callback.HttpResponseCallback | No         | Callback function that returns with the value of the HTTP response for the give service |
+| serviceResponseCallback     | io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback | No         | Callback function that returns with the value of the given service |
 
 **IMPORTANT: If you do not set the:**
-- **httpResponseListener**
-- **serviceResponseListener**
+- **httpResponseCallback**
+- **serviceResponseCallback**
 
 **parameters then you will not see any response codes or messages!**
 
@@ -81,14 +81,14 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 	.withServiceAccountFileStream(new FileInputStream("service-account-iam.json"))
 	.withDefaultConnectionTimeout(90000).withDefaultReadTimeout(90000)
     .withSerializer(new GsonSerializer())
-	.withHttpResponseListener(new HttpResponseListener() {
+	.withHttpResponseCallback(new HttpResponseCallback() {
 						
 		@Override
 		public void getResponseInfo(String function, int code, String responseMessage) {
 			System.out.println(function + " / " + code + " / " + responseMessage);
 		}
 	})
-	.withServiceResponseListener(new ServiceResponseListener() {
+	.withServiceResponseCallback(new ServiceResponseCallback() {
 						
 		@Override
 		public void getResponse(String function, Object response) {
@@ -156,22 +156,22 @@ GetVersionFilesResponse files = client.getVersionFiles(response.getReleases().ge
 System.out.println("Files response = " + files);
 ```
 
-## Adding response listeners
+## Adding response callbacks
 
-If you need the HTTP sub service responses of createDeploy() method, you can add listeners, which'll returns with the HTTP return codes, messages, and service response objects. In the example below, you'll get all HTTP responses, and service response objects.
+If you need the HTTP sub service responses of createDeploy() method, you can add callbacks, which'll returns with the HTTP return codes, messages, and service response objects. In the example below, you'll get all HTTP responses, and service response objects.
 
 ```java
 ...
 FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 ...
-	.withHttpResponseListener(new HttpResponseListener() {
+	.withHttpResponseCallback(new HttpResponseCallback() {
 		@Override
 		public void getResponseInfo(String function, int code, String responseMessage) {
 			System.out.println(function + " / " + code + " / " + responseMessage);
 		}
 	})
 	...
-	.withServiceResponseListener(new ServiceResponseListener() {
+	.withServiceResponseCallback(new ServiceResponseCallback() {
 						
 		@Override
 		public void getResponse(String function, Object response) {
