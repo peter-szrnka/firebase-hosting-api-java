@@ -98,7 +98,7 @@ FirebaseHostingApiConfig config = FirebaseHostingApiConfigBuilder.builder()
 	.withSiteId("my-site-name") //
 	.build();
 	
-FirebaseHostingApiClient client = new FirebaseHostingApiClient(config);
+FirebaseHostingApiClient client = FirebaseHostingApiClient.newClient(config);
 	
 // COMPLETE, WORKING DEPLOYMENT
 DeployRequest request = new DeployRequest();
