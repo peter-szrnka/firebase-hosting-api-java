@@ -8,6 +8,7 @@ This is a working example of **firebase-hosting-api-java** library with unreleas
 - You have to add a *"service-account.json"* file under *src/main/resources* folder!
 - You will not see anything if you do not set any listener!
 - Library does not catch all exceptions. The purpose of this approach is to give the control to your application instead of hiding and wrapping it.
+- Before you run the sample, don't forget to set the "*FIREBASE_SITE_ID*" environment property!
 
 # Sample log messages
 
