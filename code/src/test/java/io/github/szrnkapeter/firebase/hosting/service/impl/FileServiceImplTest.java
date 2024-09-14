@@ -143,7 +143,7 @@ class FileServiceImplTest {
             files.add(item2);
 
             List<String> requiredHashes = new ArrayList<>();
-            requiredHashes.add("7dff8d09129482017247cb373e8138772e852a1a02f097d1440387055d2be69c");
+            requiredHashes.add("f7beb20179aee76b26b8b4b0840a89a70b1fbb72333892df6c54fe1010640cb3");
 
             // act
             service.uploadFiles("1.0", files, requiredHashes);
