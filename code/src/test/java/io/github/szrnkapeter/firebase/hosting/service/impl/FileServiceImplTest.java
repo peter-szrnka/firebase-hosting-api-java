@@ -1,11 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.service.impl;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
-import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
+import io.github.szrnkapeter.firebase.hosting.model.*;
 import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import lombok.SneakyThrows;
@@ -16,23 +12,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Peter Szrnka
@@ -47,10 +32,9 @@ class FileServiceImplTest {
 
     @BeforeEach
     void setup() {
-        config = mock(FirebaseHostingApiConfig.class);
+        config = new FirebaseHostingApiConfig();
+        config.setSiteId("test");
         service = new FileServiceImpl(config, "accessToken");
-
-        when(config.getSiteId()).thenReturn("test");
     }
 
     @Test
@@ -60,7 +44,7 @@ class FileServiceImplTest {
             // arrange
             GetVersionFilesResponse getVersionFilesResponse = new GetVersionFilesResponse();
             mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openHTTPGetConnection(any(FirebaseHostingApiConfig.class),
-                            any(Class.class), anyString(), anyString()))
+                            eq(GetVersionFilesResponse.class), anyString(), anyString()))
                     .thenReturn(getVersionFilesResponse);
 
             // act
@@ -69,7 +53,7 @@ class FileServiceImplTest {
             // assert
             assertNotNull(response);
             mockedConnectionUtilsUtils.verify(() -> ConnectionUtils.openHTTPGetConnection(any(FirebaseHostingApiConfig.class),
-                    any(Class.class), anyString(), anyString()));
+                    eq(GetVersionFilesResponse.class), anyString(), anyString()));
         }
     }
 
@@ -85,13 +69,13 @@ class FileServiceImplTest {
             mockResponse.setUploadRequiredHashes(mockHashes);
 
             mockedConnectionUtilsUtils.when(() -> ConnectionUtils.openSimpleHTTPPostConnection(any(FirebaseHostingApiConfig.class),
-                    any(Class.class), anyString(), anyString(),
+                    eq(PopulateFilesResponse.class), anyString(), anyString(),
                     anyString(), anyString())).thenReturn(mockResponse);
 
             PopulateFilesRequest request = new PopulateFilesRequest();
             request.setFiles(new HashMap<>());
 
-            when(config.getSerializer()).thenReturn(new GsonSerializer());
+            config.setSerializer(new GsonSerializer());
 
             // act
             PopulateFilesResponse response = service.populateFiles(request, VERSION_NAME);
@@ -102,7 +86,7 @@ class FileServiceImplTest {
 
             ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
             mockedConnectionUtilsUtils.verify(() -> ConnectionUtils.openSimpleHTTPPostConnection(any(FirebaseHostingApiConfig.class),
-                    any(Class.class), anyString(), anyString(), dataCaptor.capture(), anyString()));
+                    eq(PopulateFilesResponse.class), anyString(), anyString(), dataCaptor.capture(), anyString()));
 
             assertEquals("{\"files\":{}}", dataCaptor.getValue());
         }
@@ -159,7 +143,7 @@ class FileServiceImplTest {
             files.add(item2);
 
             List<String> requiredHashes = new ArrayList<>();
-            requiredHashes.add("f7beb20179aee76b26b8b4b0840a89a70b1fbb72333892df6c54fe1010640cb3");
+            requiredHashes.add("7dff8d09129482017247cb373e8138772e852a1a02f097d1440387055d2be69c");
 
             // act
             service.uploadFiles("1.0", files, requiredHashes);
