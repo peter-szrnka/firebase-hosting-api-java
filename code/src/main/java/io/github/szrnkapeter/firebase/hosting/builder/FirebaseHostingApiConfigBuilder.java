@@ -1,11 +1,11 @@
 package io.github.szrnkapeter.firebase.hosting.builder;
 
-import java.io.InputStream;
-
-import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.callback.HttpResponseCallback;
 import io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback;
+import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.serializer.Serializer;
+
+import java.io.InputStream;
 
 /**
  * Builder class to create {@link FirebaseHostingApiConfig} instances.

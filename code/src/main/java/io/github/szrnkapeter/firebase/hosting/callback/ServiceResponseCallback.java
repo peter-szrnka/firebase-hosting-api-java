@@ -9,11 +9,10 @@ package io.github.szrnkapeter.firebase.hosting.callback;
 public interface ServiceResponseCallback {
 
 	/**
-	 * Returns with the subservice response object.
-	 * 
-	 * @param <T> the response type.
+	 * Returns with the sub service response object.
+	 *
 	 * @param function The called function's name
 	 * @param response The concrete response object
 	 */
-	<T> void getResponse(String function, T response);
+	void getResponse(String function, Object response);
 }
