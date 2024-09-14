@@ -19,7 +19,7 @@ public class VersionUtils {
     private VersionUtils() {}
 
     public static String getVersionId(String version) {
-        if(version == null || version.isEmpty()) {
+        if (version == null || version.isEmpty()) {
             return null;
         }
 
@@ -27,19 +27,13 @@ public class VersionUtils {
     }
 
     public static String getVersionName(FirebaseHostingApiConfig config, String version) {
-        if(version == null || version.isEmpty()) {
+        if (version == null || version.isEmpty()) {
             throw new IllegalArgumentException("Version field is mandatory!");
         }
-
-        String versionName = SITES + config.getSiteId() + VERSIONS + version;
 
         Pattern p = Pattern.compile(SITES + config.getSiteId() + VERSIONS + ".*");
         Matcher m = p.matcher(version);
 
-        if (m.matches()) {
-            versionName = version;
-        }
-
-        return versionName;
+        return m.matches() ? version : (SITES + config.getSiteId() + VERSIONS + version);
     }
 }
