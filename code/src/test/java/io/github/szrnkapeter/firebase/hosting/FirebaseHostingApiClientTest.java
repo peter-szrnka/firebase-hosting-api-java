@@ -248,7 +248,7 @@ class FirebaseHostingApiClientTest {
 
 		request.setFiles(fileList);
 
-		FirebaseHostingApiConfig config = getFirebaseRestApiConfig();
+		config = getFirebaseRestApiConfig();
 
 		if (nullResponseCallback) {
 			config.setHttpResponseCallback(null);
