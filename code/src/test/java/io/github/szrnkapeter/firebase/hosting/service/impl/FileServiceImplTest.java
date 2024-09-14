@@ -4,6 +4,7 @@ import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
 import io.github.szrnkapeter.firebase.hosting.model.*;
 import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
+import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,8 +143,11 @@ class FileServiceImplTest {
             files.add(item1);
             files.add(item2);
 
+            byte[] fileContent = FileUtils.compressAndReadFile(item2.getContent());
+            String checkSum = FileUtils.getSHA256Checksum(fileContent);
+
             List<String> requiredHashes = new ArrayList<>();
-            requiredHashes.add("f7beb20179aee76b26b8b4b0840a89a70b1fbb72333892df6c54fe1010640cb3");
+            requiredHashes.add(checkSum);
 
             // act
             service.uploadFiles("1.0", files, requiredHashes);
