@@ -85,11 +85,12 @@ public class FirebaseHostingApiClient {
      *
      * @param request A {@link DeployRequest} instance.
      * @return A new {@link DeployResponse} object.
+     * @throws InterruptedException     Any exception occurred in this service.
      * @throws IOException              Any exception occurred in this service.
      * @throws NoSuchAlgorithmException Any exception occurred in this service.
      * @since 0.4
      */
-    public DeployResponse createDeploy(DeployRequest request) throws IOException, NoSuchAlgorithmException {
+    public DeployResponse createDeploy(DeployRequest request) throws InterruptedException, IOException, NoSuchAlgorithmException {
         if (!request.isCleanDeploy()) {
             GetReleasesResponse getReleases = getReleases();
 

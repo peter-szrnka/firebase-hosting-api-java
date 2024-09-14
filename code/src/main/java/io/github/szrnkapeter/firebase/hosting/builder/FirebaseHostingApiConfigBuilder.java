@@ -60,6 +60,16 @@ public class FirebaseHostingApiConfigBuilder {
 		return this;
 	}
 
+	public FirebaseHostingApiConfigBuilder withDisableAsync(boolean disableAsync) {
+		config.setDisableAsync(disableAsync);
+		return this;
+	}
+
+	public FirebaseHostingApiConfigBuilder withThreadPoolSize(int threadPoolSize) {
+		config.setThreadPoolSize(threadPoolSize);
+		return this;
+	}
+
 	public FirebaseHostingApiConfig build() {
 		return config;
 	}

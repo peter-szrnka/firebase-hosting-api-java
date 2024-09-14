@@ -23,6 +23,8 @@ public class FirebaseHostingApiConfig {
 	private HttpResponseCallback httpResponseCallback;
 	private ServiceResponseCallback serviceResponseCallback;
 	private Serializer serializer;
+	private boolean disableAsync;
+	private int threadPoolSize = 10;
 
 	public String getSiteId() {
 		return siteId;
@@ -78,6 +80,22 @@ public class FirebaseHostingApiConfig {
 
 	public void setSerializer(Serializer serializer) {
 		this.serializer = serializer;
+	}
+
+	public boolean isDisableAsync() {
+		return disableAsync;
+	}
+
+	public void setDisableAsync(boolean disableAsync) {
+		this.disableAsync = disableAsync;
+	}
+
+	public int getThreadPoolSize() {
+		return threadPoolSize;
+	}
+
+	public void setThreadPoolSize(int threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
 	}
 
 	/*

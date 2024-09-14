@@ -13,7 +13,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -35,6 +38,7 @@ class FileServiceImplTest {
     void setup() {
         config = new FirebaseHostingApiConfig();
         config.setSiteId("test");
+        config.setDisableAsync(false);
         service = new FileServiceImpl(config, "accessToken");
     }
 
@@ -96,7 +100,7 @@ class FileServiceImplTest {
     @SneakyThrows
     @ParameterizedTest
     @MethodSource("uploadFileData")
-    void shouldUploadFile(String uploadUrl, String expectedUrl) {
+    void shouldUploadOneFile(String uploadUrl, String expectedUrl) {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             UploadFileRequest request = new UploadFileRequest();
@@ -117,11 +121,12 @@ class FileServiceImplTest {
     }
 
     @Test
-    @SneakyThrows
-    void shouldNotUploadFiles() {
+    void shouldNotUploadFiles() throws IOException, NoSuchAlgorithmException, InterruptedException {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             Set<DeployItem> files = new HashSet<>();
+            DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
+            files.add(item1);
 
             // act
             service.uploadFiles("1.0", files, null);
@@ -133,10 +138,10 @@ class FileServiceImplTest {
     }
 
     @Test
-    @SneakyThrows
-    void shouldUploadFiles() {
+    void shouldUploadFiles() throws IOException, NoSuchAlgorithmException, InterruptedException {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
+            config.setDisableAsync(true);
             DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
             DeployItem item2 = new DeployItem("file2.txt", "test2".getBytes());
             Set<DeployItem> files = new HashSet<>();
@@ -156,6 +161,58 @@ class FileServiceImplTest {
             mockedConnectionUtilsUtils.verify(() ->
                     ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()));
         }
+    }
+
+    @Test
+    void shouldUploadFilesAsync() throws IOException, NoSuchAlgorithmException, InterruptedException {
+        try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
+            // arrange
+            DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
+            DeployItem item2 = new DeployItem("file2.txt", "test2".getBytes());
+            Set<DeployItem> files = new HashSet<>();
+            files.add(item1);
+            files.add(item2);
+
+            byte[] fileContent = FileUtils.compressAndReadFile(item2.getContent());
+            String checkSum = FileUtils.getSHA256Checksum(fileContent);
+
+            List<String> requiredHashes = new ArrayList<>();
+            requiredHashes.add(checkSum);
+
+            mockedConnectionUtilsUtils.when(() -> ConnectionUtils.uploadFile(eq(config), anyString(), anyString(), anyString(), any()))
+                    .thenThrow(new IOException("Test"));
+
+            // act
+            service.uploadFiles("1.0", files, requiredHashes);
+
+            // assert
+            mockedConnectionUtilsUtils.verify(() ->
+                    ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()), never());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("failureTestData")
+    void shouldNotUploadFileAsync(Exception e) {
+        try (MockedStatic<FileUtils> mockedStatic = mockStatic(FileUtils.class)) {
+            // arrange
+            CountDownLatch latch = new CountDownLatch(1);
+            mockedStatic.when(() -> FileUtils.getSHA256Checksum(any())).thenThrow(e);
+            FileUploadItem item = new FileUploadItem("test".getBytes(), "test");
+
+            // act
+            service.uploadFileAsync(item, "1.0", latch);
+
+            // assert
+            mockedStatic.verify(() -> FileUtils.getSHA256Checksum(any()));
+        }
+    }
+
+    private static Object[] failureTestData() {
+        return new Object[] {
+                new NoSuchAlgorithmException("Test"),
+                new IOException("Test")
+        };
     }
 
     private static Object[][] uploadFileData() {
