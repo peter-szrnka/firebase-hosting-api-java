@@ -22,6 +22,8 @@ import static io.github.szrnkapeter.firebase.hosting.util.Constants.VERSIONS;
  */
 public class VersionServiceImpl extends AbstractUtilityService implements VersionService {
 
+    private static final String CREATE_VERSION = "createVersion";
+
     public VersionServiceImpl(FirebaseHostingApiConfig config, String accessToken) {
         super(config, accessToken);
     }
@@ -29,9 +31,9 @@ public class VersionServiceImpl extends AbstractUtilityService implements Versio
     @Override
     public Version createVersion() throws IOException {
         Version newVersion = ConnectionUtils.openSimpleHTTPPostConnection(config, Version.class, accessToken,
-                SITES + config.getSiteId() + "/versions", "{}", "createVersion");
+                SITES + config.getSiteId() + "/versions", "{}", CREATE_VERSION);
 
-        responseCallback("createVersion", newVersion);
+        responseCallback(CREATE_VERSION, newVersion);
         return newVersion;
     }
 

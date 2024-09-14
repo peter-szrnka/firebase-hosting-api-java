@@ -17,6 +17,8 @@ import static io.github.szrnkapeter.firebase.hosting.util.Constants.SITES;
  */
 public class ReleaseServiceImpl extends AbstractUtilityService implements ReleaseService {
 
+    private static final String CREATE_RELEASE = "createRelease";
+
     public ReleaseServiceImpl(FirebaseHostingApiConfig config, String accessToken) {
         super(config, accessToken);
     }
@@ -24,9 +26,9 @@ public class ReleaseServiceImpl extends AbstractUtilityService implements Releas
     @Override
     public Release createRelease(String versionName) throws IOException {
         Release newRelease =  ConnectionUtils.openSimpleHTTPPostConnection(config, Release.class, accessToken,
-                SITES + config.getSiteId() + "/releases?versionName=" + versionName, null, "createRelease");
+                SITES + config.getSiteId() + "/releases?versionName=" + versionName, null, CREATE_RELEASE);
 
-        responseCallback("createRelease", newRelease);
+        responseCallback(CREATE_RELEASE, newRelease);
         return newRelease;
     }
 
