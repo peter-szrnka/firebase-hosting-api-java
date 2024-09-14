@@ -2,10 +2,8 @@ package io.github.szrnkapeter.firebase.hosting.util;
 
 import io.github.szrnkapeter.firebase.hosting.builder.FirebaseHostingApiConfigBuilder;
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback;
 import io.github.szrnkapeter.firebase.hosting.serializer.GsonSerializer;
 
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
