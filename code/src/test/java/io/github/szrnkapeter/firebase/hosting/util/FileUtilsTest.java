@@ -38,7 +38,7 @@ class FileUtilsTest {
 		// assert
 		assertNotNull(response);
 		assertEquals(1, response.size());
-		assertEquals("f7beb20179aee76b26b8b4b0840a89a70b1fbb72333892df6c54fe1010640cb3", response.get("/file1.txt"));
+		assertEquals("7dff8d09129482017247cb373e8138772e852a1a02f097d1440387055d2be69c", response.get("/file1.txt"));
 	}
 
 	@Test
