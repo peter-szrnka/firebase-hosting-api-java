@@ -1,10 +1,9 @@
 package io.github.szrnkapeter.firebase.hosting.util;
 
-import java.util.Arrays;
-
 import com.google.auth.oauth2.GoogleCredentials;
-
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
+
+import java.util.List;
 
 /**
  * Google credential helper class.
@@ -27,7 +26,7 @@ public class GoogleCredentialUtils {
 	 */
 	public static String getAccessToken(FirebaseHostingApiConfig config) {
 		try {
-			GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getServiceAccountFileStream()).createScoped(Arrays.asList(FIREBASE_DEFAULT_SCOPE));
+			GoogleCredentials googleCredential = GoogleCredentials.fromStream(config.getServiceAccountFileStream()).createScoped(List.of(FIREBASE_DEFAULT_SCOPE));
 			googleCredential.refreshIfExpired();
 			return googleCredential.getAccessToken().getTokenValue();
 		} catch (Exception e) {

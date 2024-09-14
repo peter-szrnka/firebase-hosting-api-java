@@ -73,9 +73,9 @@ public class FileUtils {
 
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bytes.length; i++) {
-			sb.append(Integer.toString((bytes[i] & XFF) + X_100, 16).substring(1));
-		}
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & XFF) + X_100, 16).substring(1));
+        }
 
 		return sb.toString();
 	}
@@ -109,19 +109,19 @@ public class FileUtils {
 	 */
 	public static byte[] getRemoteFile(String urlString) throws IOException {
 		URL url = new URL(urlString);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try (InputStream is = url.openStream()) {
 			byte[] byteChunk = new byte[STREAM_BUFFER_SIZE]; // Or whatever size you want to read in at a time.
 			int n;
 
 			while ((n = is.read(byteChunk)) > 0) {
-				baos.write(byteChunk, 0, n);
+				outputStream.write(byteChunk, 0, n);
 			}
 		} catch (IOException e) {
 			logger.warning(String.format("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage()));
 			// Perform any other exception handling that's appropriate.
 		}
 
-		return baos.toByteArray();
+		return outputStream.toByteArray();
 	}
 }

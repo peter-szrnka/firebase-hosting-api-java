@@ -22,3 +22,4 @@ buildNumber.properties
 /examples/version_0.7/src/main/resources/service-account.json
 /examples/version_0.8/.idea
 examples/version_0.8/src/main/resources/service-account.json
+.idea

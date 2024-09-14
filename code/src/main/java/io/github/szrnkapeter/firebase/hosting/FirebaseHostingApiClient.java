@@ -27,7 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static io.github.szrnkapeter.firebase.hosting.util.ConfigValidationUtils.preValidateConfig;
+import static io.github.szrnkapeter.firebase.hosting.util.ConfigValidator.preValidateConfig;
 import static io.github.szrnkapeter.firebase.hosting.util.FileUtils.generateFileListAndHash;
 import static io.github.szrnkapeter.firebase.hosting.util.VersionUtils.getVersionId;
 import static io.github.szrnkapeter.firebase.hosting.util.VersionUtils.getVersionName;
@@ -41,7 +41,6 @@ import static io.github.szrnkapeter.firebase.hosting.util.VersionUtils.getVersio
 public class FirebaseHostingApiClient {
 
 	private final FirebaseHostingApiConfig config;
-
 	private final ReleaseService releaseService;
 	private final VersionService versionService;
 	private final FileService fileService;
@@ -95,14 +94,14 @@ public class FirebaseHostingApiClient {
 	public DeployResponse createDeploy(DeployRequest request) throws IOException, NoSuchAlgorithmException {
 		if(!request.isCleanDeploy()) {
 			GetReleasesResponse getReleases = getReleases();
-			
+
 			if(getReleases == null || getReleases.getReleases() == null || getReleases.getReleases().isEmpty()) {
 				return null;
 			}
-			
+
 			String versionId = getVersionId(getReleases.getReleases().get(0).getVersion().getName());
 			GetVersionFilesResponse getVersionFiles = getVersionFiles(versionId);
-			
+
 			Set<String> newFileNames = request.getFiles().stream().map(DeployItem::getName).collect(Collectors.toSet());
 
 			for(FileDetails file : getVersionFiles.getFiles()) {
@@ -130,10 +129,10 @@ public class FirebaseHostingApiClient {
 
 		// Finalize the new version
 		finalizeVersion(versionId);
-		
+
 		// Create the release
 		Release newRelease = createRelease(versionId);
-		
+
 		// Post delete earlier deployments
 		versionService.deletePreviousVersions(request, getReleases().getReleases());
 
@@ -237,7 +236,7 @@ public class FirebaseHostingApiClient {
 	public PopulateFilesResponse populateFiles(PopulateFilesRequest request, String version) throws IOException {
 		return fileService.populateFiles(request, version);
 	}
-	
+
 	/**
 	 * Uploads a file.
 	 * 
