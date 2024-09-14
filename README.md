@@ -11,7 +11,7 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 # Used technologies
 
-- Java 8
+- Java 8 (17 will be the default from version 0.9)
 - Maven
 
 # Implemented services
