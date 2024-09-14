@@ -16,6 +16,7 @@ import org.mockito.MockedStatic;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -99,7 +100,7 @@ class FileServiceImplTest {
     @SneakyThrows
     @ParameterizedTest
     @MethodSource("uploadFileData")
-    void shouldUploadFile(String uploadUrl, String expectedUrl) {
+    void shouldUploadOneFile(String uploadUrl, String expectedUrl) {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             UploadFileRequest request = new UploadFileRequest();
@@ -188,6 +189,30 @@ class FileServiceImplTest {
             mockedConnectionUtilsUtils.verify(() ->
                     ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()), never());
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("failureTestData")
+    void shouldNotUploadFileAsync(Exception e) {
+        try (MockedStatic<FileUtils> mockedStatic = mockStatic(FileUtils.class)) {
+            // arrange
+            CountDownLatch latch = new CountDownLatch(1);
+            mockedStatic.when(() -> FileUtils.getSHA256Checksum(any())).thenThrow(e);
+            FileUploadItem item = new FileUploadItem("test".getBytes(), "test");
+
+            // act
+            service.uploadFileAsync(item, "1.0", latch);
+
+            // assert
+            mockedStatic.verify(() -> FileUtils.getSHA256Checksum(any()));
+        }
+    }
+
+    private static Object[] failureTestData() {
+        return new Object[] {
+                new NoSuchAlgorithmException("Test"),
+                new IOException("Test")
+        };
     }
 
     private static Object[][] uploadFileData() {

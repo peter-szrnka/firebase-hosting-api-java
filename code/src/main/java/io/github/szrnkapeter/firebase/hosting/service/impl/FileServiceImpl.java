@@ -87,20 +87,20 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
         ExecutorService executorService = Executors.newFixedThreadPool(config.getThreadPoolSize());
         CountDownLatch latch = new CountDownLatch(fileUploadItems.size());
 
-        for (FileUploadItem item : fileUploadItems) {
-            executorService.execute(() -> {
-                try {
-                    uploadFileItem(item.getFileContent(), versionId, item.getCheckSum());
-                } catch (NoSuchAlgorithmException | IOException e) {
-                    responseCallback("uploadFiles", e);
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
+        fileUploadItems.forEach(item -> executorService.execute(() -> uploadFileAsync(item, versionId, latch)));
 
         latch.await();
         executorService.shutdown();
+    }
+
+    void uploadFileAsync(FileUploadItem item, String versionId, CountDownLatch latch) {
+        try {
+            uploadFileItem(item.getFileContent(), versionId, item.getCheckSum());
+        } catch (NoSuchAlgorithmException | IOException e) {
+            responseCallback("uploadFiles", e);
+        } finally {
+            latch.countDown();
+        }
     }
 
     private void uploadFileItem(byte[] fileContent, String versionId, String checkSum) throws NoSuchAlgorithmException, IOException {
