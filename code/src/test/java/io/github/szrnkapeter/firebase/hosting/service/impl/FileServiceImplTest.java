@@ -120,11 +120,12 @@ class FileServiceImplTest {
     }
 
     @Test
-    @SneakyThrows
-    void shouldNotUploadFiles() {
+    void shouldNotUploadFiles() throws IOException, NoSuchAlgorithmException, InterruptedException {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             Set<DeployItem> files = new HashSet<>();
+            DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
+            files.add(item1);
 
             // act
             service.uploadFiles("1.0", files, null);
@@ -176,6 +177,9 @@ class FileServiceImplTest {
 
             List<String> requiredHashes = new ArrayList<>();
             requiredHashes.add(checkSum);
+
+            mockedConnectionUtilsUtils.when(() -> ConnectionUtils.uploadFile(eq(config), anyString(), anyString(), anyString(), any()))
+                    .thenThrow(new IOException("Test"));
 
             // act
             service.uploadFiles("1.0", files, requiredHashes);

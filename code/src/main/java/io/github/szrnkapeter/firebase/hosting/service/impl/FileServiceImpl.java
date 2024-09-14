@@ -92,7 +92,7 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
                 try {
                     uploadFileItem(item.getFileContent(), versionId, item.getCheckSum());
                 } catch (NoSuchAlgorithmException | IOException e) {
-                    throw new RuntimeException(e);
+                    responseCallback("uploadFiles", e);
                 } finally {
                     latch.countDown();
                 }
