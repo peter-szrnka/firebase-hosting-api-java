@@ -13,6 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +37,7 @@ class FileServiceImplTest {
     void setup() {
         config = new FirebaseHostingApiConfig();
         config.setSiteId("test");
+        config.setDisableAsync(false);
         service = new FileServiceImpl(config, "accessToken");
     }
 
@@ -133,8 +136,33 @@ class FileServiceImplTest {
     }
 
     @Test
-    @SneakyThrows
-    void shouldUploadFiles() {
+    void shouldUploadFiles() throws IOException, NoSuchAlgorithmException, InterruptedException {
+        try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
+            // arrange
+            config.setDisableAsync(true);
+            DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
+            DeployItem item2 = new DeployItem("file2.txt", "test2".getBytes());
+            Set<DeployItem> files = new HashSet<>();
+            files.add(item1);
+            files.add(item2);
+
+            byte[] fileContent = FileUtils.compressAndReadFile(item2.getContent());
+            String checkSum = FileUtils.getSHA256Checksum(fileContent);
+
+            List<String> requiredHashes = new ArrayList<>();
+            requiredHashes.add(checkSum);
+
+            // act
+            service.uploadFiles("1.0", files, requiredHashes);
+
+            // assert
+            mockedConnectionUtilsUtils.verify(() ->
+                    ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()));
+        }
+    }
+
+    @Test
+    void shouldUploadFilesAsync() throws IOException, NoSuchAlgorithmException, InterruptedException {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             DeployItem item1 = new DeployItem("file1.txt", "test".getBytes());
@@ -154,7 +182,7 @@ class FileServiceImplTest {
 
             // assert
             mockedConnectionUtilsUtils.verify(() ->
-                    ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()));
+                    ConnectionUtils.uploadFile(eq(config), eq("accessToken"), anyString(), anyString(), any()), never());
         }
     }
 

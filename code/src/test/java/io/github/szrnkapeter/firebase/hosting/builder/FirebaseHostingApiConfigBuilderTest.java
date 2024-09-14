@@ -28,6 +28,8 @@ class FirebaseHostingApiConfigBuilderTest {
                 .withServiceResponseCallback((function, response) -> {
                         // Do nothing
                     })
+                .withDisableAsync(true)
+                .withThreadPoolSize(1)
                 .build();
 
         // assert

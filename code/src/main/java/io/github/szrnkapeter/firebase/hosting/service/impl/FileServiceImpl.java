@@ -1,11 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting.service.impl;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
-import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
+import io.github.szrnkapeter.firebase.hosting.model.*;
 import io.github.szrnkapeter.firebase.hosting.service.AbstractUtilityService;
 import io.github.szrnkapeter.firebase.hosting.service.FileService;
 import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
@@ -14,12 +10,14 @@ import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static io.github.szrnkapeter.firebase.hosting.util.Constants.FILES;
-import static io.github.szrnkapeter.firebase.hosting.util.Constants.SITES;
-import static io.github.szrnkapeter.firebase.hosting.util.Constants.VERSIONS;
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.*;
 
 /**
  * @author Peter Szrnka
@@ -61,7 +59,11 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
     }
 
     @Override
-    public void uploadFiles(String versionId, Set<DeployItem> files, List<String> requiredHashes) throws IOException, NoSuchAlgorithmException {
+    public void uploadFiles(String versionId, Set<DeployItem> files, List<String> requiredHashes)
+            throws IOException, NoSuchAlgorithmException, InterruptedException {
+
+        List<FileUploadItem> fileUploadItems = new ArrayList<>();
+
         for (DeployItem item : files) {
             byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
             String checkSum = FileUtils.getSHA256Checksum(fileContent);
@@ -70,11 +72,42 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
                 continue;
             }
 
-            UploadFileRequest uploadFilesRequest = new UploadFileRequest();
-            uploadFilesRequest.setVersion(versionId);
-            uploadFilesRequest.setFileContent(fileContent);
-            uploadFilesRequest.setFileName(item.getName());
-            uploadFile(uploadFilesRequest);
+            if (!config.isDisableAsync()) {
+                // In case of async mode, we will upload the files in parallel
+                fileUploadItems.add(new FileUploadItem(fileContent, checkSum));
+            } else {
+                uploadFileItem(fileContent, versionId, checkSum);
+            }
         }
+
+        if (config.isDisableAsync()) {
+            return;
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(config.getThreadPoolSize());
+        CountDownLatch latch = new CountDownLatch(fileUploadItems.size());
+
+        for (FileUploadItem item : fileUploadItems) {
+            executorService.execute(() -> {
+                try {
+                    uploadFileItem(item.getFileContent(), versionId, item.getCheckSum());
+                } catch (NoSuchAlgorithmException | IOException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+    }
+
+    private void uploadFileItem(byte[] fileContent, String versionId, String checkSum) throws NoSuchAlgorithmException, IOException {
+        UploadFileRequest request = new UploadFileRequest();
+        request.setFileContent(fileContent);
+        request.setVersion(versionId);
+        request.setFileName(checkSum);
+        uploadFile(request);
     }
 }

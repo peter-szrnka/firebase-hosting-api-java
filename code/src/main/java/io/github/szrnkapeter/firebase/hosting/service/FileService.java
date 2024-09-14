@@ -1,10 +1,6 @@
 package io.github.szrnkapeter.firebase.hosting.service;
 
-import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
-import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
+import io.github.szrnkapeter.firebase.hosting.model.*;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -23,5 +19,5 @@ public interface FileService {
 
     void uploadFile(UploadFileRequest request) throws NoSuchAlgorithmException, IOException;
 
-    void uploadFiles(String versionId, Set<DeployItem> files, List<String> requiredHashes) throws IOException, NoSuchAlgorithmException;
+    void uploadFiles(String versionId, Set<DeployItem> files, List<String> requiredHashes) throws InterruptedException, IOException, NoSuchAlgorithmException;
 }
