@@ -54,6 +54,7 @@ You have to create your own Serializer by implementing the io.github.szrnkapeter
 | default read timeout        | int (default 30000)                                          | No         | Read timeout                                                 |
 | httpResponseCallback        | io.github.szrnkapeter.firebase.hosting.callback.HttpResponseCallback | No         | Callback function that returns with the value of the HTTP response for the give service |
 | serviceResponseCallback     | io.github.szrnkapeter.firebase.hosting.callback.ServiceResponseCallback | No         | Callback function that returns with the value of the given service |
+| disableAsync                | boolean                                                      | No         | Async file upload can be turned off with this flag           |
 
 **IMPORTANT: If you do not set the:**
 - **httpResponseCallback**
