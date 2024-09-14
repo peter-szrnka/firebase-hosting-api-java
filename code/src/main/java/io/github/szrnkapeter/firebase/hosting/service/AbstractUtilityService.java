@@ -17,7 +17,7 @@ public abstract class AbstractUtilityService {
     }
 
     protected void responseCallback(String function, Object response) {
-        if(config.getServiceResponseCallback() == null) {
+        if (config.getServiceResponseCallback() == null) {
             return;
         }
 

@@ -35,7 +35,7 @@ public class Main {
                             System.out.println(function + " / " + response);
                         }
                     })*/
-                    .withSiteId("hosting-api-java-test")
+                    .withSiteId(System.getenv("FIREBASE_SITE_ID"))
                     .build();
             FirebaseHostingApiClient client = new FirebaseHostingApiClient(firebaseRestApiConfig);
 

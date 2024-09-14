@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Sample usage with v0.8
+ * Sample usage with v0.9-SNAPSHOT
  */
 public class Main {
 
@@ -29,13 +29,8 @@ public class Main {
                     // (Optional) HTTP response listener to show & process HTTP response data
                     .withHttpResponseCallback((function, code, responseMessage) -> System.out.println(function + " / " + code + " / " + responseMessage))
                     // (Optional) Service response listener to show & process service response data
-                    /*.withServiceResponseCallback(new ServiceResponseCallback() {
-                        @Override
-                        public <T> void getResponse(String function, T response) {
-                            System.out.println(function + " / " + response);
-                        }
-                    })*/
-                    .withSiteId(System.getenv("FIREBASE_SITE_ID"))
+                    //.withServiceResponseCallback((function, response) -> System.out.println(function + " / " + response))
+                    .withSiteId(System.getenv("FIREBASE_SITE_ID")) //
                     .build();
             FirebaseHostingApiClient client = FirebaseHostingApiClient.newClient(firebaseRestApiConfig);
 

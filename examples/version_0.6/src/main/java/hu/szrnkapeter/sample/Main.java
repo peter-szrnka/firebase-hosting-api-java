@@ -37,8 +37,8 @@ public class Main {
 					}
 				})*/
 				// You have to define a site ID here -> will be renamed to withSiteId() in v0.7
-				.withSiteName("fir-hosting-api-java-test")
-					.build();
+				.withSiteName(System.getenv("FIREBASE_SITE_ID"))
+				.build();
 			FirebaseHostingApiClient client = new FirebaseHostingApiClient(firebaseRestApiConfig);
 
 			DeployRequest deployRequest = new DeployRequest();

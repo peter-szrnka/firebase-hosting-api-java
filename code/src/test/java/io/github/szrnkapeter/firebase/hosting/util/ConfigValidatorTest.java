@@ -13,17 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Peter Szrnka
  * @since 0.8
  */
-class ConfigValidationUtilsTest {
+class ConfigValidatorTest {
 
     @Test
     void testPrivateConstructor() {
-        assertDoesNotThrow(() -> TestUtils.testPrivateConstructor(ConfigValidationUtilsTest.class));
+        assertDoesNotThrow(() -> TestUtils.testPrivateConstructor(ConfigValidatorTest.class));
     }
 
     @Test
-    @SneakyThrows
     void shouldThrowErrorWhenConfigIsMissing() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidationUtils.preValidateConfig(null));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidator.preValidateConfig(null));
         assertEquals("FirebaseRestApiConfig is mandatory!", exception.getMessage());
     }
 
@@ -35,7 +34,7 @@ class ConfigValidationUtilsTest {
         config.setSiteId(null);
 
         // act & assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidationUtils.preValidateConfig(config));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidator.preValidateConfig(config));
         assertEquals("Site ID is mandatory!", exception.getMessage());
     }
 
@@ -48,7 +47,7 @@ class ConfigValidationUtilsTest {
         config.setServiceAccountFileStream(null);
 
         // act & assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidationUtils.preValidateConfig(config));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidator.preValidateConfig(config));
         assertEquals("Service account file stream is missing from the configuration!", exception.getMessage());
     }
 
@@ -60,7 +59,7 @@ class ConfigValidationUtilsTest {
         config.setSerializer(null);
 
         // act & assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidationUtils.preValidateConfig(config));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> ConfigValidator.preValidateConfig(config));
         assertEquals("Serializer is missing from the configuration!", exception.getMessage());
     }
 
@@ -71,6 +70,6 @@ class ConfigValidationUtilsTest {
         FirebaseHostingApiConfig config = getFirebaseRestApiConfig();
 
         // act & assert
-        assertDoesNotThrow(() -> ConfigValidationUtils.preValidateConfig(config));
+        assertDoesNotThrow(() -> ConfigValidator.preValidateConfig(config));
     }
 }

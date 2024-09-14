@@ -53,7 +53,7 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
         String calculatedHash = FileUtils.getSHA256Checksum(request.getFileContent());
         String url = Constants.UPLOAD_FIREBASE_API_URL + "upload/" + SITES + config.getSiteId() + VERSIONS + request.getVersion() + FILES + "/" + calculatedHash;
 
-        if(request.getUploadUrl() != null) {
+        if (request.getUploadUrl() != null) {
             url = request.getUploadUrl() + "/" + calculatedHash;
         }
 
@@ -62,11 +62,11 @@ public class FileServiceImpl extends AbstractUtilityService implements FileServi
 
     @Override
     public void uploadFiles(String versionId, Set<DeployItem> files, List<String> requiredHashes) throws IOException, NoSuchAlgorithmException {
-        for(DeployItem item : files) {
+        for (DeployItem item : files) {
             byte[] fileContent = FileUtils.compressAndReadFile(item.getContent());
             String checkSum = FileUtils.getSHA256Checksum(fileContent);
 
-            if(requiredHashes != null && !requiredHashes.contains(checkSum)) {
+            if (requiredHashes != null && !requiredHashes.contains(checkSum)) {
                 continue;
             }
 

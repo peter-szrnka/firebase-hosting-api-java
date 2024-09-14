@@ -16,7 +16,7 @@ import io.github.szrnkapeter.firebase.hosting.model.Version;
 import io.github.szrnkapeter.firebase.hosting.service.FileService;
 import io.github.szrnkapeter.firebase.hosting.service.ReleaseService;
 import io.github.szrnkapeter.firebase.hosting.service.VersionService;
-import io.github.szrnkapeter.firebase.hosting.util.ConfigValidationUtils;
+import io.github.szrnkapeter.firebase.hosting.util.ConfigValidator;
 import io.github.szrnkapeter.firebase.hosting.util.FileUtils;
 import io.github.szrnkapeter.firebase.hosting.util.GoogleCredentialUtils;
 import io.github.szrnkapeter.firebase.hosting.util.VersionUtils;
@@ -69,7 +69,7 @@ class FirebaseHostingApiClientTest {
 		setup();
 
 		try (MockedStatic<GoogleCredentialUtils> mockedGoogleCredentialUtils = mockStatic(GoogleCredentialUtils.class);
-			 MockedStatic<ConfigValidationUtils> mockedConfigValidationUtil = mockStatic(ConfigValidationUtils.class)) {
+			 MockedStatic<ConfigValidator> mockedConfigValidationUtil = mockStatic(ConfigValidator.class)) {
 			// arrange
 			mockedGoogleCredentialUtils.when(() -> GoogleCredentialUtils.getAccessToken(any(FirebaseHostingApiConfig.class))).thenReturn(ACCESS_TOKEN);
 
@@ -79,7 +79,7 @@ class FirebaseHostingApiClientTest {
 			// assert
 			assertNotNull(response);
 			mockedGoogleCredentialUtils.verify(() -> GoogleCredentialUtils.getAccessToken(any(FirebaseHostingApiConfig.class)));
-			mockedConfigValidationUtil.verify(() -> ConfigValidationUtils.preValidateConfig(config));
+			mockedConfigValidationUtil.verify(() -> ConfigValidator.preValidateConfig(config));
 		}
 	}
 

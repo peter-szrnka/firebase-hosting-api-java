@@ -8,9 +8,9 @@ import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
  * @author Peter Szrnka
  * @since 0.8
  */
-public class ConfigValidationUtils {
+public class ConfigValidator {
 
-    private ConfigValidationUtils() {}
+    private ConfigValidator() {}
 
     /**
      * Pre-validation is essential to check the input configuration and avoid any unwanted issues.

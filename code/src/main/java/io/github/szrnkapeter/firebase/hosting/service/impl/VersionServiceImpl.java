@@ -44,14 +44,14 @@ public class VersionServiceImpl extends AbstractUtilityService implements Versio
 
     @Override
     public void deletePreviousVersions(DeployRequest request, List<Release> releaseList) throws IOException {
-        if(!request.isDeletePreviousVersions()) {
+        if (!request.isDeletePreviousVersions()) {
             return;
         }
 
         AtomicInteger i = new AtomicInteger(0);
 
-        for(Release release : releaseList) {
-            if(i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
+        for (Release release : releaseList) {
+            if (i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
                 deleteVersion(release.getVersion().getName());
             }
 
