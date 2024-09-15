@@ -134,7 +134,7 @@ class VersionServiceImplTest {
     }
 
     @Test
-    void shouldDeleteVersionAsync() throws IOException {
+    void shouldDeleteVersionAsync() {
         try (MockedStatic<ConnectionUtils> mockedConnectionUtilsUtils = mockStatic(ConnectionUtils.class)) {
             // arrange
             config.setDisableAsync(false);
@@ -204,13 +204,20 @@ class VersionServiceImplTest {
 
         Release release3  = new Release();
         Version version2 = new Version();
-        version2.setName("version-name");
+        version2.setName("version-name2");
         version2.setStatus("TODO");
         release3.setVersion(version2);
+
+        Release release4 = new Release();
+        Version version3 = new Version();
+        version3.setName("version-name3");
+        version3.setStatus(Constants.DELETED);
+        release4.setVersion(version3);
 
         releaseList.add(release1);
         releaseList.add(release2);
         releaseList.add(release3);
+        releaseList.add(release4);
         return releaseList;
     }
 }
