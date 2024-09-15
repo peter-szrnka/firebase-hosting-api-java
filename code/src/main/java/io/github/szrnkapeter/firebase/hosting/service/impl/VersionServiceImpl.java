@@ -10,11 +10,13 @@ import io.github.szrnkapeter.firebase.hosting.util.ConnectionUtils;
 import io.github.szrnkapeter.firebase.hosting.util.Constants;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static io.github.szrnkapeter.firebase.hosting.util.Constants.SITES;
-import static io.github.szrnkapeter.firebase.hosting.util.Constants.VERSIONS;
+import static io.github.szrnkapeter.firebase.hosting.util.Constants.*;
 
 /**
  * @author Peter Szrnka
@@ -43,19 +45,45 @@ public class VersionServiceImpl extends AbstractUtilityService implements Versio
     }
 
     @Override
-    public void deletePreviousVersions(DeployRequest request, List<Release> releaseList) throws IOException {
+    public void deletePreviousVersions(DeployRequest request, List<Release> releaseList) throws InterruptedException, IOException {
         if (!request.isDeletePreviousVersions()) {
             return;
         }
 
-        AtomicInteger i = new AtomicInteger(0);
+        // Prefilter releases
+        List<String> filteredReleases = new ArrayList<>();
 
-        for (Release release : releaseList) {
-            if (i.get() > 0 && Constants.FINALIZED.equals(release.getVersion().getStatus())) {
-                deleteVersion(release.getVersion().getName());
+        for (int i = 1; i < releaseList.size(); i++) {
+            Release release = releaseList.get(i);
+            if (Constants.DELETED.equals(release.getVersion().getStatus()) || !Constants.FINALIZED.equals(release.getVersion().getStatus())) {
+                continue;
             }
 
-            i.incrementAndGet();
+            filteredReleases.add(release.getVersion().getName());
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(config.getThreadPoolSize());
+        CountDownLatch latch = new CountDownLatch(config.isDisableAsync() ? 0 : filteredReleases.size() - 1);
+
+        for (String releaseName : filteredReleases) {
+            if (config.isDisableAsync()) {
+                deleteVersion(releaseName);
+            } else {
+                executorService.execute(() -> deleteVersionAsync(releaseName, latch));
+            }
+        }
+
+        latch.await();
+        executorService.shutdown();
+    }
+
+    void deleteVersionAsync(String versionName, CountDownLatch latch) {
+        try {
+            deleteVersion(versionName);
+        } catch (IOException e) {
+            responseCallback(UPLOAD_FILES, e);
+        } finally {
+            latch.countDown();
         }
     }
 
