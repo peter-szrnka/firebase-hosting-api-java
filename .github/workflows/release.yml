@@ -45,7 +45,7 @@ jobs:
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git commit -am "Version updated to ${{ github.event.inputs.releaseVersion }}"
-          git push
+          # git push
       - name: Publish package
         run: mvn -Prelease --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} deploy -f ./code/pom.xml
         env:
@@ -59,4 +59,4 @@ jobs:
           git config --global user.name ${{ secrets.GH_USERNAME }}
           git config --global user.email ${{ secrets.GH_EMAIL }}
           git commit -am "Version updated to ${{ github.event.inputs.developmentVersion }}"
-          git push
+          # git push
