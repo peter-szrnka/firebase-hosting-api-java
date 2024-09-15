@@ -1,17 +1,7 @@
 package io.github.szrnkapeter.firebase.hosting;
 
 import io.github.szrnkapeter.firebase.hosting.config.FirebaseHostingApiConfig;
-import io.github.szrnkapeter.firebase.hosting.model.DeployItem;
-import io.github.szrnkapeter.firebase.hosting.model.DeployRequest;
-import io.github.szrnkapeter.firebase.hosting.model.DeployResponse;
-import io.github.szrnkapeter.firebase.hosting.model.FileDetails;
-import io.github.szrnkapeter.firebase.hosting.model.GetReleasesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.GetVersionFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesRequest;
-import io.github.szrnkapeter.firebase.hosting.model.PopulateFilesResponse;
-import io.github.szrnkapeter.firebase.hosting.model.Release;
-import io.github.szrnkapeter.firebase.hosting.model.UploadFileRequest;
-import io.github.szrnkapeter.firebase.hosting.model.Version;
+import io.github.szrnkapeter.firebase.hosting.model.*;
 import io.github.szrnkapeter.firebase.hosting.service.FileService;
 import io.github.szrnkapeter.firebase.hosting.service.ReleaseService;
 import io.github.szrnkapeter.firebase.hosting.service.VersionService;
@@ -92,13 +82,13 @@ public class FirebaseHostingApiClient {
      */
     public DeployResponse createDeploy(DeployRequest request) throws InterruptedException, IOException, NoSuchAlgorithmException {
         if (!request.isCleanDeploy()) {
-            GetReleasesResponse getReleases = getReleases();
+            GetReleasesResponse releasesResponse = getReleases();
 
-            if (getReleases == null || getReleases.getReleases() == null || getReleases.getReleases().isEmpty()) {
+            if (releasesResponse == null || releasesResponse.getReleases() == null || releasesResponse.getReleases().isEmpty()) {
                 return null;
             }
 
-            String versionId = getVersionId(getReleases.getReleases().get(0).getVersion().getName());
+            String versionId = getVersionId(releasesResponse.getReleases().get(0).getVersion().getName());
             GetVersionFilesResponse getVersionFiles = getVersionFiles(versionId);
 
             Set<String> newFileNames = request.getFiles().stream().map(DeployItem::getName).collect(Collectors.toSet());

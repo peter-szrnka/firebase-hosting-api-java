@@ -17,7 +17,7 @@ public interface VersionService {
 
     void deleteVersion(String versionName) throws IOException;
 
-    void deletePreviousVersions(DeployRequest request, List<Release> releaseList) throws IOException;
+    void deletePreviousVersions(DeployRequest request, List<Release> releaseList) throws InterruptedException, IOException;
 
     Version finalizeVersion(String version) throws IOException;
 }
