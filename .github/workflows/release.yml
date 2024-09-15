@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PAT }}
+          # token: ${{ secrets.PAT }}
           ref: main
         env:
           branch: main
