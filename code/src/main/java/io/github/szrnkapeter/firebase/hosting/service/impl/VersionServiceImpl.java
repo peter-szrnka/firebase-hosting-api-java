@@ -55,7 +55,7 @@ public class VersionServiceImpl extends AbstractUtilityService implements Versio
 
         for (int i = 1; i < releaseList.size(); i++) {
             Release release = releaseList.get(i);
-            if (!Constants.FINALIZED.equals(release.getVersion().getStatus()) || Constants.DELETED.equals(release.getVersion().getStatus())) {
+            if (Constants.DELETED.equals(release.getVersion().getStatus()) || !Constants.FINALIZED.equals(release.getVersion().getStatus())) {
                 continue;
             }
 
