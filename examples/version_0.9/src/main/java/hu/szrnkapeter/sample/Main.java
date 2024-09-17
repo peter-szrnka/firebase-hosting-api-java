@@ -55,7 +55,7 @@ public class Main {
     private static Set<DeployItem> createDeployItems() {
         Set<DeployItem> files = new HashSet<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             files.add(new DeployItem("file" + i, ("test" + i).getBytes()));
         }
 
