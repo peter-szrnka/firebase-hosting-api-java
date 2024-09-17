@@ -35,7 +35,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          server-id: sonatype
+          server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
       - name: Update pom.xml to releaseVersion
