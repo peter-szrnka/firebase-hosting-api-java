@@ -31,13 +31,17 @@ A simple Java client library for Firebase Hosting REST API (https://firebase.goo
 
 ## Maven
 
+Add the following dependency to your Maven pom.xml:
+
 ```xml
 <dependency>
-	<groupId>io.github.szrnka-peter</groupId>
+	<groupId>io.github.peter-szrnka</groupId>
 	<artifactId>firebase-hosting-api-java</artifactId>
-	<version>0.8</version>
+	<version>0.9</version>
 </dependency>
 ```
+
+**IMPORTANT: In case version < 0.9, please use "io.github.szrnka-peter" as groupId!**
 
 ## Object serializers
 

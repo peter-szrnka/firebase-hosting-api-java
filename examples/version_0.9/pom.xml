@@ -14,7 +14,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.github.szrnka-peter</groupId>
+			<groupId>io.github.peter-szrnka</groupId>
 			<artifactId>firebase-hosting-api-java</artifactId>
 			<version>0.9-SNAPSHOT</version>
 		</dependency>
